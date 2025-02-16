@@ -14,7 +14,9 @@ CHLIB = -L/usr/lib/ -lgtest -lgtest_main -pthread #-Wl,--no-warn-search-mismatch
 MATHLIB = -lm 
 LIBFLAGS= $(CHLIB) #$(MATHLIB)
 ifeq ($(OS), Linux)
-	CHLIB += -lsubunit
+	ifeq ($(shell cat /etc/os-release | grep -c 'debian'),1)
+		CHLIB += -lsubunit
+	endif
 endif
 
 # Checkers
