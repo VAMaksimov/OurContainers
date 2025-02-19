@@ -1,5 +1,7 @@
-#ifndef CPP2_S21CONTAINERS_COMPONENTS_S21_STACK_H_
-#define CPP2_S21CONTAINERS_COMPONENTS_S21_STACK_H_
+#ifndef CPP2_S21_CONTAINERS_COMPONENTS_S21_STACK_QUEUE_H_
+#define CPP2_S21_CONTAINERS_COMPONENTS_S21_STACK_QUEUE_H_
+
+#include <initializer_list>
 
 namespace s21 {
 template <typename T>
@@ -11,22 +13,10 @@ class ContainerAdaptor : public Container<T> {
   using size_type_ = typename Container<T>::size_type_;
 
   // Main funcs
-  ContainerAdaptor()
-      : data_(new value_type_[kDefaultCapacity]),
-        capacity_(kDefaultCapacity),
-        top_index_(0) {}
+  ContainerAdaptor();
   ~ContainerAdaptor() { delete[] data_; }
 
-  ContainerAdaptor(std::initializer_list<value_type> const &items) {
-    data_ = new value_type_[items.size()];
-    int i = 0;
-    for (auto it = items.begin(); it != items.end(); it++) {
-      data_[i] = *it;
-      i++;
-    }
-    top_index_ = items.size();
-    capacity_ = items.size();
-  }
+  ContainerAdaptor(std::initializer_list<value_type_> const &items);
 
   ContainerAdaptor(const ContainerAdaptor &other)
       : data_(new value_type_[other.capacity_]),
@@ -37,14 +27,16 @@ class ContainerAdaptor : public Container<T> {
     }
   }
 
-  ContainerAdaptor(ContainerAdaptor &&s) : capacity_(s.capacity_), top_index_(s.top_index_) {
+  ContainerAdaptor(ContainerAdaptor &&s)
+      : capacity_(s.capacity_), top_index_(s.top_index_) {
     if (this == &s) return;
     delete[] data_;
     data_ = other.data_;
     other.data_ = nullptr;
   }
 
-  operator=(ContainerAdaptor && s) : capacity_(s.capacity_), top_index_(s.top_index_) {
+  operator=(ContainerAdaptor && s)
+      : capacity_(s.capacity_), top_index_(s.top_index_) {
     if (this == &s) return;
     delete[] data_;
     data_ = other.data_;
@@ -91,11 +83,10 @@ class Stack : public ContainerAdaptor<T> {
   using reference_ = typename ContainerAdaptor<T>::reference_;
   using const_reference_ = typename ContainerAdaptor<T>::const_reference_;
   using size_type_ = typename ContainerAdaptor<T>::size_type_;
- 
+
   // Main funcs
   Stack() : ContainerAdaptor<T>() {}
-  ~Stack() : 
 };
-}
+}  // namespace s21
 
 #endif  // CPP2_S21CONTAINERS_COMPONENTS_S21_STACK_H_
