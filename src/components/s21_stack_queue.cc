@@ -46,32 +46,16 @@ ContainerAdaptor<T>::ContainerAdaptor(ContainerAdaptor &&s)
   other.data_ = nullptr;
 }
 
-template <typename T>
-ContainerAdaptor<T>::operator=(ContainerAdaptor && s)
-    : capacity_(s.capacity_), top_index_(s.top_index_) {
-  if (this == &s) return;
-  delete[] data_;
-  data_ = other.data_;
-  other.data_ = nullptr;
-}
-
 // Other funcs
-virtual void push(const_reference_ value) = 0;
-virtual void pop() = 0;
-
-void swap(ContainerAdaptor &other) {
+template <typename T>
+void ContainerAdaptor<T>::swap(ContainerAdaptor &other) {
   std::swap(data_, other.data_);
   std::swap(capacity_, other.capacity_);
   std::swap(top_index_, other.top_index_);
 }
 
-bool empty() const override { return top_index_ == 0; }
-size_type_ size() const override { return top_index_; }
-
-private:
-const size_type_ kDefaultCapacity = 16;
-
-void GrowCapacity(size_type_ new_capacity) {
+template <typename T>
+void ContainerAdaptor<T>::GrowCapacity(size_type_ new_capacity) {
   if (new_capacity <= capacity_) return;
 
   value_type_ *buffer = new value_type_[new_capacity];
