@@ -127,7 +127,7 @@ class Stack : public ContainerAdaptor<T> {
   }
 
   // removes the top element
-  virtual void pop() {
+  virtual void pop() override {
     if (this->actual_size_ == 0) return;
     this->actual_size_--;
   }
@@ -151,7 +151,7 @@ class Queue : public ContainerAdaptor<T> {
   const_reference_ front() { return this->data_[0]; }
   const_reference_ back() { return this->data_[this->actual_size_ - 1]; }
 
-  void push(const_reference_ value) {
+  void push(const_reference_ value) override {
     if (this->actual_size_ == this->capacity_) {
       this->GrowCapacity(this->capacity_ + this->capacity_ / 2);
     }
@@ -159,7 +159,7 @@ class Queue : public ContainerAdaptor<T> {
   }
 
   // removes the first element
-  void pop() {
+  void pop() override {
     if (this->actual_size_ == 0) return;
     for (size_type_ i = 1; i < this->actual_size_; ++i) {
       this->data_[i - 1] = std::move(this->data_[i]);
