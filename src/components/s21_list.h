@@ -163,7 +163,7 @@ inline list<T>::list(const list& other) noexcept : size(other.size) {
 template <typename T>
 inline list<T>::~list() {
   clear();
-  delete[] fake;
+  delete fake;
 }
 
 template <typename T>
@@ -171,7 +171,7 @@ inline void list<T>::clear() {
   while (fake->next != fake) {
     Node_* temp = fake->next;
     fake->next = temp->next;
-    delete[] temp;
+    delete temp;
   }
   fake->prev = fake;
   size = 0;
@@ -184,7 +184,7 @@ inline list<T>& list<T>::operator=(list<T>&& other) noexcept {
   if (this != &other) {
     // Очищаем текущий объект
     clear();
-    delete[] fake;
+    delete fake;
 
     if (other.fake != nullptr) {
       // Перемещаем данные из other в текущий объект
