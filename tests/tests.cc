@@ -139,59 +139,59 @@ TEST(StackTest, ConstructorMove) {
 }
 
 TEST(StackTest, OperatorMove) {
-    Stack<int> our_stack_int = {1, 2, 3};
-    std::stack<int> std_stack_int;
-    std_stack_int.push(1);
-    std_stack_int.push(2);
-    std_stack_int.push(3);
-    Stack<int> our_stack_empty;
-    std::stack<int> std_stack_empty;
-    our_stack_empty = std::move(our_stack_int);
-    std_stack_empty = std::move(std_stack_int);
-    CompareStacks<int>(our_stack_empty, std_stack_empty);
-    EXPECT_EQ(our_stack_int.empty(), std_stack_int.empty());
+  Stack<int> our_stack_int = {1, 2, 3};
+  std::stack<int> std_stack_int;
+  std_stack_int.push(1);
+  std_stack_int.push(2);
+  std_stack_int.push(3);
+  Stack<int> our_stack_empty;
+  std::stack<int> std_stack_empty;
+  our_stack_empty = std::move(our_stack_int);
+  std_stack_empty = std::move(std_stack_int);
+  CompareStacks<int>(our_stack_empty, std_stack_empty);
+  EXPECT_EQ(our_stack_int.empty(), std_stack_int.empty());
 }
 
 TEST(StackTest, Push) {
-    Stack<int> our_stack_int;
-    our_stack_int.push(1);
-    our_stack_int.push(2);
-    our_stack_int.push(3);
-    std::stack<int> std_stack_int;
-    std_stack_int.push(1);
-    std_stack_int.push(2);
-    std_stack_int.push(3);
-    CompareStacks<int>(our_stack_int, std_stack_int);
+  Stack<int> our_stack_int;
+  our_stack_int.push(1);
+  our_stack_int.push(2);
+  our_stack_int.push(3);
+  std::stack<int> std_stack_int;
+  std_stack_int.push(1);
+  std_stack_int.push(2);
+  std_stack_int.push(3);
+  CompareStacks<int>(our_stack_int, std_stack_int);
 }
 
 TEST(StackTest, Pop) {
-    Stack<int> our_stack_int;
-    our_stack_int.push(1);
-    our_stack_int.push(2);
-    our_stack_int.pop();
-    std::stack<int> std_stack_int;
-    std_stack_int.push(1);
-    std_stack_int.push(2);
-    std_stack_int.pop();
-    CompareStacks<int>(our_stack_int, std_stack_int);
-    our_stack_int.pop();
-    std_stack_int.pop();
-    EXPECT_TRUE(our_stack_int.empty());
-    // std_stack_int.empty() causes Segmentation fault
+  Stack<int> our_stack_int;
+  our_stack_int.push(1);
+  our_stack_int.push(2);
+  our_stack_int.pop();
+  std::stack<int> std_stack_int;
+  std_stack_int.push(1);
+  std_stack_int.push(2);
+  std_stack_int.pop();
+  CompareStacks<int>(our_stack_int, std_stack_int);
+  our_stack_int.pop();
+  std_stack_int.pop();
+  EXPECT_TRUE(our_stack_int.empty());
+  // std_stack_int.empty() causes Segmentation fault
 }
 
 TEST(QueueTest, Pop) {
-    Queue<int> our_queue_int;
-    our_queue_int.push(1);
-    our_queue_int.push(2);
-    our_queue_int.pop();
-    std::queue<int> std_queue_int;
-    std_queue_int.push(1);
-    std_queue_int.push(2);
-    std_queue_int.pop();
-    CompareQueues<int>(our_queue_int, std_queue_int);
-    our_queue_int.pop();
-    std_queue_int.pop();
-    EXPECT_TRUE(our_queue_int.empty());
-    // std_queue_int.empty() causes Segmentation fault
+  Queue<int> our_queue_int;
+  our_queue_int.push(1);
+  our_queue_int.push(2);
+  our_queue_int.pop();
+  std::queue<int> std_queue_int;
+  std_queue_int.push(1);
+  std_queue_int.push(2);
+  std_queue_int.pop();
+  CompareQueues<int>(our_queue_int, std_queue_int);
+  our_queue_int.pop();
+  std_queue_int.pop();
+  EXPECT_TRUE(our_queue_int.empty());
+  // std_queue_int.empty() causes Segmentation fault
 }

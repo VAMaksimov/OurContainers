@@ -160,18 +160,14 @@ class Stack : public ContainerAdaptor<T> {
   using ContainerAdaptor<T>::ContainerAdaptor;
   using const_reference_ = typename ContainerAdaptor<T>::const_reference_;
 
-  void push(
-      const_reference_ value) override;
+  void push(const_reference_ value) override;
   void pop() override;
 
-  const_reference_ top() {
-    return this->data_[this->actual_size_ - 1];
-  }
+  const_reference_ top() { return this->data_[this->actual_size_ - 1]; }
 };
 
 template <typename T>
-void Stack<T>::push(
-    const_reference_ value) {
+void Stack<T>::push(const_reference_ value) {
   if (this->actual_size_ == this->capacity_) {
     this->GrowCapacity(this->capacity_ + this->capacity_ / 2);
   }
@@ -187,10 +183,10 @@ void Stack<T>::pop() {
  * @brief Queue is a specialization of ContainerAdaptor.
  * It inherits all the member functions from the base class ContainerAdaptor.
  * It's a container that stores elements in a first-in-first-out (FIFO) order.
- * 
+ *
  * @tparam T
  *
-*/
+ */
 template <typename T>
 class Queue : public ContainerAdaptor<T> {
  public:
@@ -198,22 +194,16 @@ class Queue : public ContainerAdaptor<T> {
   using const_reference_ = typename ContainerAdaptor<T>::const_reference_;
   using size_type_ = typename ContainerAdaptor<T>::size_type_;
 
-  void push(
-      const_reference_ value) override;
+  void push(const_reference_ value) override;
   void pop() override;
 
   // access the first element
-  const_reference_ front() {
-    return this->data_[0];
-  }
-  const_reference_ back() {
-    return this->data_[this->actual_size_ - 1];
-  }
+  const_reference_ front() { return this->data_[0]; }
+  const_reference_ back() { return this->data_[this->actual_size_ - 1]; }
 };
 
 template <typename T>
-void Queue<T>::push(
-    const_reference_ value) {
+void Queue<T>::push(const_reference_ value) {
   if (this->actual_size_ == this->capacity_) {
     this->GrowCapacity(this->capacity_ + this->capacity_ / 2);
   }
