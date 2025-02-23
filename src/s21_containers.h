@@ -18,7 +18,6 @@ class Container {
   // defines the type of the container size (standard type is size_t)
   using size_type_ = unsigned long long;
 
-  // protected is for derived classes
  protected:
   // Writing = 0 after a member function inside a class declaration
   // marks that function as pure virtual. A pure virtual function indicates that

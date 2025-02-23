@@ -36,6 +36,8 @@ class ContainerAdaptor {
   size_type_ size() const { return actual_size_; }
   void PrintContainer() const;
 
+  // in this case `protected` keyword is crucial to make the class inheritable
+  // and prevent direct access to members
  protected:
   const size_type_ kDefaultCapacity = 16;
   value_type_ *data_;
@@ -78,9 +80,11 @@ template <typename T>
 ContainerAdaptor<T>::ContainerAdaptor(ContainerAdaptor &&other)
     : capacity_(other.capacity_), actual_size_(other.actual_size_) {
   if (this == &other) return;
-  delete[] data_;
+  // no delete[] data bc it's constructor, so no memory alloc'd
   data_ = other.data_;
   other.data_ = nullptr;
+  other.capacity_ = 0;
+  other.actual_size_ = 0;
 }
 
 template <typename T>
@@ -88,9 +92,12 @@ ContainerAdaptor<T> &ContainerAdaptor<T>::operator=(ContainerAdaptor &&other) {
   if (this == &other) return *this;
   delete[] data_;
   data_ = other.data_;
-  other.data_ = nullptr;
   capacity_ = other.capacity_;
   actual_size_ = other.actual_size_;
+  other.data_ = nullptr;
+  other.capacity_ = 0;
+  other.actual_size_ = 0;
+  return *this;
 }
 
 template <typename T>
@@ -121,29 +128,50 @@ void ContainerAdaptor<T>::GrowCapacity(size_type_ new_capacity) {
   capacity_ = new_capacity;
 }
 
+/**
+ * @note ContainerAdaptor<T>::ContainerAdaptor tells the
+ * compiler to inherit the constructors of the base class. This means if you
+ * create a Stack<int> object, it will call the appropriate ContainerAdaptor
+ * constructor to initialize its members (e.g., allocating memory for the
+ * container). If you don't use this mechanism, you'll need to define your own
+ * constructors in Stack which explicitly call the base class constructor in
+ * the initializer list.
+ *
+ * Why const typename ContainerAdaptor<T>::const_reference_ and not simply
+ * const T&?
+ * The name const_reference_ is defined in the base class. If you were to
+ * write const T& directly, you would be bypassing the abstraction provided by
+ * ContainerAdaptor. In other words, you might be assuming that the constant
+ * reference type is always exactly const T&, which may not necessarily be
+ * true as the base class’s typedef could change its definition later.
+ * This leaves room for the possibility that the implementation of
+ * ContainerAdaptor might change the underlying type without requiring
+ * changes in the derived Stack class.
+ *
+ * In a template class, names that depend on a template parameter (like
+ * ContainerAdaptor<T>::const_reference_) aren’t automatically assumed to be
+ * types. Adding typename tells the compiler explicitly, “This dependent name
+ * represents a type.” Without typename, the compiler would flag an error
+ * while parsing the template.
+ */
 template <typename T>
 class Stack : public ContainerAdaptor<T> {
  public:
-  // ContainerAdaptor<T>::ContainerAdaptor tells the
-  // compiler to inherit the constructors of the base class. This means if you
-  // create a Stack<int> object, it will call the appropriate ContainerAdaptor
-  // constructor to initialize its members (e.g., allocating memory for the
-  // container). If you don't use this mechanism, you'll need to define your own
-  // constructors in Stack which explicitly call the base class constructor in
-  // the initializer list.
   using ContainerAdaptor<T>::ContainerAdaptor;
+  using const_reference_ = typename ContainerAdaptor<T>::const_reference_;
 
-  // const typename ContainerAdaptor<T>::const_reference_ is used to specify
-  // that the reference is a constant reference to the value_type of the base
-  // class.
   void push(
-      const typename ContainerAdaptor<T>::const_reference_ value) override;
+      const_reference_ value) override;
   void pop() override;
+
+  const_reference_ top() {
+    return this->data_[this->actual_size_ - 1];
+  }
 };
 
-// inserts an element at the top
 template <typename T>
-void Stack<T>::push(const typename ContainerAdaptor<T>::const_reference_ value) {
+void Stack<T>::push(
+    const_reference_ value) {
   if (this->actual_size_ == this->capacity_) {
     this->GrowCapacity(this->capacity_ + this->capacity_ / 2);
   }
@@ -152,76 +180,54 @@ void Stack<T>::push(const typename ContainerAdaptor<T>::const_reference_ value) 
 
 template <typename T>
 void Stack<T>::pop() {
-  if (this->empty()) {
-    throw std::out_of_range("Stack is empty");
-  }
-  // Since we're implementing a stack (LIFO), we remove the last inserted element.
-  this->actual_size_--;
+  if (!this->empty()) this->actual_size_--;
 }
 
-// template <typename T>
-// class Stack : public ContainerAdaptor<T> {
-//  public:
-//   using value_type_ = T;
-//   using reference_ = T &;
-//   using const_reference_ = const T &;
-//   using size_type_ = unsigned long long;
+/**
+ * @brief Queue is a specialization of ContainerAdaptor.
+ * It inherits all the member functions from the base class ContainerAdaptor.
+ * It's a container that stores elements in a first-in-first-out (FIFO) order.
+ * 
+ * @tparam T
+ *
+*/
+template <typename T>
+class Queue : public ContainerAdaptor<T> {
+ public:
+  using ContainerAdaptor<T>::ContainerAdaptor;
+  using const_reference_ = typename ContainerAdaptor<T>::const_reference_;
+  using size_type_ = typename ContainerAdaptor<T>::size_type_;
 
-//   Stack() : ContainerAdaptor<T>() {}
-//   Stack(std::initializer_list<value_type_> const &items);
-//   Stack(const ContainerAdaptor<T> &other) : ContainerAdaptor<T>(other) {}
-//   Stack(ContainerAdaptor<T> &&other) : ContainerAdaptor<T>(std::move(other))
-//   {}
+  void push(
+      const_reference_ value) override;
+  void pop() override;
 
-//   const_reference_ top() const { return this->data_[this->actual_size_ - 1];
-//   }
+  // access the first element
+  const_reference_ front() {
+    return this->data_[0];
+  }
+  const_reference_ back() {
+    return this->data_[this->actual_size_ - 1];
+  }
+};
 
-//   void push(const_reference_ value) override;
-//   virtual void pop() override;
-// };
+template <typename T>
+void Queue<T>::push(
+    const_reference_ value) {
+  if (this->actual_size_ == this->capacity_) {
+    this->GrowCapacity(this->capacity_ + this->capacity_ / 2);
+  }
+  this->data_[this->actual_size_++] = value;
+}
 
-
-
-// template <typename T>
-// class Queue : public ContainerAdaptor<T> {
-//  public:
-//   using value_type_ = T;
-//   using reference_ = T &;
-//   using const_reference_ = const T &;
-//   using size_type_ = unsigned long long;
-
-//   Queue() : ContainerAdaptor<T>() {}
-//   Queue(std::initializer_list<value_type_> const &items)
-//       : ContainerAdaptor<T>(items) {}
-//   Queue(const ContainerAdaptor<T> &other) : ContainerAdaptor<T>(other) {}
-//   Queue(ContainerAdaptor<T> &&other) : ContainerAdaptor<T>(std::move(other))
-//   {}
-
-//   // access the first element
-//   const_reference_ front() { return this->data_[0]; }
-//   const_reference_ back() { return this->data_[this->actual_size_ - 1]; }
-
-//   void push(const_reference_ value) override;
-//   void pop() override;
-// };
-
-// template <typename T>
-// void Queue<T>::push(const_reference_ value) {
-//   if (this->actual_size_ == this->capacity_) {
-//     this->GrowCapacity(this->capacity_ + this->capacity_ / 2);
-//   }
-//   this->data_[this->actual_size_++] = value;
-// }
-
-// // removes the first element
-// template <typename T>
-// void Queue<T>::pop() {
-//   if (this->actual_size_ == 0) return;
-//   for (size_type_ i = 1; i < this->actual_size_; ++i) {
-//     this->data_[i - 1] = std::move(this->data_[i]);
-//   }
-//   this->actual_size_--;
-// }
+template <typename T>
+void Queue<T>::pop() {
+  if (this->empty()) return;
+  for (size_type_ i = 1; i < this->actual_size_; ++i) {
+    this->data_[i - 1] = std::move(this->data_[i]);
+  }
+  this->actual_size_--;
+}
 }  // namespace s21
 
 #endif  // CPP2_S21CONTAINERS_COMPONENTS_S21_STACK_H_
