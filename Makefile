@@ -2,7 +2,8 @@ OS = $(shell uname)
 CC = g++
 
 # Flags
-# the compiler will search in ./src for header files specified via #include "my_header.h" without needing to use .. in the path.
+# Due to the -Isrc the compiler will search in ./src
+# for header files specified via #include "my_header.h" without needing to use .. in the path.
 MAIN_FLAGS = -std=c++17 -Isrc
 DEBUG_FLAGS = -Wall -Wextra -Werror
 VALG_FLAGS = -g

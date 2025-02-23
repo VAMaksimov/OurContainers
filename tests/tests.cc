@@ -62,6 +62,16 @@ TEST(QueueTest, InitializationAndBasicProperties) {
   CompareQueues<int>(my_queue, q);
 }
 
+TEST(StackTest, Swap) {
+  Stack<int> stack1({1, 2, 3, 4, 5});
+  Stack<int> stack2({6, 7, 8});
+  stack1.swap(stack2);
+  EXPECT_EQ(stack2.size(), 5);
+  EXPECT_EQ(stack1.size(), 3);
+  EXPECT_EQ(stack2.top(), 5);
+  EXPECT_EQ(stack1.top(), 8);
+}
+
 // Test that an empty ContainerAdaptor behaves like an empty std::stack.
 TEST(StackTest, EmptyContainer) {
   Stack<int> my_stack;
