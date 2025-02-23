@@ -18,31 +18,22 @@ class Container {
   // defines the type of the container size (standard type is size_t)
   using size_type_ = unsigned long long;
 
-  // Compiler provides the constructor and/or destructor automatically when
-  // `= default` is used
-  Container() = default;
-  // If a derived class is permitted to override a base class’s methods,
-  // the virtual keyword is used. By adding virtual to a method’s definition,
-  // it is declared that a derived class’s implementation should be used if one
-  // is supplied.
-  // Within the implementation, the override keyword to the
-  // method’s declaration is added
-  virtual ~Container() = default;
-
+  // protected is for derived classes
+ protected:
   // Writing = 0 after a member function inside a class declaration
   // marks that function as pure virtual. A pure virtual function indicates that
   // the class is abstract and cannot be instantiated directly
   virtual bool empty() const = 0;
   virtual size_type_ size() const = 0;
+  virtual void PrintContainer() const = 0;
 };
 
-template class Container<int>;
-template class Container<float>;
-template class Container<double>;
-template class Container<char>;
+// template class Container<int>;
+// template class Container<float>;
+// template class Container<double>;
+// template class Container<char>;
 // template class Container<std::string>;
 // template class Container<std::pair<int, int>>;
-
 }  // namespace s21
 
 #endif  // CPP2_S21CONTAINERS_S21_CONTAINERS_H_
