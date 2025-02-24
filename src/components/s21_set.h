@@ -17,27 +17,32 @@ class set : public sorted_container<Key, Key> {
 
  public:
   set() : sorted_container<key_type, value_type>() {};
-  set(std::initializer_list<value_type> const &items) : sorted_container<key_type, value_type>() {
+  set(std::initializer_list<value_type> const &items)
+      : sorted_container<key_type, value_type>() {
     for (auto num : items) {
       std::cout << num << std::endl;
       this->root_ = this->insert(this->root_, num, num);
     }
   }
-  set(const set &s);  // copy constructor
-  set(set &&s);       // move constructor
+  set(const set &s) {
+    this->destroy_tree(this->root_);
+    if (s.root_) {
+      this->root_ = this->copy_tree(s.root_, nullptr);
+    }
+  };
+  set(set &&s);  // move constructor
   ~set() = default;
   //   operator=(set && s);
 
   size_type size() {
+    this->print_tree();
     this->count_nodes(this->root_);
     return this->counter;
   }
 
-  bool empty() {
-    return this->tree_empty();
-  }
+  bool empty() { return this->tree_empty(); }
 };
- 
+
 }  // namespace s21
 
 #endif
