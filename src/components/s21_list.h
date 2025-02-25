@@ -148,16 +148,7 @@ template <typename T>
 inline list<T>::list(size_type n) : size_(0) {
   initFakeNode();
   for (size_type i = 0; i < n; ++i) {
-    Node_* newNode = new Node_(value_type());
-    if (fake->next == fake) {
-      fake->next = fake->prev = newNode;
-    } else {
-      newNode->prev = fake->prev;
-      fake->prev->next = newNode;
-    }
-    fake->prev = newNode;
-    newNode->next = fake;
-    ++size_;
+    push_back(value_type());
   }
 }
 
@@ -167,12 +158,7 @@ inline list<T>::list(std::initializer_list<value_type> const& items)
     : size_(0) {
   initFakeNode();
   for (const auto& item : items) {
-    Node_* newNode = new Node_(item);
-    newNode->next = fake;
-    newNode->prev = fake->prev;
-    fake->prev->next = newNode;
-    fake->prev = newNode;
-    ++size_;
+    push_back(item);
   }
 }
 
@@ -191,15 +177,11 @@ inline list<T>::list(list&& other) noexcept {
 
 // Constructor copy
 template <typename T>
-inline list<T>::list(const list& other) noexcept : size_(other.size_) {
+inline list<T>::list(const list& other) noexcept : size_(0) {
   initFakeNode();
   Node_* currentNode = other.getHead();
   while (currentNode != other.fake) {
-    Node_* newNode = new Node_(currentNode->value);
-    newNode->prev = fake->prev;
-    fake->prev->next = newNode;
-    fake->prev = newNode;
-    newNode->next = fake;
+    push_back(currentNode->value);
     currentNode = currentNode->next;
   }
 }
@@ -234,8 +216,13 @@ inline list<T>& list<T>::operator=(list<T>&& other) noexcept {
 template <typename T>
 inline list<T>& list<T>::operator=(const list<T>& other) noexcept {
   if (this != &other) {
-    list<T> temp(other);
-    swap(temp);
+    clear();  // Очищаем текущий список
+    Node_* currentNode = other.getHead();
+    while (currentNode != other.fake) {
+      push_back(
+          currentNode->value);  // Используем push_back для добавления элементов
+      currentNode = currentNode->next;
+    }
   }
   return *this;
 }
@@ -346,6 +333,15 @@ void list<T>::erase(iterator pos) {
   posNode->next->prev = posNode->prev;
   delete posNode;
   --size_;
+}
+
+template <typename T>
+void list<T>::push_back(const_reference value) {
+  Node_* newNode = new Node_(value, fake, fake->prev);
+  fake->prev->next = newNode;
+  fake->prev = newNode;
+
+  ++size_;
 }
 
 template <typename T>

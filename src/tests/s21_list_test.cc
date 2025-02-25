@@ -283,3 +283,18 @@ TEST(Test_List, Erase_Method) {
   EXPECT_EQ(myList.back(), 4);
   EXPECT_EQ(myList.size(), 2);
 }
+
+TEST(Test_List, Push_Back_Method) {
+  s21::list<int> myList;
+  myList.push_back(1);
+  myList.push_back(2);
+  myList.push_back(3);
+
+  EXPECT_EQ(myList.size(), 3);
+  EXPECT_EQ(myList.front(), 1);
+  EXPECT_EQ(myList.back(), 3);
+
+  myList.push_back(4);
+  EXPECT_EQ(myList.size(), 4);
+  EXPECT_EQ(myList.back(), 4);
+}
