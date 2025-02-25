@@ -36,8 +36,16 @@ class ContainerAdaptor {
   size_type_ size() const { return actual_size_; }
   void PrintContainer() const;
 
-  // in this case `protected` keyword is crucial to make the class inheritable
-  // and prevent direct access to members
+  // in C there are ... and va_list for a variable number of parameters, but C++
+  // provides a variadic templates.
+  // The notation <typename... Args> declares a set of types (“type parameter
+  // pack”) that can hold zero or more types. When insert_many_back is called,
+  // the compiler determines types for each argument in that parameter pack.
+  template <typename... Args>
+  void insert_many_back(Args &&...args);
+
+  // in this case `protected` keyword is crucial to make the class
+  // inheritable and prevent direct access to members
  protected:
   const size_type_ kDefaultCapacity = 16;
   value_type_ *data_;
@@ -113,6 +121,16 @@ void ContainerAdaptor<T>::PrintContainer() const {
     std::cout << data_[i] << " ";
   }
   std::cout << std::endl;
+}
+
+template <typename T>
+template <typename... Args>
+void ContainerAdaptor<T>::insert_many_back(Args &&...args) {
+  // For example args == {a, b, c}
+  // The fold expression (push(args), ...) expands to
+  // (push(a), push(b), push(c));
+  // using the comma operator to evaluate each call in sequence.
+  (push(args), ...);
 }
 
 template <typename T>

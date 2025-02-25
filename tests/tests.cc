@@ -205,3 +205,16 @@ TEST(QueueTest, Pop) {
   EXPECT_TRUE(our_queue_int.empty());
   // std_queue_int.empty() causes Segmentation fault
 }
+
+TEST(StackTest, InsertMany) {
+  Stack<int> our_stack_int;
+  our_stack_int.insert_many_back(1, 2, 3);
+  std::stack<int> std_stack_int;
+  std_stack_int.push(1);
+  std_stack_int.push(2);
+  std_stack_int.push(3);
+  CompareStacks<int>(our_stack_int, std_stack_int);
+  our_stack_int.insert_many_back(4);
+  std_stack_int.push(4);
+  CompareStacks<int>(our_stack_int, std_stack_int);
+}
