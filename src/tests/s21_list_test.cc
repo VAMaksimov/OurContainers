@@ -73,7 +73,7 @@ TEST(Test_List, Copy_Constructor) {
   EXPECT_EQ(*it2, *it1);
 }
 
-TEST(ListMoveConstructorTest, MoveNonEmptyList) {
+TEST(Test_List, MoveNonEmptyList) {
   s21::list<int> original{1, 2, 3};
   s21::list<int> moved(std::move(original));
 
@@ -86,7 +86,7 @@ TEST(ListMoveConstructorTest, MoveNonEmptyList) {
   EXPECT_TRUE(original.begin() == original.end());
 }
 
-TEST(ListMoveConstructorTest, MoveEmptyList) {
+TEST(Test_List, MoveEmptyList) {
   s21::list<int> original;
   s21::list<int> moved(std::move(original));
 
@@ -97,7 +97,7 @@ TEST(ListMoveConstructorTest, MoveEmptyList) {
   EXPECT_TRUE(original.begin() == original.end());
 }
 
-TEST(ListAssignmentOperatorTest, AssignNonEmptyList) {
+TEST(Test_List, AssignNonEmptyList) {
   s21::list<int> list1 = {1, 2, 3};
   s21::list<int> list2;
   list2 = list1;
@@ -114,7 +114,7 @@ TEST(ListAssignmentOperatorTest, AssignNonEmptyList) {
   }
 }
 
-TEST(ListAssignmentOperatorTest, AssignEmptyList) {
+TEST(Test_List, AssignEmptyList) {
   s21::list<int> list1;
   s21::list<int> list2 = {1, 2, 3};
   list1 = list2;
@@ -131,7 +131,7 @@ TEST(ListAssignmentOperatorTest, AssignEmptyList) {
   }
 }
 
-TEST(ListAssignmentOperatorTest, SelfAssignment) {
+TEST(Test_List, SelfAssignment) {
   s21::list<int> list1 = {1, 2, 3};
   list1 = list1;
 
@@ -143,7 +143,7 @@ TEST(ListAssignmentOperatorTest, SelfAssignment) {
   ++it;
   EXPECT_EQ(*it, 3);
 }
-TEST(ListAssignmentOperatorTest, MoveAssignmentOperator) {
+TEST(Test_List, MoveAssignmentOperator) {
   s21::list<int> list1 = {1, 2, 3};
   s21::list<int> list2;
   list2 = std::move(list1);
@@ -161,7 +161,7 @@ TEST(ListAssignmentOperatorTest, MoveAssignmentOperator) {
   EXPECT_EQ(*it2, 3);
 }
 
-TEST(ListConstIteratorTest, IterateThroughList) {
+TEST(Test_List, IterateThroughList) {
   s21::list<int> list = {1, 2, 3, 4, 5};
   s21::list<int>::const_iterator it = list.begin();
 
@@ -178,7 +178,7 @@ TEST(ListConstIteratorTest, IterateThroughList) {
   EXPECT_TRUE(it == list.end());
 }
 
-TEST(ListConstIteratorTest, ConstIteratorEquality) {
+TEST(Test_List, ConstIteratorEquality) {
   s21::list<int> list = {1, 2, 3};
   s21::list<int>::const_iterator it1 = list.begin();
   s21::list<int>::const_iterator it2 = list.begin();
@@ -188,7 +188,7 @@ TEST(ListConstIteratorTest, ConstIteratorEquality) {
   EXPECT_FALSE(it1 == it2);
 }
 
-TEST(ListConstIteratorTest, ConstIteratorInequality) {
+TEST(Test_List, ConstIteratorInequality) {
   s21::list<int> list = {1, 2, 3};
   s21::list<int>::const_iterator it1 = list.begin();
   s21::list<int>::const_iterator it2 = list.begin();
@@ -196,4 +196,14 @@ TEST(ListConstIteratorTest, ConstIteratorInequality) {
   EXPECT_FALSE(it1 != it2);
   ++it1;
   EXPECT_TRUE(it1 != it2);
+}
+
+TEST(Test_List, Front_Method) {
+  s21::list<int> myList = {1, 2, 3, 4, 5};
+  EXPECT_EQ(myList.front(), 1);
+}
+
+TEST(Test_List, Back_Method) {
+  s21::list<int> myList = {1, 2, 3, 4, 5};
+  EXPECT_EQ(myList.back(), 5);
 }

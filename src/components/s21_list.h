@@ -47,7 +47,6 @@ class list : public SequenceContaner<list<T>, T> {
   Node_* getTail() const { return fake->prev; }
 
   // Iterators
-  // Изменим ListIterator: изменяем область видимости current на protected
   class ListIterator {
    public:
     ListIterator() = default;
@@ -103,9 +102,14 @@ class list : public SequenceContaner<list<T>, T> {
   iterator begin() const noexcept { return iterator(fake->next); }
   iterator end() const noexcept { return iterator(fake); }
 
+  // List elements acccess
+  const_reference front() const { return fake->next->value; }
+  const_reference back() const { return fake->prev->value; }
+
   // Methoods
   void clear();
   void swap(list& other) noexcept;
+  bool empty() const { return size == 0; }
 
  private:
   Node_* fake;
