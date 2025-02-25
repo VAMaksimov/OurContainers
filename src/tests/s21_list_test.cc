@@ -160,3 +160,40 @@ TEST(ListAssignmentOperatorTest, MoveAssignmentOperator) {
   ++it2;
   EXPECT_EQ(*it2, 3);
 }
+
+TEST(ListConstIteratorTest, IterateThroughList) {
+  s21::list<int> list = {1, 2, 3, 4, 5};
+  s21::list<int>::const_iterator it = list.begin();
+
+  EXPECT_EQ(*it, 1);
+  ++it;
+  EXPECT_EQ(*it, 2);
+  ++it;
+  EXPECT_EQ(*it, 3);
+  ++it;
+  EXPECT_EQ(*it, 4);
+  ++it;
+  EXPECT_EQ(*it, 5);
+  ++it;
+  EXPECT_TRUE(it == list.end());
+}
+
+TEST(ListConstIteratorTest, ConstIteratorEquality) {
+  s21::list<int> list = {1, 2, 3};
+  s21::list<int>::const_iterator it1 = list.begin();
+  s21::list<int>::const_iterator it2 = list.begin();
+
+  EXPECT_TRUE(it1 == it2);
+  ++it1;
+  EXPECT_FALSE(it1 == it2);
+}
+
+TEST(ListConstIteratorTest, ConstIteratorInequality) {
+  s21::list<int> list = {1, 2, 3};
+  s21::list<int>::const_iterator it1 = list.begin();
+  s21::list<int>::const_iterator it2 = list.begin();
+
+  EXPECT_FALSE(it1 != it2);
+  ++it1;
+  EXPECT_TRUE(it1 != it2);
+}

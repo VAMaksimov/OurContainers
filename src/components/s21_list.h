@@ -47,34 +47,61 @@ class list : public SequenceContaner<list<T>, T> {
   Node_* getTail() const { return fake->prev; }
 
   // Iterators
+  // Изменим ListIterator: изменяем область видимости current на protected
   class ListIterator {
    public:
     ListIterator() = default;
-    ListIterator(Node_* node);
+    ListIterator(Node_* node) : current(node) {}
     ~ListIterator() = default;
 
-    ListIterator& operator++();
+    ListIterator& operator++() {
+      current = current->next;
+      return *this;
+    }
 
-    ListIterator operator++(int);
+    ListIterator operator++(int) {
+      ListIterator temp = *this;
+      ++(*this);
+      return temp;
+    }
 
-    ListIterator& operator--();
+    ListIterator& operator--() {
+      current = current->prev;
+      return *this;
+    }
 
-    ListIterator operator--(int);
-    reference operator*() const;
+    ListIterator operator--(int) {
+      ListIterator temp = *this;
+      --(*this);
+      return temp;
+    }
 
-    bool operator==(const ListIterator& other) const;
+    reference operator*() { return current->value; }
 
-    bool operator!=(const ListIterator& other) const;
+    bool operator==(const ListIterator& other) const {
+      return current == other.current;
+    }
 
-   private:
+    bool operator!=(const ListIterator& other) const {
+      return current != other.current;
+    }
+
+   protected:
     Node_* current;
+  };
+  class ListConstIterator : public ListIterator {
+   public:
+    ListConstIterator() : ListIterator(nullptr) {}
+    ListConstIterator(Node_* node) : ListIterator(node) {}
+    ListConstIterator(const ListIterator& other) : ListIterator(other) {}
+    const_reference operator*() { return this->current->value; }
   };
 
   using iterator = ListIterator;
-  //   using const_iterator = ListConstIterator;
+  using const_iterator = ListConstIterator;
 
-  iterator begin() const noexcept;
-  iterator end() const noexcept;
+  iterator begin() const noexcept { return iterator(fake->next); }
+  iterator end() const noexcept { return iterator(fake); }
 
   // Methoods
   void clear();
@@ -211,59 +238,73 @@ inline list<T>& list<T>::operator=(const list<T>& other) noexcept {
 
 /* methods ListIterator*/
 
-template <typename T>
-inline list<T>::ListIterator::ListIterator(Node_* node) : current(node) {}
+// template <typename T>
+// inline list<T>::ListIterator::ListIterator(Node_* node) : current(node) {}
 
-template <typename T>
-inline typename list<T>::ListIterator& list<T>::ListIterator::operator++() {
-  current = current->next;
-  return *this;
-}
+// template <typename T>
+// inline typename list<T>::ListIterator& list<T>::ListIterator::operator++() {
+//   current = current->next;
+//   return *this;
+// }
 
-template <typename T>
-inline typename list<T>::ListIterator list<T>::ListIterator::operator++(int) {
-  ListIterator temp = *this;
-  ++(*this);
-  return temp;
-}
+// template <typename T>
+// inline typename list<T>::ListIterator list<T>::ListIterator::operator++(int)
+// {
+//   ListIterator temp = *this;
+//   ++(*this);
+//   return temp;
+// }
 
-template <typename T>
-inline typename list<T>::ListIterator& list<T>::ListIterator::operator--() {
-  current = current->prev;
-  return *this;
-}
+// template <typename T>
+// inline typename list<T>::ListIterator& list<T>::ListIterator::operator--() {
+//   current = current->prev;
+//   return *this;
+// }
 
-template <typename T>
-inline typename list<T>::ListIterator list<T>::ListIterator::operator--(int) {
-  ListIterator temp = *this;
-  --(*this);
-  return temp;
-}
+// template <typename T>
+// inline typename list<T>::ListIterator list<T>::ListIterator::operator--(int)
+// {
+//   ListIterator temp = *this;
+//   --(*this);
+//   return temp;
+// }
 
-template <typename T>
-inline bool list<T>::ListIterator::operator==(const ListIterator& other) const {
-  return current == other.current;
-}
+// template <typename T>
+// inline bool list<T>::ListIterator::operator==(const ListIterator& other)
+// const {
+//   return current == other.current;
+// }
 
-template <typename T>
-inline bool list<T>::ListIterator::operator!=(const ListIterator& other) const {
-  return current != other.current;
-}
+// template <typename T>
+// inline bool list<T>::ListIterator::operator!=(const ListIterator& other)
+// const {
+//   return current != other.current;
+// }
 
-template <typename T>
-inline typename list<T>::iterator list<T>::begin() const noexcept {
-  return iterator(fake->next);
-}
+// template <typename T>
+// inline typename list<T>::iterator list<T>::begin() const noexcept {
+//   return iterator(fake->next);
+// }
 
-template <typename T>
-inline typename list<T>::iterator list<T>::end() const noexcept {
-  return iterator(fake);
-}
+// template <typename T>
+// inline typename list<T>::iterator list<T>::end() const noexcept {
+//   return iterator(fake);
+// }
 
-template <typename T>
-inline typename list<T>::reference list<T>::ListIterator::operator*() const {
-  return current->value;
-}
+// template <typename T>
+// inline typename list<T>::const_iterator list<T>::begin() const noexcept {
+//   return const_iterator(fake->next);
+// }
+
+// template <typename T>
+// inline typename list<T>::const_iterator list<T>::end() const noexcept {
+//   return const_iterator(fake);
+// }
+
+// template <typename T>
+// inline typename list<T>::reference list<T>::ListIterator::operator*() const {
+//   return current->value;
+// }
 
 /*Capacity*/
 template <typename T>
