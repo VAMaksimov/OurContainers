@@ -4,16 +4,17 @@
 #include <iostream>
 
 template <typename Key, typename T>
-class sorted_container {
- protected:
-  struct tnode {
+class SortedContainer {
+ public:
+  protected:
+  struct TNode {
     Key key_;
     T value_;
-    struct tnode *parent_;
-    struct tnode *left_;
-    struct tnode *right_;
+    struct TNode *parent_;
+    struct TNode *left_;
+    struct TNode *right_;
 
-    tnode(Key key, T value) : key_{key}, value_{value} {
+    TNode(Key key, T value) : key_{key}, value_{value} {
       parent_ = nullptr;
       left_ = nullptr;
       right_ = nullptr;
@@ -21,17 +22,17 @@ class sorted_container {
   };  // end struct
 
   using size_type = size_t;
-  tnode *root_;
+  TNode *root_;
   size_type counter;
 
-  sorted_container() {
+  SortedContainer() {
     root_ = nullptr;
     counter = 0;
   }
 
-  ~sorted_container() { destroy_tree(root_); }
+  ~SortedContainer() { destroy_tree(root_); }
 
-  void destroy_tree(tnode *my_tree) {
+  void destroy_tree(TNode *my_tree) {
     if (my_tree) {
       destroy_tree(my_tree->left_);
       destroy_tree(my_tree->right_);
@@ -48,7 +49,7 @@ class sorted_container {
     return result;
   }
 
-  void count_nodes(tnode *my_tree) {
+  void count_nodes(TNode *my_tree) {
     // std::cout << "counter = " << counter << std::endl;
     if (my_tree) {
       counter++;
@@ -57,9 +58,9 @@ class sorted_container {
     }
   }
 
-  tnode *insert(tnode *my_tree, Key key, T value) {
+  TNode *insert(TNode *my_tree, Key key, T value) {
     if (my_tree == nullptr) {
-      tnode *temp = new tnode(key, value);
+      TNode *temp = new TNode(key, value);
       std::cout << "NEW ";
       print_struct(temp);
       return temp;
@@ -81,27 +82,27 @@ class sorted_container {
     return my_tree;
   }
 
-  // sorted_container(const sorted_container &other) {
+  // SortedContainer(const SortedContainer &other) {
   //   destroy_tree(root_);
   //   if (other.root_) {
   //     root_ = copy_tree(other.root_, nullptr);
   //   }
   // }
 
-  tnode *copy_tree(tnode *source, tnode *parent) {
+  TNode *copy_tree(TNode *source, TNode *parent) {
     if (source == nullptr) {
       return nullptr;
     }
-    tnode *temp = new tnode(source->key_, source->value_);
+    TNode *temp = new TNode(source->key_, source->value_);
     temp->parent_ = parent;
     temp->left_ = copy_tree(source->left_, temp);
     temp->right_ = copy_tree(source->right_, temp);
     return temp;
   }
 
-  void print_struct(tnode *tree) {
+  void print_struct(TNode *tree) {
     if (tree == nullptr) {
-      std::cout << "tnode = null" << std::endl;
+      std::cout << "TNode = null" << std::endl;
       return;
     }
     std::cout << "Structure:" << std::endl;
@@ -120,7 +121,7 @@ class sorted_container {
     std::cout << std::endl;
   }
 
-  void print_helper(tnode *my_tree) {
+  void print_helper(TNode *my_tree) {
     if (my_tree) {
       print_helper(my_tree->left_);
       std::cout << my_tree->value_ << " ";
@@ -128,7 +129,7 @@ class sorted_container {
     }
   }
 
-  // size_t counter_nodes(tnode *tree)
+  // size_t counter_nodes(TNode *tree)
 
 };  // end class
 
