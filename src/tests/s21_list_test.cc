@@ -207,3 +207,58 @@ TEST(Test_List, Back_Method) {
   s21::list<int> myList = {1, 2, 3, 4, 5};
   EXPECT_EQ(myList.back(), 5);
 }
+
+TEST(Test_List, Empty_Method) {
+  s21::list<int> myList;
+  EXPECT_TRUE(myList.empty());
+}
+
+TEST(Test_List, Size_Method) {
+  s21::list<int> myList = {1, 2, 3, 4, 5};
+  EXPECT_EQ(myList.size(), 5);
+}
+
+TEST(Test_List, Max_Size_Method) {
+  s21::list<int> myList;
+  EXPECT_GT(myList.max_size(), 0);
+}
+
+TEST(Test_List, Insert_Method_Before_First_Element) {
+  s21::list<int> myList = {1, 2, 3};
+  auto it = myList.begin();
+  myList.insert(it, 0);
+  EXPECT_EQ(myList.front(), 0);
+  it = myList.begin();
+  EXPECT_EQ(*(++it), 1);
+  EXPECT_EQ(myList.size(), 4);
+}
+
+TEST(Test_List, Insert_Method_Before_Second_Element) {
+  s21::list<int> myList = {0, 1, 2, 3};
+  auto it = myList.begin();
+  ++it;
+  myList.insert(it, 1);
+  EXPECT_EQ(*it, 1);
+  EXPECT_EQ(myList.size(), 5);
+}
+
+TEST(Test_List, Insert_Method_Before_Last_Element) {
+  s21::list<int> myList = {1, 2, 3, 5};
+  auto it = myList.end();
+  --it;
+  myList.insert(it, 4);
+  EXPECT_EQ(myList.back(), 5);
+  EXPECT_EQ(*(--it), 4);
+  it = myList.begin();
+  EXPECT_EQ(*it, 1);
+  ++it;
+  EXPECT_EQ(*it, 2);
+  ++it;
+  EXPECT_EQ(*it, 3);
+  ++it;
+  EXPECT_EQ(*it, 4);
+  ++it;
+  EXPECT_EQ(*it, 5);
+  ++it;
+  EXPECT_EQ(it, myList.end());
+}

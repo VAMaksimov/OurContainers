@@ -42,7 +42,7 @@ class list : public SequenceContaner<list<T>, T> {
   list<T>& operator=(const list<T>& other) noexcept;
 
   // Mutators and accesors
-  size_type getSize() const { return size; }
+  size_type getSize() const { return size_; }
   Node_* getHead() const { return fake->next; }
   Node_* getTail() const { return fake->prev; }
 
@@ -85,6 +85,8 @@ class list : public SequenceContaner<list<T>, T> {
       return current != other.current;
     }
 
+    Node_* getNode() const { return current; }
+
    protected:
     Node_* current;
   };
@@ -99,6 +101,7 @@ class list : public SequenceContaner<list<T>, T> {
   using iterator = ListIterator;
   using const_iterator = ListConstIterator;
 
+  // List element access
   iterator begin() const noexcept { return iterator(fake->next); }
   iterator end() const noexcept { return iterator(fake); }
 
@@ -106,14 +109,24 @@ class list : public SequenceContaner<list<T>, T> {
   const_reference front() const { return fake->next->value; }
   const_reference back() const { return fake->prev->value; }
 
+  // List Capacity
+  bool empty() const { return size_ == 0; }
+  size_type size() const noexcept { return size_; }
+  size_type max_size() const noexcept;
+
   // Methoods
-  void clear();
+  void clear() noexcept;
+  iterator insert(iterator pos, const_reference value);
+  void erase(iterator pos);
+  void push_back(const_reference value);
+  void pop_back();
+  void push_front(const_reference value);
+  void pop_front();
   void swap(list& other) noexcept;
-  bool empty() const { return size == 0; }
 
  private:
   Node_* fake;
-  size_type size;
+  size_type size_;
   void initFakeNode();
 };
 
@@ -126,13 +139,13 @@ inline void list<T>::initFakeNode() {
 
 // Constructors default
 template <typename T>
-inline list<T>::list() noexcept : size(0) {
+inline list<T>::list() noexcept : size_(0) {
   initFakeNode();
 }
 
 // Constructors param
 template <typename T>
-inline list<T>::list(size_type n) : size(0) {
+inline list<T>::list(size_type n) : size_(0) {
   initFakeNode();
   for (size_type i = 0; i < n; ++i) {
     Node_* newNode = new Node_(value_type());
@@ -144,13 +157,14 @@ inline list<T>::list(size_type n) : size(0) {
     }
     fake->prev = newNode;
     newNode->next = fake;
-    ++size;
+    ++size_;
   }
 }
 
 // Constructor {}
 template <typename T>
-inline list<T>::list(std::initializer_list<value_type> const& items) : size(0) {
+inline list<T>::list(std::initializer_list<value_type> const& items)
+    : size_(0) {
   initFakeNode();
   for (const auto& item : items) {
     Node_* newNode = new Node_(item);
@@ -158,7 +172,7 @@ inline list<T>::list(std::initializer_list<value_type> const& items) : size(0) {
     newNode->prev = fake->prev;
     fake->prev->next = newNode;
     fake->prev = newNode;
-    ++size;
+    ++size_;
   }
 }
 
@@ -167,17 +181,17 @@ template <typename T>
 inline list<T>::list(list&& other) noexcept {
   if (other.fake != nullptr) {
     fake = other.fake;
-    size = other.size;
+    size_ = other.size_;
 
     other.fake = nullptr;
-    other.size = 0;
+    other.size_ = 0;
     other.initFakeNode();
   };
 }
 
 // Constructor copy
 template <typename T>
-inline list<T>::list(const list& other) noexcept : size(other.size) {
+inline list<T>::list(const list& other) noexcept : size_(other.size_) {
   initFakeNode();
   Node_* currentNode = other.getHead();
   while (currentNode != other.fake) {
@@ -197,34 +211,20 @@ inline list<T>::~list() {
   delete fake;
 }
 
-template <typename T>
-inline void list<T>::clear() {
-  while (fake->next != fake) {
-    Node_* temp = fake->next;
-    fake->next = temp->next;
-    delete temp;
-  }
-  fake->prev = fake;
-  size = 0;
-}
-
 /*Operators*/
 
 template <typename T>
 inline list<T>& list<T>::operator=(list<T>&& other) noexcept {
   if (this != &other) {
-    // Очищаем текущий объект
     clear();
     delete fake;
 
     if (other.fake != nullptr) {
-      // Перемещаем данные из other в текущий объект
       fake = other.fake;
-      size = other.size;
+      size_ = other.size_;
 
-      // Обнуляем other
       other.fake = nullptr;
-      other.size = 0;
+      other.size_ = 0;
       other.initFakeNode();
     }
   }
@@ -309,12 +309,40 @@ inline list<T>& list<T>::operator=(const list<T>& other) noexcept {
 // inline typename list<T>::reference list<T>::ListIterator::operator*() const {
 //   return current->value;
 // }
+/*List Capacity*/
+template <typename T>
+typename list<T>::size_type list<T>::max_size() const noexcept {
+  return std::numeric_limits<size_type>::max();
+}
 
-/*Capacity*/
+/*List Modifiers*/
+
+template <typename T>
+inline void list<T>::clear() noexcept {
+  while (fake->next != fake) {
+    Node_* temp = fake->next;
+    fake->next = temp->next;
+    delete temp;
+  }
+  fake->prev = fake;
+  size_ = 0;
+}
+
+template <typename T>
+typename list<T>::iterator list<T>::insert(iterator pos,
+                                           const_reference value) {
+  Node_* posNode = pos.getNode();
+  Node_* newNode = new Node_(value, posNode, posNode->prev);
+  posNode->prev->next = newNode;
+  posNode->prev = newNode;
+  ++size_;
+  return iterator(newNode);
+}
+
 template <typename T>
 void list<T>::swap(list& other) noexcept {
   std::swap(this->fake, other.fake);
-  std::swap(this->size, other.size);
+  std::swap(this->size_, other.size_);
 }
 
 }  // namespace s21
