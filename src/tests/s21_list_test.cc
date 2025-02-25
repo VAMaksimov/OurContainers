@@ -262,3 +262,24 @@ TEST(Test_List, Insert_Method_Before_Last_Element) {
   ++it;
   EXPECT_EQ(it, myList.end());
 }
+
+TEST(Test_List, Erase_Method) {
+  s21::list<int> myList = {1, 2, 3, 4, 5};
+  auto it = myList.begin();
+  myList.erase(it);
+  EXPECT_EQ(myList.front(), 2);  // mylist={2, 3, 4, 5};
+  EXPECT_EQ(myList.size(), 4);
+
+  it = myList.begin();
+  ++it;
+
+  myList.erase(it);
+  EXPECT_EQ(myList.front(), 2);  // mylist={2, 4, 5};
+  EXPECT_EQ(myList.size(), 3);
+
+  it = myList.end();
+  --it;
+  myList.erase(it);
+  EXPECT_EQ(myList.back(), 4);
+  EXPECT_EQ(myList.size(), 2);
+}

@@ -340,6 +340,15 @@ typename list<T>::iterator list<T>::insert(iterator pos,
 }
 
 template <typename T>
+void list<T>::erase(iterator pos) {
+  Node_* posNode = pos.getNode();
+  posNode->prev->next = posNode->next;
+  posNode->next->prev = posNode->prev;
+  delete posNode;
+  --size_;
+}
+
+template <typename T>
 void list<T>::swap(list& other) noexcept {
   std::swap(this->fake, other.fake);
   std::swap(this->size_, other.size_);
