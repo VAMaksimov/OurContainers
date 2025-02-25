@@ -41,6 +41,12 @@ class ContainerAdaptor {
   // The notation <typename... Args> declares a set of types (“type parameter
   // pack”) that can hold zero or more types. When insert_many_back is called,
   // the compiler determines types for each argument in that parameter pack.
+  // Args &&...args are universal (forwarding) references.
+
+  // If T reference is used, the function will not compile with variable
+  // number of arguments:
+  // void insert_many_back(value_type_ &&...args); expansion
+  // pattern ‘s21::ContainerAdaptor<T>::value_type_ contains no parameter packs
   template <typename... Args>
   void insert_many_back(Args &&...args);
 
