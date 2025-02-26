@@ -123,6 +123,10 @@ class list : public SequenceContaner<list<T>, T> {
   void push_front(const_reference value);
   void pop_front();
   void swap(list& other) noexcept;
+  void merge(list& other);
+  void splice(const_iterator pos, list& other);
+  void reverse();
+  void sort();
 
  private:
   Node_* fake;
@@ -373,6 +377,8 @@ void list<T>::pop_front() {
     --size_;
   }
 }
+
+// merge()
 
 template <typename T>
 void list<T>::swap(list& other) noexcept {

@@ -359,3 +359,17 @@ TEST(Test_List, Pop_Front_Method) {
   EXPECT_TRUE(myList.empty());  // mylist={};
   EXPECT_EQ(myList.size(), 0);
 }
+TEST(Test_List, Swap_Method) {
+  s21::list<int> myList1 = {1, 2, 3};
+  s21::list<int> myList2 = {4, 5, 6};
+
+  myList1.swap(myList2);
+
+  EXPECT_EQ(myList1.size(), 3);
+  EXPECT_EQ(myList1.front(), 4);
+  EXPECT_EQ(myList1.back(), 6);
+
+  EXPECT_EQ(myList2.size(), 3);
+  EXPECT_EQ(myList2.front(), 1);
+  EXPECT_EQ(myList2.back(), 3);
+}
