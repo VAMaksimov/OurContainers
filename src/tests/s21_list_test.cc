@@ -373,3 +373,30 @@ TEST(Test_List, Swap_Method) {
   EXPECT_EQ(myList2.front(), 1);
   EXPECT_EQ(myList2.back(), 3);
 }
+
+TEST(Test_List, Reverse_Method) {
+  s21::list<int> myList = {1, 2, 3, 4, 5};
+  myList.reverse();
+
+  EXPECT_EQ(myList.front(), 5);  // mylist={5, 4, 3, 2, 1};
+  EXPECT_EQ(myList.back(), 1);
+  EXPECT_EQ(myList.size(), 5);
+
+  auto it = myList.begin();
+  EXPECT_EQ(*it++, 5);
+  EXPECT_EQ(*it++, 4);
+  EXPECT_EQ(*it++, 3);
+  EXPECT_EQ(*it++, 2);
+  EXPECT_EQ(*it++, 1);
+
+  myList.reverse();
+  EXPECT_EQ(myList.front(), 1);  // mylist={1, 2, 3, 4, 5};
+  EXPECT_EQ(myList.back(), 5);
+
+   it = myList.begin();
+  EXPECT_EQ(*it++, 1);
+  EXPECT_EQ(*it++, 2);
+  EXPECT_EQ(*it++, 3);
+  EXPECT_EQ(*it++, 4);
+  EXPECT_EQ(*it++, 5);
+}
