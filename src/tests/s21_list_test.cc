@@ -393,10 +393,27 @@ TEST(Test_List, Reverse_Method) {
   EXPECT_EQ(myList.front(), 1);  // mylist={1, 2, 3, 4, 5};
   EXPECT_EQ(myList.back(), 5);
 
-   it = myList.begin();
+  it = myList.begin();
   EXPECT_EQ(*it++, 1);
   EXPECT_EQ(*it++, 2);
   EXPECT_EQ(*it++, 3);
   EXPECT_EQ(*it++, 4);
   EXPECT_EQ(*it++, 5);
+}
+TEST(Test_List, Unique_Method) {
+  s21::list<int> myList = {1, 2, 2, 3, 4, 4, 5};
+
+  myList.unique();
+
+  EXPECT_EQ(myList.size(), 5);
+  EXPECT_EQ(myList.front(), 1);
+  EXPECT_EQ(myList.back(), 5);
+
+  auto it = myList.begin();
+  EXPECT_EQ(*it++, 1);
+  EXPECT_EQ(*it++, 2);
+  EXPECT_EQ(*it++, 3);
+  EXPECT_EQ(*it++, 4);
+  EXPECT_EQ(*it++, 5);
+  EXPECT_EQ(it, myList.end());
 }

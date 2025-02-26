@@ -379,6 +379,12 @@ void list<T>::pop_front() {
   }
 }
 
+template <typename T>
+void list<T>::swap(list& other) noexcept {
+  std::swap(this->fake, other.fake);
+  std::swap(this->size_, other.size_);
+}
+
 // merge()
 // splice()
 
@@ -395,9 +401,17 @@ void list<T>::reverse() noexcept {
 }
 
 template <typename T>
-void list<T>::swap(list& other) noexcept {
-  std::swap(this->fake, other.fake);
-  std::swap(this->size_, other.size_);
+void list<T>::unique() {
+  if (empty()) return;
+  iterator it = begin();
+  while (it != end()) {
+    iterator next_it = it;
+    ++next_it;
+    if (next_it != end() && *it == *next_it)
+      erase(next_it);
+    else
+      ++it;
+  }
 }
 
 }  // namespace s21
