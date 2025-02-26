@@ -364,6 +364,17 @@ void list<T>::push_front(const_reference value) {
 }
 
 template <typename T>
+void list<T>::pop_front() {
+  if (!empty()) {
+    Node_* first = fake->next;
+    fake->next = first->next;
+    first->next->prev = fake;
+    delete first;
+    --size_;
+  }
+}
+
+template <typename T>
 void list<T>::swap(list& other) noexcept {
   std::swap(this->fake, other.fake);
   std::swap(this->size_, other.size_);

@@ -336,3 +336,26 @@ TEST(Test_List, Push_Front_Method) {
   EXPECT_EQ(myList.size(), 4);
   EXPECT_EQ(myList.front(), 0);
 }
+
+TEST(Test_List, Pop_Front_Method) {
+  s21::list<int> myList = {1, 2, 3, 4, 5};
+  myList.pop_front();
+  EXPECT_EQ(myList.front(), 2);  // mylist={2, 3, 4, 5};
+  EXPECT_EQ(myList.size(), 4);
+
+  myList.pop_front();
+  EXPECT_EQ(myList.front(), 3);  // mylist={3, 4, 5};
+  EXPECT_EQ(myList.size(), 3);
+
+  myList.pop_front();
+  EXPECT_EQ(myList.front(), 4);  // mylist={4, 5};
+  EXPECT_EQ(myList.size(), 2);
+
+  myList.pop_front();
+  EXPECT_EQ(myList.front(), 5);  // mylist={5};
+  EXPECT_EQ(myList.size(), 1);
+
+  myList.pop_front();
+  EXPECT_TRUE(myList.empty());  // mylist={};
+  EXPECT_EQ(myList.size(), 0);
+}
