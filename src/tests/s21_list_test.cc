@@ -298,3 +298,26 @@ TEST(Test_List, Push_Back_Method) {
   EXPECT_EQ(myList.size(), 4);
   EXPECT_EQ(myList.back(), 4);
 }
+
+TEST(Test_List, Pop_Back_Method) {
+  s21::list<int> myList = {1, 2, 3, 4, 5};
+  myList.pop_back();
+  EXPECT_EQ(myList.back(), 4);  // mylist={1, 2, 3, 4};
+  EXPECT_EQ(myList.size(), 4);
+
+  myList.pop_back();
+  EXPECT_EQ(myList.back(), 3);  // mylist={1, 2, 3};
+  EXPECT_EQ(myList.size(), 3);
+
+  myList.pop_back();
+  EXPECT_EQ(myList.back(), 2);  // mylist={1, 2};
+  EXPECT_EQ(myList.size(), 2);
+
+  myList.pop_back();
+  EXPECT_EQ(myList.back(), 1);  // mylist={1};
+  EXPECT_EQ(myList.size(), 1);
+
+  myList.pop_back();
+  EXPECT_TRUE(myList.empty());  // mylist={};
+  EXPECT_EQ(myList.size(), 0);
+}

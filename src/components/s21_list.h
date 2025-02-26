@@ -114,7 +114,7 @@ class list : public SequenceContaner<list<T>, T> {
   size_type size() const noexcept { return size_; }
   size_type max_size() const noexcept;
 
-  // Methoods
+  // List Modifiers
   void clear() noexcept;
   iterator insert(iterator pos, const_reference value);
   void erase(iterator pos);
@@ -342,6 +342,17 @@ void list<T>::push_back(const_reference value) {
   fake->prev = newNode;
 
   ++size_;
+}
+
+template <typename T>
+void list<T>::pop_back() {
+  if (!empty()) {
+    Node_* last = fake->prev;
+    last->prev->next = fake;
+    fake->prev = last->prev;
+    delete last;
+    --size_;
+  }
 }
 
 template <typename T>
