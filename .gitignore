@@ -53,3 +53,7 @@ Mkfile.old
 dkms.conf
 build
 
+# vscode
+.vscode/
+build
+*.bin
