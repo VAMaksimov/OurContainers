@@ -386,7 +386,6 @@ void list<T>::swap(list& other) noexcept {
 }
 
 // merge()
-// splice()
 
 template <typename T>
 void list<T>::reverse() noexcept {
@@ -429,6 +428,31 @@ void list<T>::sort() {
       ++it;
     }
   }
+}
+template <typename T>
+void list<T>::splice(const_iterator pos, list& other) {
+  if (other.empty()) {
+    return;
+  }
+
+  Node_* other_first = other.fake->next;
+  Node_* other_last = other.fake->prev;
+
+  other.fake->next = other.fake;
+  other.fake->prev = other.fake;
+  size_type moved_size = other.size_;
+  other.size_ = 0;
+
+  Node_* pos_node = pos.getNode();
+  Node_* prev_node = pos_node->prev;
+
+  prev_node->next = other_first;
+  other_first->prev = prev_node;
+
+  other_last->next = pos_node;
+  pos_node->prev = other_last;
+
+  size_ += moved_size;
 }
 
 }  // namespace s21

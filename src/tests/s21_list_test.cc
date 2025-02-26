@@ -434,3 +434,24 @@ TEST(Test_List, Sort_Method) {
   EXPECT_EQ(*it++, 5);
   EXPECT_EQ(it, myList.end());
 }
+
+TEST(Test_List, Splice_Method) {
+  s21::list<int> list1 = {1, 2, 3};
+  s21::list<int> list2 = {4, 5, 6};
+
+  auto it = list1.end();
+  list1.splice(it, list2);
+
+  EXPECT_EQ(list1.size(), 6);
+  EXPECT_EQ(list1.front(), 1);
+  EXPECT_EQ(list1.back(), 6);
+
+  auto iter = list1.begin();
+  EXPECT_EQ(*iter++, 1);
+  EXPECT_EQ(*iter++, 2);
+  EXPECT_EQ(*iter++, 3);
+  EXPECT_EQ(*iter++, 4);
+  EXPECT_EQ(*iter++, 5);
+  EXPECT_EQ(*iter++, 6);
+  EXPECT_EQ(iter, list1.end());
+}
