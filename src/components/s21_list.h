@@ -356,6 +356,14 @@ void list<T>::pop_back() {
 }
 
 template <typename T>
+void list<T>::push_front(const_reference value) {
+  Node_* newNode = new Node_(value, fake->next, fake);
+  fake->next->prev = newNode;
+  fake->next = newNode;
+  ++size_;
+}
+
+template <typename T>
 void list<T>::swap(list& other) noexcept {
   std::swap(this->fake, other.fake);
   std::swap(this->size_, other.size_);

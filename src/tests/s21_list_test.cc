@@ -321,3 +321,18 @@ TEST(Test_List, Pop_Back_Method) {
   EXPECT_TRUE(myList.empty());  // mylist={};
   EXPECT_EQ(myList.size(), 0);
 }
+
+TEST(Test_List, Push_Front_Method) {
+  s21::list<int> myList;
+  myList.push_front(3);
+  myList.push_front(2);
+  myList.push_front(1);
+
+  EXPECT_EQ(myList.size(), 3);
+  EXPECT_EQ(myList.front(), 1);
+  EXPECT_EQ(myList.back(), 3);
+
+  myList.push_front(0);
+  EXPECT_EQ(myList.size(), 4);
+  EXPECT_EQ(myList.front(), 0);
+}
