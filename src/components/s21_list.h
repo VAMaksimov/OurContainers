@@ -405,12 +405,29 @@ void list<T>::unique() {
   if (empty()) return;
   iterator it = begin();
   while (it != end()) {
-    iterator next_it = it;
-    ++next_it;
-    if (next_it != end() && *it == *next_it)
-      erase(next_it);
+    iterator nextIt = it;
+    ++nextIt;
+    if (nextIt != end() && *it == *nextIt)
+      erase(nextIt);
     else
       ++it;
+  }
+}
+
+template <typename T>
+void list<T>::sort() {
+  if (empty() || size_ == 1) return;
+
+  for (size_type i = 0; i < size_ - 1; ++i) {
+    iterator it = begin();
+    for (size_type j = 0; j < size_ - 1 - i; ++j) {
+      iterator nextIt = it;
+      ++nextIt;
+      if (*nextIt < *it) {
+        std::swap(*it, *nextIt);
+      }
+      ++it;
+    }
   }
 }
 

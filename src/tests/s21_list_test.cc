@@ -417,3 +417,20 @@ TEST(Test_List, Unique_Method) {
   EXPECT_EQ(*it++, 5);
   EXPECT_EQ(it, myList.end());
 }
+
+TEST(Test_List, Sort_Method) {
+  s21::list<int> myList = {5, 3, 1, 4, 2};
+  myList.sort();
+
+  EXPECT_EQ(myList.size(), 5);
+  EXPECT_EQ(myList.front(), 1);
+  EXPECT_EQ(myList.back(), 5);
+
+  auto it = myList.begin();
+  EXPECT_EQ(*it++, 1);
+  EXPECT_EQ(*it++, 2);
+  EXPECT_EQ(*it++, 3);
+  EXPECT_EQ(*it++, 4);
+  EXPECT_EQ(*it++, 5);
+  EXPECT_EQ(it, myList.end());
+}
