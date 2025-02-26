@@ -29,10 +29,122 @@ class sorted_container {
     counter = 0;
   }
 
-  ~sorted_container() { destroy_tree(root_); }
+  ~sorted_container() {
+    destroy_tree(root_);
+    root_ = nullptr;
+  }
+
+  class iterator {
+   private:
+    tnode *current_;
+
+   public:
+    iterator(tnode *cur_node = nullptr) : current_(cur_node) {}
+    // Iterator(tnode *cur_node) {}
+    Key &operator*() { return current_->key_; }
+    tnode *operator->() { return current_; }
+    // Iterator &operator--() {
+    //   if(current_->parent_ == nullptr) {
+    //     return current_;
+    //   }
+    //   return current_->parent_;
+    // }
+    // Iterator &operator++() {
+    //   tnode *ptr = current_->right_;
+    //   if(current_->right_ == nullptr)
+    // }
+    // bool operator==(const Iterator &other) const;
+    // bool operator!=(const Iterator &other) const;
+
+    // Де референс
+    // std::pair<Key, T> &operator*() {
+    //   return *reinterpret_cast<std::pair<Key, T> *>(current_);
+    // }
+
+    // // Стрелочная нотация
+    // std::pair<Key, T> *operator->() {
+    //   return reinterpret_cast<std::pair<Key, T> *>(current_);
+    // }
+
+    // Префиксный инкремент
+    iterator &operator++() {
+      if (current_->right_) {
+        current_ = current_->right_;
+        while (current_->left_) current_ = current_->left_;
+      } else {
+        tnode *parent = current_->parent_;
+        while (parent && current_ == parent->right_) {
+          current_ = parent;
+          parent = parent->parent_;
+        }
+        current_ = parent;
+      }
+      return *this;
+    }
+
+    // Постфиксный инкремент
+    iterator operator++(int) {
+      iterator tmp(*this);
+      ++(*this);
+      return tmp;
+    }
+
+    // Префиксный декремент
+    iterator &operator--() {
+      if (current_->left_) {
+        current_ = current_->left_;
+        while (current_->right_) current_ = current_->right_;
+      } else {
+        tnode *parent = current_->parent_;
+        while (parent && current_ == parent->left_) {
+          current_ = parent;
+          parent = parent->parent_;
+        }
+        current_ = parent;
+      }
+      return *this;
+    }
+
+    // Постфиксный декремент
+    iterator operator--(int) {
+      iterator tmp(*this);
+      --(*this);
+      return tmp;
+    }
+
+    // Операторы сравнения
+    bool operator==(const iterator &other) const {
+      return current_ == other.current_;
+    }
+
+    bool operator!=(const iterator &other) const { return !(*this == other); }
+  };
+
+ public:
+  // Методы для получения итераторов
+  iterator begin() {
+    tnode *node = root_;
+    while (node && node->left_) node = node->left_;
+    return iterator(node);
+  }
+
+  iterator end() { return iterator(nullptr); }
+
+  // Константные версии
+  const iterator begin() const {
+    tnode *node = root_;
+    while (node && node->left_) node = node->left_;
+    return iterator(node);
+  }
+
+  const iterator end() const { return iterator(nullptr); }
+  // Iterator Begin();
+  // Iterator End();
+  // const Iterator Begin() const;
+  // const Iterator End() const;
 
   void destroy_tree(tnode *my_tree) {
-    if (my_tree) {
+    if (my_tree != nullptr) {
       destroy_tree(my_tree->left_);
       destroy_tree(my_tree->right_);
       delete my_tree;
@@ -42,14 +154,13 @@ class sorted_container {
 
   bool tree_empty() {
     bool result = true;
-    if (root_) {
+    if (root_ != nullptr) {
       result = false;
     }
     return result;
   }
 
   void count_nodes(tnode *my_tree) {
-    // std::cout << "counter = " << counter << std::endl;
     if (my_tree) {
       counter++;
       count_nodes(my_tree->left_);
@@ -77,16 +188,8 @@ class sorted_container {
       std::cout << "RIGHT ";
       print_struct(my_tree->right_);
     }
-    // print_struct(my_tree);
     return my_tree;
   }
-
-  // sorted_container(const sorted_container &other) {
-  //   destroy_tree(root_);
-  //   if (other.root_) {
-  //     root_ = copy_tree(other.root_, nullptr);
-  //   }
-  // }
 
   tnode *copy_tree(tnode *source, tnode *parent) {
     if (source == nullptr) {
@@ -127,9 +230,6 @@ class sorted_container {
       print_helper(my_tree->right_);
     }
   }
-
-  // size_t counter_nodes(tnode *tree)
-
 };  // end class
 
 #endif

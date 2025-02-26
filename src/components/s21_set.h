@@ -11,8 +11,9 @@ class set : public sorted_container<Key, Key> {
   using value_type = Key;
   using reference = value_type &;
   using const_reference = const value_type &;
-  // using iterator = BinaryTree::iterator;
-  // using const_iterator = BinaryTree::const_iterator;
+  using iterator = typename sorted_container<key_type, value_type>::iterator;
+  // using const_iterator =
+  //     typename sorted_container<key_type, value_type>::const_iterator;
   using size_type = size_t;
 
  public:
@@ -24,23 +25,50 @@ class set : public sorted_container<Key, Key> {
       this->root_ = this->insert(this->root_, num, num);
     }
   }
-  set(const set &s) {
+  set(const set &s) : sorted_container<key_type, value_type>() {
     this->destroy_tree(this->root_);
-    if (s.root_) {
+    this->root_ = this->copy_tree(s.root_, nullptr);
+  };
+  set(set &&s) noexcept : sorted_container<key_type, value_type>() {
+    this->root_ = s.root_;
+    s.root_ = nullptr;
+  }
+  ~set() {
+    this->destroy_tree(this->root_);
+    this->root_ = nullptr;
+  }
+  set &operator=(const set &s) {
+    if (this != &s) {
+      this->destroy_tree(this->root_);
       this->root_ = this->copy_tree(s.root_, nullptr);
     }
-  };
-  set(set &&s);  // move constructor
-  ~set() = default;
-  //   operator=(set && s);
+    return *this;
+  }
+
+  set &operator=(set &&s) noexcept {
+    if (this != &s) {
+      this->destroy_tree(this->root_);
+      this->root_ = s.root_;
+      s.root_ = nullptr;
+    }
+    return *this;
+  }
 
   size_type size() {
+    this->counter = 0;
     this->print_tree();
     this->count_nodes(this->root_);
     return this->counter;
   }
 
   bool empty() { return this->tree_empty(); }
+
+  iterator begin() { return sorted_container<key_type, value_type>::begin(); }
+  iterator end() { return sorted_container<key_type, value_type>::end(); }
+  iterator begin() const {
+    return sorted_container<key_type, value_type>::begin();
+  }
+  iterator end() const { return sorted_container<key_type, value_type>::end(); }
 };
 
 }  // namespace s21
