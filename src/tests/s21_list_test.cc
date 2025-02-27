@@ -5,7 +5,7 @@
 #include "s21_containers.h"
 TEST(Test_List, Default_Constructor) {
   s21::list<int> myList;
-  EXPECT_EQ(myList.getSize(), 0);
+  EXPECT_EQ(myList.size(), 0);
   EXPECT_EQ(myList.getHead(),
             myList.getTail());  // ptr fake node: ptr head = ptr tail
 }
@@ -14,7 +14,7 @@ TEST(Test_List, Parameterized_Constructor) {
   s21::list<int> myList(1);
   EXPECT_EQ(myList.getHead(), myList.getTail());
   s21::list<int> myList2(5);
-  EXPECT_EQ(myList2.getSize(), 5);
+  EXPECT_EQ(myList2.size(), 5);
   EXPECT_NE(myList2.getHead(), myList2.getTail());
 }
 
@@ -59,7 +59,7 @@ TEST(Test_List, Copy_Constructor) {
   s21::list<int> myList1 = {1, 2, 3, 4, 5};
   s21::list<int> myList2(myList1);
 
-  EXPECT_EQ(myList2.getSize(), myList1.getSize());
+  EXPECT_EQ(myList2.size(), myList1.size());
   EXPECT_NE(myList2.getHead(), myList1.getHead());
 
   auto it1 = myList1.begin();
@@ -77,12 +77,12 @@ TEST(Test_List, MoveNonEmptyList) {
   s21::list<int> original{1, 2, 3};
   s21::list<int> moved(std::move(original));
 
-  EXPECT_EQ(moved.getSize(), 3);
+  EXPECT_EQ(moved.size(), 3);
   EXPECT_EQ(*moved.begin(), 1);
   EXPECT_EQ(*++moved.begin(), 2);
   EXPECT_EQ(*++(++moved.begin()), 3);
 
-  EXPECT_EQ(original.getSize(), 0);
+  EXPECT_EQ(original.size(), 0);
   EXPECT_TRUE(original.begin() == original.end());
 }
 
@@ -90,10 +90,10 @@ TEST(Test_List, MoveEmptyList) {
   s21::list<int> original;
   s21::list<int> moved(std::move(original));
 
-  EXPECT_EQ(moved.getSize(), 0);
+  EXPECT_EQ(moved.size(), 0);
   EXPECT_TRUE(moved.begin() == moved.end());
 
-  EXPECT_EQ(original.getSize(), 0);
+  EXPECT_EQ(original.size(), 0);
   EXPECT_TRUE(original.begin() == original.end());
 }
 
@@ -102,7 +102,7 @@ TEST(Test_List, AssignNonEmptyList) {
   s21::list<int> list2;
   list2 = list1;
 
-  EXPECT_EQ(list2.getSize(), list1.getSize());
+  EXPECT_EQ(list2.size(), list1.size());
   EXPECT_NE(list2.getHead(), list1.getHead());
 
   auto it1 = list1.begin();
@@ -119,7 +119,7 @@ TEST(Test_List, AssignEmptyList) {
   s21::list<int> list2 = {1, 2, 3};
   list1 = list2;
 
-  EXPECT_EQ(list1.getSize(), list2.getSize());
+  EXPECT_EQ(list1.size(), list2.size());
   EXPECT_NE(list1.getHead(), list2.getHead());
 
   auto it1 = list1.begin();
@@ -135,7 +135,7 @@ TEST(Test_List, SelfAssignment) {
   s21::list<int> list1 = {1, 2, 3};
   list1 = list1;
 
-  EXPECT_EQ(list1.getSize(), 3);
+  EXPECT_EQ(list1.size(), 3);
   auto it = list1.begin();
   EXPECT_EQ(*it, 1);
   ++it;
@@ -148,8 +148,8 @@ TEST(Test_List, MoveAssignmentOperator) {
   s21::list<int> list2;
   list2 = std::move(list1);
 
-  EXPECT_EQ(list2.getSize(), 3);
-  EXPECT_EQ(list1.getSize(), 0);
+  EXPECT_EQ(list2.size(), 3);
+  EXPECT_EQ(list1.size(), 0);
   EXPECT_TRUE(list1.begin() == list1.end());
   EXPECT_NE(list2.getHead(), nullptr);
 
@@ -454,4 +454,46 @@ TEST(Test_List, Splice_Method) {
   EXPECT_EQ(*iter++, 5);
   EXPECT_EQ(*iter++, 6);
   EXPECT_EQ(iter, list1.end());
+}
+
+TEST(Test_List, Merge_Method) {
+  s21::list<int> list1 = {1, 3, 5};
+  s21::list<int> list2 = {2, 4, 6};
+
+  list1.merge(list2);
+
+  EXPECT_EQ(list1.size(), 6);
+  EXPECT_EQ(list1.front(), 1);
+  EXPECT_EQ(list1.back(), 6);
+
+  auto it = list1.begin();
+  EXPECT_EQ(*it++, 1);
+  EXPECT_EQ(*it++, 2);
+  EXPECT_EQ(*it++, 3);
+  EXPECT_EQ(*it++, 4);
+  EXPECT_EQ(*it++, 5);
+  EXPECT_EQ(*it++, 6);
+  EXPECT_EQ(it, list1.end());
+}
+
+TEST(Test_List, Merge_Method_Additional) {
+  s21::list<int> list1 = {1, 10, 5, 7};
+  s21::list<int> list2 = {2, 4, 6, 8};
+
+  list1.merge(list2);
+
+  EXPECT_EQ(list1.size(), 8);
+  EXPECT_EQ(list1.front(), 1);
+  EXPECT_EQ(list1.back(), 7);
+
+  auto it = list1.begin();
+  EXPECT_EQ(*it++, 1);
+  EXPECT_EQ(*it++, 2);
+  EXPECT_EQ(*it++, 4);
+  EXPECT_EQ(*it++, 6);
+  EXPECT_EQ(*it++, 8);
+  EXPECT_EQ(*it++, 10);
+  EXPECT_EQ(*it++, 5);
+  EXPECT_EQ(*it++, 7);
+  EXPECT_EQ(it, list1.end());
 }

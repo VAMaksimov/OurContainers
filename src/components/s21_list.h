@@ -4,10 +4,11 @@
 #include "components/s21_sequence_containers.h"
 
 namespace s21 {
+
 template <typename T>
 class list : public SequenceContaner<list<T>, T> {
  public:
-  //  List Member type
+  // List Member type
   using value_type = typename SequenceContaner<list<T>, T>::value_type;
   using reference = typename SequenceContaner<list<T>, T>::reference;
   using const_reference =
@@ -19,81 +20,72 @@ class list : public SequenceContaner<list<T>, T> {
     Node_* next;
     Node_* prev;
 
-    // Constructor fake Node
-    explicit Node_(Node_* next_node = nullptr, Node_* prev_node = nullptr)
-        : value(), next(next_node), prev(prev_node) {}
-    // Constructor real Node
-    explicit Node_(value_type val, Node_* next_node = nullptr,
-                   Node_* prev_node = nullptr)
-        : value(val), next(next_node), prev(prev_node) {}
+    // Constructor for a dummy node
+    explicit Node_(Node_* nextNode = nullptr, Node_* prevNode = nullptr)
+        : value(), next(nextNode), prev(prevNode) {}
+
+    // Constructor for a real node
+    explicit Node_(value_type val, Node_* nextNode = nullptr,
+                   Node_* prevNode = nullptr)
+        : value(val), next(nextNode), prev(prevNode) {}
   };
-  // Сonstructors
+
+  // List Functions
   list() noexcept;
   explicit list(size_type n);
   list(std::initializer_list<value_type> const& items);
   list(const list& other) noexcept;
   list(list&& other) noexcept;
-  // Destructor
   ~list();
 
-  // Operators
-
+  // Assignment operators
   list<T>& operator=(list<T>&& other) noexcept;
   list<T>& operator=(const list<T>& other) noexcept;
 
-  // Mutators and accesors
-  size_type getSize() const { return size_; }
+  // Access and modification methods
   Node_* getHead() const { return fake->next; }
   Node_* getTail() const { return fake->prev; }
 
-  // Iterators
+  // List Iterators
   class ListIterator {
    public:
     ListIterator() = default;
-    ListIterator(Node_* node) : current(node) {}
-    ~ListIterator() = default;
-
+    explicit ListIterator(Node_* node) : current(node) {}
     ListIterator& operator++() {
       current = current->next;
       return *this;
     }
-
     ListIterator operator++(int) {
       ListIterator temp = *this;
       ++(*this);
       return temp;
     }
-
     ListIterator& operator--() {
       current = current->prev;
       return *this;
     }
-
     ListIterator operator--(int) {
       ListIterator temp = *this;
       --(*this);
       return temp;
     }
-
     reference operator*() { return current->value; }
-
     bool operator==(const ListIterator& other) const {
       return current == other.current;
     }
-
     bool operator!=(const ListIterator& other) const {
       return current != other.current;
     }
-
     Node_* getNode() const { return current; }
 
    protected:
     Node_* current;
   };
+
   class ListConstIterator : public ListIterator {
    public:
     ListConstIterator() : ListIterator(nullptr) {}
-    ListConstIterator(Node_* node) : ListIterator(node) {}
+    explicit ListConstIterator(Node_* node) : ListIterator(node) {}
     ListConstIterator(const ListIterator& other) : ListIterator(other) {}
     const_reference operator*() { return this->current->value; }
   };
@@ -101,17 +93,16 @@ class list : public SequenceContaner<list<T>, T> {
   using iterator = ListIterator;
   using const_iterator = ListConstIterator;
 
-  // List element access
   iterator begin() const noexcept { return iterator(fake->next); }
   iterator end() const noexcept { return iterator(fake); }
 
-  // List elements acccess
-  const_reference front() const { return fake->next->value; }
-  const_reference back() const { return fake->prev->value; }
+  // List Element access
+  const_reference front() const;
+  const_reference back() const;
 
   // List Capacity
-  bool empty() const { return size_ == 0; }
-  size_type size() const noexcept { return size_; }
+  bool empty() const;
+  size_type size() const noexcept;
   size_type max_size() const noexcept;
 
   // List Modifiers
@@ -132,8 +123,26 @@ class list : public SequenceContaner<list<T>, T> {
  private:
   Node_* fake;
   size_type size_;
+
   void initFakeNode();
+
+  // Utils
+  Node_* createNode(const_reference value, Node_* next, Node_* prev) {
+    return new Node_(value, next, prev);
+  }
+  void copyFrom(const list& other);
+
+  // for merge() and splice()
+  void transferNode(iterator pos, list& other, iterator src);
+  void appendRemaining(list& other);
+
+  void extractNodes(list& other, Node_*& first, Node_*& last,
+                    size_type& movedSize);
+  void linkNodes(Node_* posPrev, Node_* posNext, Node_* first, Node_* last,
+                 size_type movedSize);
 };
+
+/*List Functions*/
 
 template <typename T>
 inline void list<T>::initFakeNode() {
@@ -142,74 +151,66 @@ inline void list<T>::initFakeNode() {
   fake->prev = fake;
 }
 
-// Constructors default
 template <typename T>
-inline list<T>::list() noexcept : size_(0) {
+void list<T>::copyFrom(const list& other) {
+  for (Node_* current = other.fake->next; current != other.fake;
+       current = current->next) {
+    push_back(current->value);
+  }
+}
+
+template <typename T>
+list<T>::list() noexcept : size_(0) {
   initFakeNode();
 }
 
-// Constructors param
 template <typename T>
-inline list<T>::list(size_type n) : size_(0) {
+list<T>::list(size_type n) : size_(0) {
   initFakeNode();
   for (size_type i = 0; i < n; ++i) {
     push_back(value_type());
   }
 }
 
-// Constructor {}
 template <typename T>
-inline list<T>::list(std::initializer_list<value_type> const& items)
-    : size_(0) {
+list<T>::list(std::initializer_list<value_type> const& items) : size_(0) {
   initFakeNode();
   for (const auto& item : items) {
     push_back(item);
   }
 }
 
-// constructor move
 template <typename T>
-inline list<T>::list(list&& other) noexcept {
+list<T>::list(const list& other) noexcept : size_(0) {
+  initFakeNode();
+  copyFrom(other);
+}
+
+template <typename T>
+list<T>::list(list&& other) noexcept {
   if (other.fake != nullptr) {
     fake = other.fake;
     size_ = other.size_;
-
     other.fake = nullptr;
     other.size_ = 0;
     other.initFakeNode();
-  };
-}
-
-// Constructor copy
-template <typename T>
-inline list<T>::list(const list& other) noexcept : size_(0) {
-  initFakeNode();
-  Node_* currentNode = other.getHead();
-  while (currentNode != other.fake) {
-    push_back(currentNode->value);
-    currentNode = currentNode->next;
   }
 }
 
-// Destructor
 template <typename T>
-inline list<T>::~list() {
+list<T>::~list() {
   clear();
   delete fake;
 }
 
-/*Operators*/
-
 template <typename T>
-inline list<T>& list<T>::operator=(list<T>&& other) noexcept {
+list<T>& list<T>::operator=(list<T>&& other) noexcept {
   if (this != &other) {
     clear();
     delete fake;
-
     if (other.fake != nullptr) {
       fake = other.fake;
       size_ = other.size_;
-
       other.fake = nullptr;
       other.size_ = 0;
       other.initFakeNode();
@@ -219,98 +220,45 @@ inline list<T>& list<T>::operator=(list<T>&& other) noexcept {
 }
 
 template <typename T>
-inline list<T>& list<T>::operator=(const list<T>& other) noexcept {
+list<T>& list<T>::operator=(const list<T>& other) noexcept {
   if (this != &other) {
-    clear();  // Очищаем текущий список
-    Node_* currentNode = other.getHead();
-    while (currentNode != other.fake) {
-      push_back(
-          currentNode->value);  // Используем push_back для добавления элементов
-      currentNode = currentNode->next;
-    }
+    clear();
+    copyFrom(other);
   }
   return *this;
 }
 
-/* methods ListIterator*/
-
-// template <typename T>
-// inline list<T>::ListIterator::ListIterator(Node_* node) : current(node) {}
-
-// template <typename T>
-// inline typename list<T>::ListIterator& list<T>::ListIterator::operator++() {
-//   current = current->next;
-//   return *this;
-// }
-
-// template <typename T>
-// inline typename list<T>::ListIterator list<T>::ListIterator::operator++(int)
-// {
-//   ListIterator temp = *this;
-//   ++(*this);
-//   return temp;
-// }
-
-// template <typename T>
-// inline typename list<T>::ListIterator& list<T>::ListIterator::operator--() {
-//   current = current->prev;
-//   return *this;
-// }
-
-// template <typename T>
-// inline typename list<T>::ListIterator list<T>::ListIterator::operator--(int)
-// {
-//   ListIterator temp = *this;
-//   --(*this);
-//   return temp;
-// }
-
-// template <typename T>
-// inline bool list<T>::ListIterator::operator==(const ListIterator& other)
-// const {
-//   return current == other.current;
-// }
-
-// template <typename T>
-// inline bool list<T>::ListIterator::operator!=(const ListIterator& other)
-// const {
-//   return current != other.current;
-// }
-
-// template <typename T>
-// inline typename list<T>::iterator list<T>::begin() const noexcept {
-//   return iterator(fake->next);
-// }
-
-// template <typename T>
-// inline typename list<T>::iterator list<T>::end() const noexcept {
-//   return iterator(fake);
-// }
-
-// template <typename T>
-// inline typename list<T>::const_iterator list<T>::begin() const noexcept {
-//   return const_iterator(fake->next);
-// }
-
-// template <typename T>
-// inline typename list<T>::const_iterator list<T>::end() const noexcept {
-//   return const_iterator(fake);
-// }
-
-// template <typename T>
-// inline typename list<T>::reference list<T>::ListIterator::operator*() const {
-//   return current->value;
-// }
-/*List Capacity*/
+// List Element access
 template <typename T>
-typename list<T>::size_type list<T>::max_size() const noexcept {
+inline typename list<T>::const_reference list<T>::front() const {
+  return fake->next->value;
+}
+
+template <typename T>
+inline typename list<T>::const_reference list<T>::back() const {
+  return fake->prev->value;
+}
+
+// List Capacity
+template <typename T>
+inline bool list<T>::empty() const {
+  return size_ == 0;
+}
+
+template <typename T>
+inline typename list<T>::size_type list<T>::size() const noexcept {
+  return size_;
+}
+
+template <typename T>
+inline typename list<T>::size_type list<T>::max_size() const noexcept {
   return std::numeric_limits<size_type>::max();
 }
 
 /*List Modifiers*/
 
 template <typename T>
-inline void list<T>::clear() noexcept {
+void list<T>::clear() noexcept {
   while (fake->next != fake) {
     Node_* temp = fake->next;
     fake->next = temp->next;
@@ -324,7 +272,7 @@ template <typename T>
 typename list<T>::iterator list<T>::insert(iterator pos,
                                            const_reference value) {
   Node_* posNode = pos.getNode();
-  Node_* newNode = new Node_(value, posNode, posNode->prev);
+  Node_* newNode = createNode(value, posNode, posNode->prev);
   posNode->prev->next = newNode;
   posNode->prev = newNode;
   ++size_;
@@ -342,10 +290,9 @@ void list<T>::erase(iterator pos) {
 
 template <typename T>
 void list<T>::push_back(const_reference value) {
-  Node_* newNode = new Node_(value, fake, fake->prev);
+  Node_* newNode = createNode(value, fake, fake->prev);
   fake->prev->next = newNode;
   fake->prev = newNode;
-
   ++size_;
 }
 
@@ -362,7 +309,7 @@ void list<T>::pop_back() {
 
 template <typename T>
 void list<T>::push_front(const_reference value) {
-  Node_* newNode = new Node_(value, fake->next, fake);
+  Node_* newNode = createNode(value, fake->next, fake);
   fake->next->prev = newNode;
   fake->next = newNode;
   ++size_;
@@ -381,11 +328,134 @@ void list<T>::pop_front() {
 
 template <typename T>
 void list<T>::swap(list& other) noexcept {
-  std::swap(this->fake, other.fake);
-  std::swap(this->size_, other.size_);
+  std::swap(fake, other.fake);
+  std::swap(size_, other.size_);
 }
 
-// merge()
+// template <typename T>
+// void list<T>::merge(list& other) {
+//   if (this == &other || other.empty()) return;
+
+//   iterator it1 = begin();
+//   iterator it2 = other.begin();
+//   while (it1 != end() && it2 != other.end()) {
+//     if (*it2 < *it1) {
+//       iterator nextIt2 = it2;
+//       ++nextIt2;
+//       Node_* node = it2.getNode();
+//       node->prev->next = node->next;
+//       node->next->prev = node->prev;
+//       --other.size_;
+//       Node_* posNode = it1.getNode();
+//       node->next = posNode;
+//       node->prev = posNode->prev;
+//       posNode->prev->next = node;
+//       posNode->prev = node;
+//       ++size_;
+//       it2 = nextIt2;
+//     } else {
+//       ++it1;
+//     }
+//   }
+//   if (!other.empty()) {
+//     Node_* firstOther = other.fake->next;
+//     Node_* lastOther = other.fake->prev;
+//     Node_* lastThis = fake->prev;
+//     lastThis->next = firstOther;
+//     firstOther->prev = lastThis;
+//     lastOther->next = fake;
+//     fake->prev = lastOther;
+//     size_ += other.size_;
+//     other.size_ = 0;
+//     other.fake->next = other.fake;
+//     other.fake->prev = other.fake;
+//   }
+// }
+
+template <typename T>
+void list<T>::merge(list& other) {
+  if (this == &other || other.empty()) return;
+
+  iterator it1 = begin();
+  iterator it2 = other.begin();
+
+  while (it1 != end() && it2 != other.end()) {
+    if (*it2 < *it1) {
+      iterator next_it2 = it2;
+      ++next_it2;
+      transferNode(it1, other, it2);
+      it2 = next_it2;
+    } else {
+      ++it1;
+    }
+  }
+
+  if (!other.empty()) {
+    appendRemaining(other);  // append lost elements
+  }
+}
+
+template <typename T>
+void list<T>::transferNode(iterator pos, list& other, iterator src) {
+  Node_* srcNode = src.getNode();
+
+  srcNode->prev->next = srcNode->next;
+  srcNode->next->prev = srcNode->prev;
+  --other.size_;
+
+  Node_* posNode = pos.getNode();
+  srcNode->prev = posNode->prev;
+  srcNode->next = posNode;
+  posNode->prev->next = srcNode;
+  posNode->prev = srcNode;
+  ++size_;
+}
+
+template <typename T>
+void list<T>::appendRemaining(list& other) {
+  if (other.empty()) return;
+
+  Node_* first;
+  Node_* last;
+  size_type movedSize;
+  extractNodes(other, first, last, movedSize);
+  linkNodes(fake->prev, fake, first, last, movedSize);
+}
+
+template <typename T>
+void list<T>::extractNodes(list& other, Node_*& first, Node_*& last,
+                           size_type& movedSize) {
+  first = other.fake->next;
+  last = other.fake->prev;
+  movedSize = other.size_;
+
+  // Reset source list
+  other.fake->next = other.fake;
+  other.fake->prev = other.fake;
+  other.size_ = 0;
+}
+
+template <typename T>
+void list<T>::linkNodes(Node_* posPrev, Node_* posNext, Node_* first,
+                        Node_* last, size_type movedSize) {
+  posPrev->next = first;
+  first->prev = posPrev;
+  last->next = posNext;
+  posNext->prev = last;
+  size_ += movedSize;
+}
+
+template <typename T>
+void list<T>::splice(const_iterator pos, list& other) {
+  if (other.empty()) return;
+
+  Node_* first;
+  Node_* last;
+  size_type movedSize;
+  extractNodes(other, first, last, movedSize);
+  Node_* posNode = pos.getNode();
+  linkNodes(posNode->prev, posNode, first, last, movedSize);
+}
 
 template <typename T>
 void list<T>::reverse() noexcept {
@@ -416,7 +486,6 @@ void list<T>::unique() {
 template <typename T>
 void list<T>::sort() {
   if (empty() || size_ == 1) return;
-
   for (size_type i = 0; i < size_ - 1; ++i) {
     iterator it = begin();
     for (size_type j = 0; j < size_ - 1 - i; ++j) {
@@ -429,31 +498,7 @@ void list<T>::sort() {
     }
   }
 }
-template <typename T>
-void list<T>::splice(const_iterator pos, list& other) {
-  if (other.empty()) {
-    return;
-  }
-
-  Node_* other_first = other.fake->next;
-  Node_* other_last = other.fake->prev;
-
-  other.fake->next = other.fake;
-  other.fake->prev = other.fake;
-  size_type moved_size = other.size_;
-  other.size_ = 0;
-
-  Node_* pos_node = pos.getNode();
-  Node_* prev_node = pos_node->prev;
-
-  prev_node->next = other_first;
-  other_first->prev = prev_node;
-
-  other_last->next = pos_node;
-  pos_node->prev = other_last;
-
-  size_ += moved_size;
-}
 
 }  // namespace s21
+
 #endif  // S21_CONTAINERS_H_S21_LIST_H
