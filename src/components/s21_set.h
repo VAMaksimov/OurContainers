@@ -1,7 +1,7 @@
 #ifndef SRC_COMPONENTS_S21_SET_H
 #define SRC_COMPONENTS_S21_SET_H
 
-#include "s21_sorted_container.h"
+#include "components/s21_sorted_container.h"
 
 namespace s21 {
 template <typename Key>
