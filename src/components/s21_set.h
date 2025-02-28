@@ -5,7 +5,7 @@
 
 namespace s21 {
 template <typename Key>
-class set : public sorted_container<Key, Key> {
+class Set : public SortedContainer<Key, Key> {
  private:
   using key_type = Key;
   using value_type = Key;
@@ -16,23 +16,23 @@ class set : public sorted_container<Key, Key> {
   using size_type = size_t;
 
  public:
-  set() : sorted_container<key_type, value_type>() {};
-  set(std::initializer_list<value_type> const &items)
-      : sorted_container<key_type, value_type>() {
+  Set() : SortedContainer<key_type, value_type>() {};
+  Set(std::initializer_list<value_type> const &items)
+      : SortedContainer<key_type, value_type>() {
     for (auto num : items) {
       std::cout << num << std::endl;
       this->root_ = this->insert(this->root_, num, num);
     }
   }
-  set(const set &s) {
+  Set(const Set &s) {
     this->destroy_tree(this->root_);
     if (s.root_) {
       this->root_ = this->copy_tree(s.root_, nullptr);
     }
   };
-  set(set &&s);  // move constructor
-  ~set() = default;
-  //   operator=(set && s);
+  Set(Set &&s);  // move constructor
+  ~Set() = default;
+  //   operator=(Set && s);
 
   size_type size() {
     this->print_tree();

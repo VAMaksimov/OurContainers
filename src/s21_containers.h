@@ -6,7 +6,9 @@
 // 3) C++ standard library headers
 // 4) other libraries' headers
 // 5) project's headers.
-#include "components/s21_stack_queue.h"
+// #include "components/s21_stack_queue.h"
+#include "components/s21_set.h"
+#include "components/s21_sorted_container.h"
 
 namespace s21 {
 template <typename T>
