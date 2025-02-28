@@ -5,7 +5,7 @@
 
 int main() {
   s21::set<int> MySet = {0, 1, 3, 2, 7};
-
+  int test = 0;
   // Обычный обход
   for (auto it = MySet.begin(); it != MySet.end(); ++it) {
     std::cout << *it << " ";
@@ -23,7 +23,31 @@ int main() {
   // for (auto cit = MySet.cbegin(); cit != MySet.cend(); ++cit) {
   //   std::cout << *cit << " ";
   // }
+  std::cout << std::endl;
+
+  MySet.fi
+
+      if (MySet.empty()) {
+    std::cout << "Tree MySet pusto" << std::endl;
+  }
+  else {
+    std::cout << "Tree MySet ne pusto" << std::endl;
+    std::cout << MySet.size() << std::endl;
+  }
+  MySet.insert(5);
+  // auto iter = MySet.begin();
+  // iter->value_ = 999;
+  // for (auto it = MySet.begin(); it != MySet.end(); ++it) {
+  //   std::cout << *it << " ";
+  // }
   // std::cout << std::endl;
+  // MySet.clear();
+  // std::set<int> MySet = {0};
+  // s21::set<int> MySet2 = {1, 2, 3, 5};
+  // s21::set<int> copy(std::move(MySet2));
+  // std::set<int> copy(std::move(MySet));
+  // s21::set<int> MySet3;
+  // std::set<int> MySet2;
 
   if (MySet.empty()) {
     std::cout << "Tree MySet pusto" << std::endl;
@@ -31,12 +55,6 @@ int main() {
     std::cout << "Tree MySet ne pusto" << std::endl;
     std::cout << MySet.size() << std::endl;
   }
-  // std::set<int> MySet = {0};
-  // s21::set<int> MySet2 = {1, 2, 3, 5};
-  // s21::set<int> copy(std::move(MySet2));
-  // std::set<int> copy(std::move(MySet));
-  // s21::set<int> MySet3;
-  // std::set<int> MySet2;
 
   // MySet3 = MySet2;
   // std::cout << "Size = " << MySet2.size() << std::endl;

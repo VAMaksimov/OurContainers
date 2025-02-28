@@ -19,19 +19,6 @@ int main() {
   for (auto it = MySet.begin(); it != MySet.end(); ++it) {
     std::cout << *it << " ";
   }
-
-  std::cout << "\nReverse:\n";
-
-  // Обратный обход
-  for (auto rit = MySet.rbegin(); rit != MySet.rend(); ++rit) {
-    std::cout << *rit << " ";
-  }
-
-  // Константный обход
-  std::cout << "\nConst:\n";
-  for (auto cit = MySet.cbegin(); cit != MySet.cend(); ++cit) {
-    std::cout << *cit << " ";
-  }
   std::cout << std::endl;
 
   // MySet.insert(5);
@@ -44,6 +31,17 @@ int main() {
     std::cout << "Tree MySet ne pusto" << std::endl;
     std::cout << MySet.size() << std::endl;
   }
+  MySet.clear();
+  if (MySet.empty()) {
+    std::cout << "Tree MySet pusto" << std::endl;
+  } else {
+    std::cout << "Tree MySet ne pusto" << std::endl;
+    std::cout << MySet.size() << std::endl;
+  }
+  // for (auto it = MySet.begin(); it != MySet.end(); ++it) {
+  //   std::cout << *it << " ";
+  // }
+  // std::cout << std::endl;
   // if (MySet3.empty()) {
   //   std::cout << "Tree MySet3 pusto" << std::endl;
   // } else {

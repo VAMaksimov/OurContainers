@@ -2,69 +2,48 @@
 #define SRC_COMPONENTS_S21_SORTED_CONTAINER_H
 
 #include <iostream>
+#include <utility>
 
 template <typename Key, typename T>
-class sorted_container {
+class BinaryTree {
  protected:
-  struct tnode {
-    Key key_;
+  struct Node {
+    const Key key_;
     T value_;
-    struct tnode *parent_;
-    struct tnode *left_;
-    struct tnode *right_;
+    struct Node *parent_;
+    struct Node *left_;
+    struct Node *right_;
 
-    tnode(Key key, T value) : key_{key}, value_{value} {
+    Node(Key key, T value) : key_{key}, value_{value} {
       parent_ = nullptr;
       left_ = nullptr;
       right_ = nullptr;
     }
-  };  // end struct
+  };  // end struct Node
 
   using size_type = size_t;
-  tnode *root_;
-  size_type counter;
+  Node *root_;
+  size_type counter_;
 
-  sorted_container() {
+  BinaryTree() {
     root_ = nullptr;
-    counter = 0;
+    counter_ = 0;
   }
 
-  ~sorted_container() {
-    destroy_tree(root_);
+  ~BinaryTree() {
+    DestroyTree(root_);
     root_ = nullptr;
   }
 
+ public:
   class iterator {
    private:
-    tnode *current_;
+    Node *current_;
 
    public:
-    iterator(tnode *cur_node = nullptr) : current_(cur_node) {}
-    // Iterator(tnode *cur_node) {}
-    Key &operator*() { return current_->key_; }
-    tnode *operator->() { return current_; }
-    // Iterator &operator--() {
-    //   if(current_->parent_ == nullptr) {
-    //     return current_;
-    //   }
-    //   return current_->parent_;
-    // }
-    // Iterator &operator++() {
-    //   tnode *ptr = current_->right_;
-    //   if(current_->right_ == nullptr)
-    // }
-    // bool operator==(const Iterator &other) const;
-    // bool operator!=(const Iterator &other) const;
-
-    // Де референс
-    // std::pair<Key, T> &operator*() {
-    //   return *reinterpret_cast<std::pair<Key, T> *>(current_);
-    // }
-
-    // // Стрелочная нотация
-    // std::pair<Key, T> *operator->() {
-    //   return reinterpret_cast<std::pair<Key, T> *>(current_);
-    // }
+    iterator(Node *cur_node = nullptr) : current_(cur_node) {}
+    const Key &operator*() { return current_->key_; }
+    // Node *operator->() { return current_; }
 
     // Префиксный инкремент
     iterator &operator++() {
@@ -72,7 +51,7 @@ class sorted_container {
         current_ = current_->right_;
         while (current_->left_) current_ = current_->left_;
       } else {
-        tnode *parent = current_->parent_;
+        Node *parent = current_->parent_;
         while (parent && current_ == parent->right_) {
           current_ = parent;
           parent = parent->parent_;
@@ -95,7 +74,7 @@ class sorted_container {
         current_ = current_->left_;
         while (current_->right_) current_ = current_->right_;
       } else {
-        tnode *parent = current_->parent_;
+        Node *parent = current_->parent_;
         while (parent && current_ == parent->left_) {
           current_ = parent;
           parent = parent->parent_;
@@ -118,41 +97,99 @@ class sorted_container {
     }
 
     bool operator!=(const iterator &other) const { return !(*this == other); }
-  };
+  };  // end class iterator
 
- public:
-  // Методы для получения итераторов
-  iterator begin() {
-    tnode *node = root_;
-    while (node && node->left_) node = node->left_;
-    return iterator(node);
+  class const_iterator {
+   private:
+    const Node *current_;
+
+   public:
+    const_iterator(const Node *cur_node = nullptr) : current_(cur_node) {}
+    const Key &operator*() const { return current_->key_; }
+
+    // Префиксный инкремент
+    const_iterator &operator++() {
+      if (current_->right_) {
+        current_ = current_->right_;
+        while (current_->left_) current_ = current_->left_;
+      } else {
+        const Node *parent = current_->parent_;
+        while (parent && current_ == parent->right_) {
+          current_ = parent;
+          parent = parent->parent_;
+        }
+        current_ = parent;
+      }
+      return *this;
+    }
+
+    // Постфиксный инкремент
+    const_iterator operator++(int) {
+      const_iterator tmp(*this);
+      ++(*this);
+      return tmp;
+    }
+
+    // Префиксный декремент
+    const_iterator &operator--() {
+      if (current_->left_) {
+        current_ = current_->left_;
+        while (current_->right_) current_ = current_->right_;
+      } else {
+        const Node *parent = current_->parent_;
+        while (parent && current_ == parent->left_) {
+          current_ = parent;
+          parent = parent->parent_;
+        }
+        current_ = parent;
+      }
+      return *this;
+    }
+
+    // Постфиксный декремент
+    const_iterator operator--(int) {
+      const_iterator tmp(*this);
+      --(*this);
+      return tmp;
+    }
+
+    // Операторы сравнения
+    bool operator==(const const_iterator &other) const {
+      return current_ == other.current_;
+    }
+
+    bool operator!=(const const_iterator &other) const {
+      return !(*this == other);
+    }
+  };  // end class const_iterator
+
+  iterator Begin() {
+    Node *my_tree = root_;
+    while (my_tree && my_tree->left_) my_tree = my_tree->left_;
+    return iterator(my_tree);
   }
 
-  iterator end() { return iterator(nullptr); }
+  iterator End() { return iterator(nullptr); }
 
-  // Константные версии
-  const iterator begin() const {
-    tnode *node = root_;
-    while (node && node->left_) node = node->left_;
-    return iterator(node);
+  const_iterator Begin() const {
+    Node *my_tree = root_;
+    while (my_tree && my_tree->left_) my_tree = my_tree->left_;
+    return const_iterator(my_tree);
   }
 
-  const iterator end() const { return iterator(nullptr); }
-  // Iterator Begin();
-  // Iterator End();
-  // const Iterator Begin() const;
-  // const Iterator End() const;
+  const_iterator End() const { return const_iterator(nullptr); }
 
-  void destroy_tree(tnode *my_tree) {
+ protected:
+  void DestroyTree(Node *my_tree) {
     if (my_tree != nullptr) {
-      destroy_tree(my_tree->left_);
-      destroy_tree(my_tree->right_);
+      DestroyTree(my_tree->left_);
+      DestroyTree(my_tree->right_);
       delete my_tree;
       my_tree = nullptr;
     }
   }
 
-  bool tree_empty() {
+  bool TreeEmpty() {
     bool result = true;
     if (root_ != nullptr) {
       result = false;
@@ -160,51 +197,64 @@ class sorted_container {
     return result;
   }
 
-  void count_nodes(tnode *my_tree) {
+  void CountNodes(Node *my_tree) {
     if (my_tree) {
-      counter++;
-      count_nodes(my_tree->left_);
-      count_nodes(my_tree->right_);
+      counter_++;
+      CountNodes(my_tree->left_);
+      CountNodes(my_tree->right_);
     }
   }
 
-  tnode *insert(tnode *my_tree, Key key, T value) {
-    if (my_tree == nullptr) {
-      tnode *temp = new tnode(key, value);
-      std::cout << "NEW ";
-      print_struct(temp);
-      return temp;
+  std::pair<iterator, bool> AddNode(const Key &key, const T &value) {
+    if (root_ == nullptr) {
+      root_ = new Node(key, value);
+      return {root_, true};
     }
-    if (key < my_tree->key_) {
-      std::cout << "LEFT: " << key << " < " << my_tree->key_ << std::endl;
-      my_tree->left_ = insert(my_tree->left_, key, value);
-      my_tree->left_->parent_ = my_tree;
-      std::cout << "LEFT ";
-      print_struct(my_tree->left_);
-    } else if (key > my_tree->key_) {
-      std::cout << "RIGHT: " << key << " > " << my_tree->key_ << std::endl;
-      my_tree->right_ = insert(my_tree->right_, key, value);
-      my_tree->right_->parent_ = my_tree;
-      std::cout << "RIGHT ";
-      print_struct(my_tree->right_);
+    Node *current = root_;
+    Node *parent = nullptr;
+    while (current != nullptr) {
+      parent = current;
+      if (key < current->key_) {
+        current = current->left_;
+      } else if (key > current->key_) {
+        current = current->right_;
+      } else {
+        return {current, false};
+      }
     }
-    return my_tree;
+    Node *new_node = new Node(key, value);
+    new_node->parent_ = parent;
+    if (key < parent->key_) {
+      parent->left_ = new_node;
+    } else {
+      parent->right_ = new_node;
+    }
+    return {new_node, true};
   }
 
-  tnode *copy_tree(tnode *source, tnode *parent) {
+  void Erase(iterator pos) {
+    if (pos == nullptr) {
+      return;
+    }
+    if (pos->left_) {
+      std::cout << "HELLO" << std::endl;
+    }
+  }
+
+  Node *CopyTree(Node *source, Node *parent) {
     if (source == nullptr) {
       return nullptr;
     }
-    tnode *temp = new tnode(source->key_, source->value_);
+    Node *temp = new Node(source->key_, source->value_);
     temp->parent_ = parent;
-    temp->left_ = copy_tree(source->left_, temp);
-    temp->right_ = copy_tree(source->right_, temp);
+    temp->left_ = CopyTree(source->left_, temp);
+    temp->right_ = CopyTree(source->right_, temp);
     return temp;
   }
 
-  void print_struct(tnode *tree) {
+  void PrintStruct(Node *tree) {
     if (tree == nullptr) {
-      std::cout << "tnode = null" << std::endl;
+      std::cout << "Node = null" << std::endl;
       return;
     }
     std::cout << "Structure:" << std::endl;
@@ -216,18 +266,18 @@ class sorted_container {
     std::cout << "---------------------" << std::endl;
   }
 
-  void print_tree() {
+  void PrintTree() {
     std::cout << "---------------------" << std::endl;
     std::cout << "TREE: ";
-    print_helper(root_);
+    PrintHelper(root_);
     std::cout << std::endl;
   }
 
-  void print_helper(tnode *my_tree) {
+  void PrintHelper(Node *my_tree) {
     if (my_tree) {
-      print_helper(my_tree->left_);
+      PrintHelper(my_tree->left_);
       std::cout << my_tree->value_ << " ";
-      print_helper(my_tree->right_);
+      PrintHelper(my_tree->right_);
     }
   }
 };  // end class
