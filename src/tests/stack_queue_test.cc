@@ -1,4 +1,5 @@
 // 1) Related header
+#include "components/s21_stack_queue.h"
 // 2) C system headers
 // 3) C++ standard library headers
 #include <queue>
@@ -6,7 +7,6 @@
 // 4) other libraries' headers
 #include <gtest/gtest.h>
 // 5) project's headers.
-#include "s21_containers.h"
 
 using namespace s21;
 
