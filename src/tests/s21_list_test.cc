@@ -3,6 +3,7 @@
 #include <gtest/gtest.h>
 
 #include "s21_containers.h"
+
 TEST(Test_List, Default_Constructor) {
   s21::list<int> myList;
   EXPECT_EQ(myList.size(), 0);
@@ -279,6 +280,8 @@ TEST(Test_List, Erase_Method) {
 
   it = myList.end();
   --it;
+  ++it;
+  it--;
   myList.erase(it);
   EXPECT_EQ(myList.back(), 4);
   EXPECT_EQ(myList.size(), 2);
@@ -496,4 +499,65 @@ TEST(Test_List, Merge_Method_Additional) {
   EXPECT_EQ(*it++, 5);
   EXPECT_EQ(*it++, 7);
   EXPECT_EQ(it, list1.end());
+}
+
+TEST(Test_List, Insert_Many) {
+  s21::list<int> myList = {1, 2, 3};
+  myList.insert_many(myList.end(), 4, 5, 6);
+
+  EXPECT_EQ(myList.size(), 6);
+  auto it = myList.begin();
+  EXPECT_EQ(*it++, 1);
+  EXPECT_EQ(*it++, 2);
+  EXPECT_EQ(*it++, 3);
+  EXPECT_EQ(*it++, 4);
+  EXPECT_EQ(*it++, 5);
+  EXPECT_EQ(*it++, 6);
+  EXPECT_EQ(it, myList.end());
+}
+
+TEST(Test_List, Insert_Many_In_Middle) {
+  s21::list<int> myList = {1, 2, 3, 7, 8};
+  myList.insert_many(++(++myList.begin()), 4, 5, 6);  // after 2
+
+  EXPECT_EQ(myList.size(), 8);
+  auto it = myList.begin();
+  EXPECT_EQ(*it++, 1);
+  EXPECT_EQ(*it++, 2);
+  EXPECT_EQ(*it++, 4);
+  EXPECT_EQ(*it++, 5);
+  EXPECT_EQ(*it++, 6);
+  EXPECT_EQ(*it++, 3);
+  EXPECT_EQ(*it++, 7);
+  EXPECT_EQ(*it++, 8);
+  EXPECT_EQ(it, myList.end());
+}
+
+TEST(Test_List, Insert_Many_Front) {
+  s21::list<int> myList = {4, 5, 6};
+  myList.insert_many_front(1, 2, 3);
+
+  EXPECT_EQ(myList.size(), 6);
+  auto it = myList.begin();
+  EXPECT_EQ(*it++, 1);
+  EXPECT_EQ(*it++, 2);
+  EXPECT_EQ(*it++, 3);
+  EXPECT_EQ(*it++, 4);
+  EXPECT_EQ(*it++, 5);
+  EXPECT_EQ(*it++, 6);
+  EXPECT_EQ(it, myList.end());
+}
+TEST(Test_List, Insert_Many_Back) {
+  s21::list<int> myList = {1, 2, 3};
+  myList.insert_many_back(4, 5, 6);
+
+  EXPECT_EQ(myList.size(), 6);
+  auto it = myList.begin();
+  EXPECT_EQ(*it++, 1);
+  EXPECT_EQ(*it++, 2);
+  EXPECT_EQ(*it++, 3);
+  EXPECT_EQ(*it++, 4);
+  EXPECT_EQ(*it++, 5);
+  EXPECT_EQ(*it++, 6);
+  EXPECT_EQ(it, myList.end());
 }

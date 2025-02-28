@@ -15,115 +15,142 @@ class list : public SequenceContaner<list<T>, T> {
       typename SequenceContaner<list<T>, T>::const_reference;
   using size_type = typename SequenceContaner<list<T>, T>::size_type;
 
+ private:
   struct Node_ {
     value_type value;
     Node_* next;
     Node_* prev;
 
-    // Constructor for a dummy node
-    explicit Node_(Node_* nextNode = nullptr, Node_* prevNode = nullptr)
-        : value(), next(nextNode), prev(prevNode) {}
-
+    // Constructor for a fake node
+    explicit Node_(Node_* nextNode = nullptr, Node_* prevNode = nullptr);
     // Constructor for a real node
     explicit Node_(value_type val, Node_* nextNode = nullptr,
-                   Node_* prevNode = nullptr)
-        : value(val), next(nextNode), prev(prevNode) {}
+                   Node_* prevNode = nullptr);
   };
 
+ public:
   // List Functions
-  list() noexcept;
-  explicit list(size_type n);
-  list(std::initializer_list<value_type> const& items);
-  list(const list& other) noexcept;
-  list(list&& other) noexcept;
-  ~list();
+  list() noexcept;             // Default constructor
+  explicit list(size_type n);  // Fill constructor
+  list(std::initializer_list<value_type> const&
+           items);                   // Initializer list constructor
+  list(const list& other) noexcept;  // Copy constructor
+  list(list&& other) noexcept;       // Move constructor
+  ~list();                           // Destructor
 
   // Assignment operators
-  list<T>& operator=(list<T>&& other) noexcept;
-  list<T>& operator=(const list<T>& other) noexcept;
+  list<T>& operator=(list<T>&& other) noexcept;       // Move assignment
+  list<T>& operator=(const list<T>& other) noexcept;  // Copy assignment
 
   // Access and modification methods
-  Node_* getHead() const { return fake->next; }
-  Node_* getTail() const { return fake->prev; }
+  Node_* getHead() const;
+  Node_* getTail() const;
 
   // List Iterators
 
   class ListIterator {
    public:
-    ListIterator();
-    explicit ListIterator(Node_* node);
-    ListIterator& operator++();
-    ListIterator operator++(int);
-    ListIterator& operator--();
-    ListIterator operator--(int);
-    reference operator*();
-    bool operator==(const ListIterator& other) const;
-    bool operator!=(const ListIterator& other) const;
-    Node_* getNode() const;
+    ListIterator();                      // Default iterator constructor
+    explicit ListIterator(Node_* node);  // Constructor from node pointer
+    ListIterator& operator++();          // Prefix increment
+    ListIterator operator++(int);        // Postfix increment
+    ListIterator& operator--();          // Prefix decrement
+    ListIterator operator--(int);        // Postfix decrement
+    reference operator*();               // Dereference operator
+    bool operator==(const ListIterator& other) const;  // Equality check
+    bool operator!=(const ListIterator& other) const;  // Inequality check
+    Node_* getNode() const;  // Get underlying node pointer
 
    protected:
-    Node_* current;
+    Node_* current;  // Pointer to current node
   };
 
   class ListConstIterator : public ListIterator {
    public:
-    ListConstIterator();
-    explicit ListConstIterator(Node_* node);
-    ListConstIterator(const ListIterator& other);
-    const_reference operator*();
+    ListConstIterator();                           // Default const iterator
+    explicit ListConstIterator(Node_* node);       // Node pointer constructor
+    ListConstIterator(const ListIterator& other);  // Conversion from non-const
+    const_reference operator*();                   // Const dereference operator
   };
 
   using iterator = ListIterator;
   using const_iterator = ListConstIterator;
 
-  iterator begin() const noexcept { return iterator(fake->next); }
-  iterator end() const noexcept { return iterator(fake); }
+  iterator begin() const noexcept;  // Iterator to first element
+  iterator end() const noexcept;    // Iterator to end marker (fake node)
 
   // List Element access
-  const_reference front() const;
-  const_reference back() const;
+  const_reference front() const;  // Access first element
+  const_reference back() const;   // Access last element
 
   // List Capacity
-  bool empty() const;
-  size_type size() const noexcept;
-  size_type max_size() const noexcept;
+  bool empty() const;                   // Check if list is empty
+  size_type size() const noexcept;      // Get current number of elements
+  size_type max_size() const noexcept;  // Get maximum possible size
 
   // List Modifiers
-  void clear() noexcept;
-  iterator insert(iterator pos, const_reference value);
-  void erase(iterator pos);
-  void push_back(const_reference value);
-  void pop_back();
-  void push_front(const_reference value);
-  void pop_front();
-  void swap(list& other) noexcept;
-  void merge(list& other);
-  void splice(const_iterator pos, list& other);
-  void reverse() noexcept;
-  void unique();
-  void sort();
+  void clear() noexcept;  // Remove all elements
+  iterator insert(iterator pos,
+                  const_reference value);  // Insert element at position
+  void erase(iterator pos);                // Remove element at position
+  void push_back(const_reference value);   // Add to end
+  void pop_back();                         // Remove from end
+  void push_front(const_reference value);  // Add to front
+  void pop_front();                        // Remove from front
+  void swap(list& other) noexcept;  // Exchange contents with another list
+  void merge(list& other);          // Merge sorted lists
+  void splice(const_iterator pos,
+              list& other);  // Transfer elements from other list
+  void reverse() noexcept;   // Reverse element order
+  void unique();             // Remove consecutive duplicates
+  void sort();               // Sort elements (using bubble sort)
+
+  // many_insert methods
+
+  template <typename... Args>
+  iterator insert_many(const_iterator pos,
+                       Args&&... args);  // Insert multiple elements
+
+  template <typename... Args>
+  void insert_many_back(Args&&... args);  // Append multiple elements
+
+  template <typename... Args>
+  void insert_many_front(Args&&... args);  // Prepend multiple elements
 
  private:
   Node_* fake;
   size_type size_;
 
-  void initFakeNode();
+  void initFakeNode();  // Initialize dummy node structure
 
   // Utils
-  Node_* createNode(const_reference value, Node_* next, Node_* prev) {
-    return new Node_(value, next, prev);
-  }
-  void copyFrom(const list& other);
+  Node_* createNode(const_reference value, Node_* next,
+                    Node_* prev);    // Node allocation
+  void copyFrom(const list& other);  // Deep copy helper
 
   // for merge() and splice()
-  void transferNode(iterator pos, list& other, iterator src);
-  void appendRemaining(list& other);
+  void transferNode(iterator pos, list& other,
+                    iterator src);    // Move single node
+  void appendRemaining(list& other);  // Append remaining nodes from other list
 
   void extractNodes(list& other, Node_*& first, Node_*& last,
                     size_type& movedSize);
   void linkNodes(Node_* posPrev, Node_* posNext, Node_* first, Node_* last,
                  size_type movedSize);
+
+  // for many_insert
+  template <typename... Args>
+  void emplaceBack(
+      Args&&... args);  // // insert element at end. Better than push_back()
 };
+
+template <typename T>
+list<T>::Node_::Node_(Node_* nextNode, Node_* prevNode)
+    : value(), next(nextNode), prev(prevNode) {}
+
+template <typename T>
+list<T>::Node_::Node_(value_type val, Node_* nextNode, Node_* prevNode)
+    : value(val), next(nextNode), prev(prevNode) {}
 
 /*List Functions*/
 
@@ -284,6 +311,16 @@ typename list<T>::const_reference list<T>::ListConstIterator::operator*() {
   return this->current->value;
 }
 
+template <typename T>
+typename list<T>::iterator list<T>::begin() const noexcept {
+  return iterator(fake->next);
+}
+
+template <typename T>
+typename list<T>::iterator list<T>::end() const noexcept {
+  return iterator(fake);
+}
+
 /*List Element access*/
 template <typename T>
 inline typename list<T>::const_reference list<T>::front() const {
@@ -412,56 +449,6 @@ void list<T>::merge(list& other) {
 }
 
 template <typename T>
-void list<T>::transferNode(iterator pos, list& other, iterator src) {
-  Node_* srcNode = src.getNode();
-
-  srcNode->prev->next = srcNode->next;
-  srcNode->next->prev = srcNode->prev;
-  --other.size_;
-
-  Node_* posNode = pos.getNode();
-  srcNode->prev = posNode->prev;
-  srcNode->next = posNode;
-  posNode->prev->next = srcNode;
-  posNode->prev = srcNode;
-  ++size_;
-}
-
-template <typename T>
-void list<T>::appendRemaining(list& other) {
-  if (other.empty()) return;
-
-  Node_* first;
-  Node_* last;
-  size_type movedSize;
-  extractNodes(other, first, last, movedSize);
-  linkNodes(fake->prev, fake, first, last, movedSize);
-}
-
-template <typename T>
-void list<T>::extractNodes(list& other, Node_*& first, Node_*& last,
-                           size_type& movedSize) {
-  first = other.fake->next;
-  last = other.fake->prev;
-  movedSize = other.size_;
-
-  // Reset source list
-  other.fake->next = other.fake;
-  other.fake->prev = other.fake;
-  other.size_ = 0;
-}
-
-template <typename T>
-void list<T>::linkNodes(Node_* posPrev, Node_* posNext, Node_* first,
-                        Node_* last, size_type movedSize) {
-  posPrev->next = first;
-  first->prev = posPrev;
-  last->next = posNext;
-  posNext->prev = last;
-  size_ += movedSize;
-}
-
-template <typename T>
 void list<T>::splice(const_iterator pos, list& other) {
   if (other.empty()) return;
 
@@ -513,6 +500,128 @@ void list<T>::sort() {
       ++it;
     }
   }
+}
+
+/* many_insert methods
+****************
+The following functions are used to manage the insertion of multiple elements
+into the list.
+`insert_many` takes a position and a variable number of arguments, creates a
+temporary list,and splices it into the original list at the specified position.
+`insert_many_front` inserts multiple elements at the front of the list by
+calling `insert_many`
+`insert_many_back` inserts multiple elements at the back of the list by
+calling `insert_many` with the end iterator.
+
+*/
+
+template <typename T>
+template <typename... Args>
+typename list<T>::iterator list<T>::insert_many(const_iterator pos,
+                                                Args&&... args) {
+  list<T> temp;
+  (temp.emplaceBack(std::forward<Args>(args)), ...);
+
+  if (temp.empty()) return pos;
+
+  iterator first = temp.begin();
+  splice(pos, temp);
+  return first;
+}
+
+template <typename T>
+template <typename... Args>
+void list<T>::insert_many_front(Args&&... args) {
+  const_iterator it = begin();
+  insert_many(it, std::forward<Args>(args)...);
+}
+
+template <typename T>
+template <typename... Args>
+void list<T>::insert_many_back(Args&&... args) {
+  const_iterator it = end();
+  insert_many(it, std::forward<Args>(args)...);
+}
+
+/*Utils
+************
+transferNode(),appendRemaining(),extractNodes(),extractNodes(),linkNodes() -
+auxiliary functions for merge() and splice()
+*************
+emplaceBack()- inserts elements at the end of the list. More efficient than
+push_back(), because it does not additionally call copy/move constructors.
+*/
+
+template <typename T>
+typename list<T>::Node_* list<T>::createNode(const_reference value, Node_* next,
+                                             Node_* prev) {
+  return new Node_(value, next, prev);
+}
+template <typename T>
+void list<T>::transferNode(iterator pos, list& other, iterator src) {
+  Node_* srcNode = src.getNode();
+
+  srcNode->prev->next = srcNode->next;
+  srcNode->next->prev = srcNode->prev;
+  --other.size_;
+
+  Node_* posNode = pos.getNode();
+  srcNode->prev = posNode->prev;
+  srcNode->next = posNode;
+  posNode->prev->next = srcNode;
+  posNode->prev = srcNode;
+  ++size_;
+}
+
+template <typename T>
+void list<T>::appendRemaining(list& other) {
+  if (other.empty()) return;
+
+  Node_* first;
+  Node_* last;
+  size_type movedSize;
+  extractNodes(other, first, last, movedSize);
+  linkNodes(fake->prev, fake, first, last, movedSize);
+}
+
+template <typename T>
+void list<T>::extractNodes(list& other, Node_*& first, Node_*& last,
+                           size_type& movedSize) {
+  first = other.fake->next;
+  last = other.fake->prev;
+  movedSize = other.size_;
+
+  // Reset source list
+  other.fake->next = other.fake;
+  other.fake->prev = other.fake;
+  other.size_ = 0;
+}
+
+template <typename T>
+void list<T>::linkNodes(Node_* posPrev, Node_* posNext, Node_* first,
+                        Node_* last, size_type movedSize) {
+  posPrev->next = first;
+  first->prev = posPrev;
+  last->next = posNext;
+  posNext->prev = last;
+  size_ += movedSize;
+}
+template <typename T>
+typename list<T>::Node_* list<T>::getHead() const {
+  return fake->next;
+}
+template <typename T>
+typename list<T>::Node_* list<T>::getTail() const {
+  return fake->prev;
+}
+
+template <typename T>
+template <typename... Args>
+void list<T>::emplaceBack(Args&&... args) {
+  Node_* newNode = new Node_(T(std::forward<Args>(args)...), fake, fake->prev);
+  fake->prev->next = newNode;
+  fake->prev = newNode;
+  ++size_;
 }
 
 }  // namespace s21
