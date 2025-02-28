@@ -9,6 +9,7 @@
 #include "components/s21_stack_queue.h"
 #include "components/s21_set.h"
 #include "components/s21_sorted_container.h"
+#include "components/s21_stack_queue.h"
 #include "components/s21_list.h"
 /// @brief вот то что ниже вынесте в отдельный файл  и в папку components , а
 /// здесь чисто инклюды оставить
