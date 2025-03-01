@@ -96,7 +96,9 @@ class BinaryTree {
       return current_ == other.current_;
     }
 
-    bool operator!=(const const_iterator &other) const { return !(*this == other); }
+    bool operator!=(const const_iterator &other) const {
+      return !(*this == other);
+    }
   };  // end class const_iterator
 
   const_iterator Begin() const {
