@@ -82,6 +82,7 @@ TEST(StackTest, EmptyContainer) {
   EXPECT_NO_THROW(st.pop());
   EXPECT_NO_THROW(my_stack.pop());
   // st.top() causes Segmentation fault
+  EXPECT_ANY_THROW(my_stack.top());
 }
 
 TEST(QueueTest, EmptyContainer) {
@@ -93,6 +94,9 @@ TEST(QueueTest, EmptyContainer) {
   EXPECT_NO_THROW(q.pop());
   EXPECT_NO_THROW(my_queue.pop());
   // q.front() causes Segmentation fault
+  // q.back() causes Segmentation fault
+  EXPECT_ANY_THROW(my_queue.front());
+  EXPECT_ANY_THROW(my_queue.back());
 }
 
 // Capture and test the output of PrintContainer().
@@ -160,6 +164,13 @@ TEST(StackTest, OperatorMove) {
   std_stack_empty = std::move(std_stack_int);
   CompareStacks<int>(our_stack_empty, std_stack_empty);
   EXPECT_EQ(our_stack_int.empty(), std_stack_int.empty());
+}
+
+TEST(StackTest, Destructor) {
+  Stack<int> our_stack_int = {1, 2, 3};
+  our_stack_int.~Stack();
+  EXPECT_EQ(our_stack_int.empty(), true);
+  EXPECT_EQ(our_stack_int.size(), 0);
 }
 
 TEST(StackTest, Push) {

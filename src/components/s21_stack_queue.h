@@ -187,7 +187,10 @@ class Stack : public ContainerAdaptor<T> {
   void push(const_reference_ value) override;
   void pop() override;
 
-  const_reference_ top() { return this->data_[this->actual_size_ - 1]; }
+  const_reference_ top() {
+    if (this->empty()) throw std::out_of_range("Stack is empty");
+    return this->data_[this->actual_size_ - 1];
+  }
 };
 
 template <typename T>
@@ -222,8 +225,14 @@ class Queue : public ContainerAdaptor<T> {
   void pop() override;
 
   // access the first element
-  const_reference_ front() { return this->data_[0]; }
-  const_reference_ back() { return this->data_[this->actual_size_ - 1]; }
+  const_reference_ front() {
+    if (this->empty()) throw std::out_of_range("Queue is empty");
+    return this->data_[0];
+  }
+  const_reference_ back() {
+    if (this->empty()) throw std::out_of_range("Queue is empty");
+    return this->data_[this->actual_size_ - 1];
+  }
 };
 
 template <typename T>
