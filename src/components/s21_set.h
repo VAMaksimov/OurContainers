@@ -55,8 +55,6 @@ class set : public BinaryTree<Key, Key> {
     return *this;
   }
 
-  iterator begin() { return BinaryTree<key_type, value_type>::Begin(); }
-  iterator end() { return BinaryTree<key_type, value_type>::End(); }
   const_iterator begin() const {
     return BinaryTree<key_type, value_type>::Begin();
   }
@@ -80,7 +78,7 @@ class set : public BinaryTree<Key, Key> {
     return this->AddNode(value, value);
   }
 
-  void erase(iterator pos);
+  void erase(iterator pos) { this->Erase(pos); }
 };
 
 }  // namespace s21

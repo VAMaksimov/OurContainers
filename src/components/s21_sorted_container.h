@@ -42,8 +42,8 @@ class BinaryTree {
 
    public:
     iterator(Node *cur_node = nullptr) : current_(cur_node) {}
-    const Key &operator*() { return current_->key_; }
-    // Node *operator->() { return current_; }
+    const Key &operator*() const { return current_->key_; }
+    Node *operator->() { return current_; }
 
     // Префиксный инкремент
     iterator &operator++() {
@@ -106,6 +106,7 @@ class BinaryTree {
    public:
     const_iterator(const Node *cur_node = nullptr) : current_(cur_node) {}
     const Key &operator*() const { return current_->key_; }
+    // const Node *operator->() const { return current_; }
 
     // Префиксный инкремент
     const_iterator &operator++() {
@@ -168,7 +169,6 @@ class BinaryTree {
     while (my_tree && my_tree->left_) my_tree = my_tree->left_;
     return iterator(my_tree);
   }
-
   iterator End() { return iterator(nullptr); }
 
   const_iterator Begin() const {
@@ -176,7 +176,6 @@ class BinaryTree {
     while (my_tree && my_tree->left_) my_tree = my_tree->left_;
     return const_iterator(my_tree);
   }
-
   const_iterator End() const { return const_iterator(nullptr); }
 
  protected:
@@ -236,9 +235,54 @@ class BinaryTree {
     if (pos == nullptr) {
       return;
     }
+    Node *parent_erase = pos->parent_;
+    Node *node_erase = nullptr;
+    Node *new_root = nullptr;
     if (pos->left_) {
-      std::cout << "HELLO" << std::endl;
+      new_root = pos->left_;
+      if (pos->right_) {
+        Node *current = pos->left_;
+        Node *parent = nullptr;
+        while (current) {
+          parent = current;
+          current = current->right_;
+        }
+        parent->right_ = pos->right_;
+      }
+    } else if (pos->right_) {
+      new_root = pos->right_;
+    } else if (parent_erase) {
+      if (pos->key_ < parent_erase->key_) {
+        node_erase = parent_erase->left_;
+        parent_erase->left_ = EraseNode(parent_erase->left_);
+      } else {
+        node_erase = parent_erase->right_;
+        parent_erase->right_ = EraseNode(parent_erase->right_);
+      }
+    } else {
+      node_erase = root_;
+      root_ = EraseNode(root_);
     }
+    if (new_root && parent_erase) {
+      node_erase = new_root->parent_;
+      new_root->parent_ = parent_erase;
+      if (new_root->key_ < parent_erase->key_) {
+        parent_erase->left_ = new_root;
+      } else {
+        parent_erase->right_ = new_root;
+      }
+    } else if (new_root && !parent_erase) {
+      node_erase = root_;
+      root_ = new_root;
+    }
+    EraseNode(node_erase);
+  }
+
+  Node *EraseNode(Node *current) {
+    if (current) {
+      delete current;
+    }
+    return nullptr;
   }
 
   Node *CopyTree(Node *source, Node *parent) {

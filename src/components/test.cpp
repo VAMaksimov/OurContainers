@@ -25,16 +25,19 @@ int main() {
   // }
   std::cout << std::endl;
 
-  MySet.fi
+  std::cout << "Begin & erase:" << std::endl;
+  auto iter = MySet.begin();
+  // MySet.erase(iter);
+  iter->value_ = 777;
+  std::cout << "+++++++++++++" << std::endl;
 
-      if (MySet.empty()) {
+  if (MySet.empty()) {
     std::cout << "Tree MySet pusto" << std::endl;
-  }
-  else {
+  } else {
     std::cout << "Tree MySet ne pusto" << std::endl;
     std::cout << MySet.size() << std::endl;
   }
-  MySet.insert(5);
+  // MySet.insert(5);
   // auto iter = MySet.begin();
   // iter->value_ = 999;
   // for (auto it = MySet.begin(); it != MySet.end(); ++it) {
@@ -49,12 +52,12 @@ int main() {
   // s21::set<int> MySet3;
   // std::set<int> MySet2;
 
-  if (MySet.empty()) {
-    std::cout << "Tree MySet pusto" << std::endl;
-  } else {
-    std::cout << "Tree MySet ne pusto" << std::endl;
-    std::cout << MySet.size() << std::endl;
-  }
+  // if (MySet.empty()) {
+  //   std::cout << "Tree MySet pusto" << std::endl;
+  // } else {
+  //   std::cout << "Tree MySet ne pusto" << std::endl;
+  //   std::cout << MySet.size() << std::endl;
+  // }
 
   // MySet3 = MySet2;
   // std::cout << "Size = " << MySet2.size() << std::endl;
