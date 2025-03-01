@@ -3,6 +3,7 @@
 // 2) C system headers
 // 3) C++ standard library headers
 #include <set>
+#include <map>
 // 4) other libraries' headers
 #include <gtest/gtest.h>
 // 5) project's headers.
