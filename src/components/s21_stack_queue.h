@@ -5,6 +5,8 @@
 // 2) C system headers
 // 3) C++ standard library headers
 #include <initializer_list>
+#include <iostream>
+#include <utility>
 // 4) other libraries' headers
 // 5) project's headers.
 
@@ -59,7 +61,7 @@ class ContainerAdaptor {
   size_type_ actual_size_;
 
   void GrowCapacity(size_type_ new_capacity);
-};
+};  // class ContainerAdaptor
 
 template <typename T>
 ContainerAdaptor<T>::ContainerAdaptor()
@@ -191,7 +193,7 @@ class Stack : public ContainerAdaptor<T> {
     if (this->empty()) throw std::out_of_range("Stack is empty");
     return this->data_[this->actual_size_ - 1];
   }
-};
+};  // class Stack
 
 template <typename T>
 void Stack<T>::push(const_reference_ value) {
@@ -233,7 +235,7 @@ class Queue : public ContainerAdaptor<T> {
     if (this->empty()) throw std::out_of_range("Queue is empty");
     return this->data_[this->actual_size_ - 1];
   }
-};
+};  // class Queue
 
 template <typename T>
 void Queue<T>::push(const_reference_ value) {

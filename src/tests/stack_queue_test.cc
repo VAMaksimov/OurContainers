@@ -36,7 +36,6 @@ void CompareQueues(Queue<T> &actual, std::queue<T> &expected) {
   EXPECT_EQ(actual.empty(), expected.empty());
 }
 
-// Test size() and empty() methods.
 TEST(StackTest, InitializationAndBasicProperties) {
   Stack<int> my_stack({1, 2, 3});
 
@@ -72,7 +71,6 @@ TEST(StackTest, Swap) {
   EXPECT_EQ(stack1.top(), 8);
 }
 
-// Test that an empty ContainerAdaptor behaves like an empty std::stack.
 TEST(StackTest, EmptyContainer) {
   Stack<int> my_stack;
   std::stack<int> st;
@@ -107,9 +105,14 @@ TEST(StackTest, PrintContainer) {
   Stack<char> stack3({'a', 'b', 'c'});
   Stack<std::string> stack4({"one", "two", "three"});
 
-  // Redirect std::cout to capture output.
   std::ostringstream oss;
+  // First, the code saves the original buffer of std::cout so it can be
+  // restored later When called without arguments, rdbuf() simply returns a
+  // pointer to the current stream buffer associated with the stream
   auto old_buf = std::cout.rdbuf();
+  // Replace std::cout's buffer with the buffer from the string stream (oss).
+  // When called with a stream buffer pointer argument, rdbuf(ptr) sets the
+  // stream to use the provided buffer and returns the previous buffer
   std::cout.rdbuf(oss.rdbuf());
 
   stack1.PrintContainer();
@@ -166,12 +169,13 @@ TEST(StackTest, OperatorMove) {
   EXPECT_EQ(our_stack_int.empty(), std_stack_int.empty());
 }
 
-TEST(StackTest, Destructor) {
-  Stack<int> our_stack_int = {1, 2, 3};
-  our_stack_int.~Stack();
-  EXPECT_EQ(our_stack_int.empty(), true);
-  EXPECT_EQ(our_stack_int.size(), 0);
-}
+// TEST(StackTest, Destructor) {
+// Is not possible to test
+// The segmentation fault occurs because the
+// destructor ~ContainerAdaptor() is explicitly called on an object that is
+// still in scope and will have its destructor automatically called again when
+// it goes out of scope. This creates a double deletion problem
+// }
 
 TEST(StackTest, Push) {
   Stack<int> our_stack_int;

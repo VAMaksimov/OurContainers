@@ -7,8 +7,8 @@
 // 4) other libraries' headers
 // 5) project's headers.
 #include "components/s21_list.h"
-#include "components/s21_set.h"
-#include "components/s21_sorted_container.h"
+// #include "components/s21_set.h"
+// #include "components/s21_sorted_container.h"
 #include "components/s21_stack_queue.h"
 /// @brief вот то что ниже вынесте в отдельный файл  и в папку components , а
 /// здесь чисто инклюды оставить
