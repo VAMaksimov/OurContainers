@@ -19,7 +19,7 @@ class map : public BinaryTree<Key, Value> {
  public:
   map() : BinaryTree<key_type, mapped_type>() {};
   map(std::initializer_list<value_type> const &key_value_pairs) {
-    for (const auto &item : key_value_pairs) this->insert(item);
+    for (const auto &kvp : key_value_pairs) this->insert(kvp);
   }
   map(const map &s) : BinaryTree<key_type, mapped_type>() {
     this->DestroyTree(this->root_);
