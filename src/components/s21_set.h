@@ -11,7 +11,6 @@ class set : public BinaryTree<Key, Key> {
   using value_type = Key;
   using reference = value_type &;
   using const_reference = const value_type &;
-  using iterator = typename BinaryTree<key_type, value_type>::iterator;
   using const_iterator =
       typename BinaryTree<key_type, value_type>::const_iterator;
   using size_type = size_t;
@@ -74,11 +73,20 @@ class set : public BinaryTree<Key, Key> {
     this->root_ = nullptr;
   }
 
-  std::pair<iterator, bool> insert(const value_type &value) {
+  std::pair<const_iterator, bool> insert(const value_type &value) {
     return this->AddNode(value, value);
   }
 
-  void erase(iterator pos) { this->Erase(pos); }
+  void erase(const_iterator pos) { this->Erase(pos); }
+  const_iterator find(const key_type &key) {
+    return this->FindNode(this->root_, key);
+  }
+
+  bool contains(const key_type &key) {
+    return this->Contains(this->root_, key);
+  }
+  void swap(set &other) { std::swap(this, other); }
+  void merge(set &other) { this->Merge(other.root_); }
 };
 
 }  // namespace s21

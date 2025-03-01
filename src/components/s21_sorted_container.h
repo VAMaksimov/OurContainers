@@ -36,77 +36,14 @@ class BinaryTree {
   }
 
  public:
-  class iterator {
+  class const_iterator {
    private:
     Node *current_;
 
    public:
-    iterator(Node *cur_node = nullptr) : current_(cur_node) {}
+    const_iterator(Node *cur_node = nullptr) : current_(cur_node) {}
     const Key &operator*() const { return current_->key_; }
-    Node *operator->() { return current_; }
-
-    // Префиксный инкремент
-    iterator &operator++() {
-      if (current_->right_) {
-        current_ = current_->right_;
-        while (current_->left_) current_ = current_->left_;
-      } else {
-        Node *parent = current_->parent_;
-        while (parent && current_ == parent->right_) {
-          current_ = parent;
-          parent = parent->parent_;
-        }
-        current_ = parent;
-      }
-      return *this;
-    }
-
-    // Постфиксный инкремент
-    iterator operator++(int) {
-      iterator tmp(*this);
-      ++(*this);
-      return tmp;
-    }
-
-    // Префиксный декремент
-    iterator &operator--() {
-      if (current_->left_) {
-        current_ = current_->left_;
-        while (current_->right_) current_ = current_->right_;
-      } else {
-        Node *parent = current_->parent_;
-        while (parent && current_ == parent->left_) {
-          current_ = parent;
-          parent = parent->parent_;
-        }
-        current_ = parent;
-      }
-      return *this;
-    }
-
-    // Постфиксный декремент
-    iterator operator--(int) {
-      iterator tmp(*this);
-      --(*this);
-      return tmp;
-    }
-
-    // Операторы сравнения
-    bool operator==(const iterator &other) const {
-      return current_ == other.current_;
-    }
-
-    bool operator!=(const iterator &other) const { return !(*this == other); }
-  };  // end class iterator
-
-  class const_iterator {
-   private:
-    const Node *current_;
-
-   public:
-    const_iterator(const Node *cur_node = nullptr) : current_(cur_node) {}
-    const Key &operator*() const { return current_->key_; }
-    // const Node *operator->() const { return current_; }
+    const Node *operator->() const { return current_; }
 
     // Префиксный инкремент
     const_iterator &operator++() {
@@ -114,7 +51,7 @@ class BinaryTree {
         current_ = current_->right_;
         while (current_->left_) current_ = current_->left_;
       } else {
-        const Node *parent = current_->parent_;
+        Node *parent = current_->parent_;
         while (parent && current_ == parent->right_) {
           current_ = parent;
           parent = parent->parent_;
@@ -137,7 +74,7 @@ class BinaryTree {
         current_ = current_->left_;
         while (current_->right_) current_ = current_->right_;
       } else {
-        const Node *parent = current_->parent_;
+        Node *parent = current_->parent_;
         while (parent && current_ == parent->left_) {
           current_ = parent;
           parent = parent->parent_;
@@ -163,13 +100,6 @@ class BinaryTree {
       return !(*this == other);
     }
   };  // end class const_iterator
-
-  iterator Begin() {
-    Node *my_tree = root_;
-    while (my_tree && my_tree->left_) my_tree = my_tree->left_;
-    return iterator(my_tree);
-  }
-  iterator End() { return iterator(nullptr); }
 
   const_iterator Begin() const {
     Node *my_tree = root_;
@@ -204,7 +134,7 @@ class BinaryTree {
     }
   }
 
-  std::pair<iterator, bool> AddNode(const Key &key, const T &value) {
+  std::pair<const_iterator, bool> AddNode(const Key &key, const T &value) {
     if (root_ == nullptr) {
       root_ = new Node(key, value);
       return {root_, true};
@@ -231,7 +161,7 @@ class BinaryTree {
     return {new_node, true};
   }
 
-  void Erase(iterator pos) {
+  void Erase(const_iterator pos) {
     if (pos == nullptr) {
       return;
     }
@@ -283,6 +213,47 @@ class BinaryTree {
       delete current;
     }
     return nullptr;
+  }
+
+  const_iterator FindNode(Node *current, const Key &key) {
+    const_iterator result = const_iterator(root_);
+    if (key < current->key_) {
+      result = FindNode(current->left_, key);
+    } else if (key > current->key_) {
+      result = FindNode(current->right_, key);
+    } else {
+      result = const_iterator(current);
+    }
+    return result;
+  }
+
+  bool Contains(Node *current, const Key &key) {
+    bool result = false;
+    if (key < current->key_) {
+      result = Contains(current->left_, key);
+    } else if (key > current->key_) {
+      result = Contains(current->right_, key);
+    } else {
+      result = true;
+    }
+    return result;
+  }
+
+  void MergeHelper(Node *current, Node *other, Node *parent) {
+    if (current == nullptr) {
+      current = other;
+      current->parent_ = parent;
+      return true;
+    }
+    bool result = false;
+    parent = current;
+    if (other->key_ < current->key_) {
+      result = MergeHelper(current->left_, other, parent);
+    } else if (other->key_ > current->key_) {
+      result = MergeHelper(current->right_, other, parent);
+    } else {
+      result = true;
+    }
   }
 
   Node *CopyTree(Node *source, Node *parent) {
