@@ -85,8 +85,15 @@ class set : public BinaryTree<Key, Key> {
   bool contains(const key_type &key) {
     return this->Contains(this->root_, key);
   }
-  void swap(set &other) { std::swap(this, other); }
-  void merge(set &other) { this->Merge(other.root_); }
+  void swap(set &other) { std::swap(this->root_, other.root_); }
+  void merge(set &other) {
+    this->Merge(other.root_);
+    this->PrintTree();
+    std::cout << "*****************" << std::endl;
+    other.PrintTree();
+  }
+
+  void print() { this->PrintTree(); }
 };
 
 }  // namespace s21
