@@ -70,9 +70,7 @@ array<T, N>::array(const array& other) {
 
 template <typename T, std::size_t N>
 array<T, N>::array(array&& other) noexcept {
-  for (size_type i = 0; i < N; ++i) {
-    data_[i] = std::move(other.data_[i]);
-  }
+  std::move(other.begin(), other.end(), data_);
 }
 
 template <typename T, std::size_t N>
