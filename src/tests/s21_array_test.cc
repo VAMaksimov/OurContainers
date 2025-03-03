@@ -67,3 +67,13 @@ TEST(ArrayTest, At) {
   EXPECT_EQ(arr.at(4), 5);
   EXPECT_THROW(arr.at(5), std::out_of_range);
 }
+
+TEST(ArrayTest, Begin) {
+  s21::array<int, 5> arr = {1, 2, 3, 4, 5};
+  EXPECT_EQ(*arr.begin(), 1);
+}
+
+TEST(ArrayTest, End) {
+  s21::array<int, 5> arr = {1, 2, 3, 4, 5};
+  EXPECT_EQ(*(arr.end() - 1), 5);
+}
