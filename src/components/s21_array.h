@@ -7,17 +7,17 @@
 
 namespace s21 {
 
-template <typename T>
-class array : public SequenceContainer<array<T>, T> {
+template <typename T, std::size_t N>
+class array : public SequenceContainer<array<T, N>, T> {
  public:
   // Array Member type
-  using value_type = typename SequenceContainer<array<T>, T>::value_type;
-  using reference = typename SequenceContainer<array<T>, T>::reference;
+  using value_type = typename SequenceContainer<array<T, N>, T>::value_type;
+  using reference = typename SequenceContainer<array<T, N>, T>::reference;
   using const_reference =
-      typename SequenceContainer<array<T>, T>::const_reference;
+      typename SequenceContainer<array<T, N>, T>::const_reference;
   using iterator = T*;
   using const_iterator = const T*;
-  using size_type = typename SequenceContainer<array<T>, T>::size_type;
+  using size_type = typename SequenceContainer<array<T, N>, T>::size_type;
 
   // Array Member functions
   array();
@@ -51,94 +51,97 @@ class array : public SequenceContainer<array<T>, T> {
   void fill(const_reference value);
 
  private:
-  value_type* data_;
-  size_type size_;
+  size_type size_ = N;
+  value_type data_[N];
 };
 
 /*Array Member functions*/
-template <typename T>
-array<T>::array() : data_(nullptr), size_(0) {}
-
-template <typename T>
-array<T>::array(std::initializer_list<value_type> const& items)
-    : size_(items.size()) {
-  data_ = new value_type[size_];
+template <typename T, size_t N>
+inline array<T, N>::array() : size_(N) {}
+template <typename T, std::size_t N>
+array<T, N>::array(std::initializer_list<value_type> const& items) {
   std::copy(items.begin(), items.end(), data_);
 }
 
-template <typename T>
-array<T>::array(const array& other) : size_(other.size_) {
-  data_ = new value_type[size_];
-  std::copy(other.data_, other.data_ + size_, data_);
+template <typename T, std::size_t N>
+array<T, N>::array(const array& other) {
+  std::copy(other.data_, other.data_ + N, data_);
 }
 
-template <typename T>
-array<T>::array(array&& other) noexcept
-    : data_(other.data_), size_(other.size_) {
-  other.data_ = nullptr;
-  other.size_ = 0;
+template <typename T, std::size_t N>
+array<T, N>::array(array&& other) noexcept {
+  for (size_type i = 0; i < N; ++i) {
+    data_[i] = std::move(other.data_[i]);
+  }
 }
 
-template <typename T>
-array<T>::~array() {
-  delete[] data_;
-}
+template <typename T, std::size_t N>
+array<T, N>::~array() {}
 
-template <typename T>
-array<T>& array<T>::operator=(array&& other) noexcept {
+template <typename T, std::size_t N>
+array<T, N>& array<T, N>::operator=(array&& other) noexcept {
   if (this != &other) {
-    array<T> temp(std::move(other));
-    swap(temp);
+    swap(other);
   }
   return *this;
 }
 
-template <typename T>
-array<T>& array<T>::operator=(const array& other) {
-  array<T> temp(other);
-  swap(temp);
+template <typename T, std::size_t N>
+array<T, N>& array<T, N>::operator=(const array& other) {
+  if (this != &other) {
+    std::copy(other.data_, other.data_ + N, data_);
+  }
   return *this;
 }
 
 /*Array Element access*/
-template <typename T>
-typename array<T>::reference array<T>::at(size_type pos) {
+template <typename T, std::size_t N>
+typename array<T, N>::reference array<T, N>::at(size_type pos) {
   if (pos >= size_) {
     throw std::out_of_range("Index out of range");
   }
   return data_[pos];
 }
 
-template <typename T>
-typename array<T>::reference array<T>::operator[](size_type pos) {
+template <typename T, std::size_t N>
+typename array<T, N>::reference array<T, N>::operator[](size_type pos) {
   return data_[pos];
 }
 
-template <typename T>
-typename array<T>::const_reference array<T>::front() const {
+template <typename T, std::size_t N>
+typename array<T, N>::const_reference array<T, N>::front() const {
   return data_[0];
 }
 
-template <typename T>
-typename array<T>::const_reference array<T>::back() const {
+template <typename T, std::size_t N>
+typename array<T, N>::const_reference array<T, N>::back() const {
   return data_[size_ - 1];
 }
 
-template <typename T>
-typename array<T>::iterator array<T>::data() noexcept {
+template <typename T, std::size_t N>
+typename array<T, N>::iterator array<T, N>::data() noexcept {
   return data_;
 }
 
 /*Array Iterators*/
+template <typename T, std::size_t N>
+typename array<T, N>::iterator array<T, N>::begin() noexcept {
+  return data_;
+}
+
+template <typename T, std::size_t N>
+typename array<T, N>::iterator array<T, N>::end() noexcept {
+  return data_ + size_;
+}
 
 /*Array Capacity*/
-template <typename T>
-typename array<T>::size_type array<T>::size() const noexcept {
+template <typename T, std::size_t N>
+typename array<T, N>::size_type array<T, N>::size() const noexcept {
   return size_;
 }
 /*Array Modifiers*/
-template <typename T>
-void array<T>::swap(array& other) noexcept {
+template <typename T, std::size_t N>
+void array<T, N>::swap(array& other) noexcept {
   std::swap(data_, other.data_);
   std::swap(size_, other.size_);
 }
