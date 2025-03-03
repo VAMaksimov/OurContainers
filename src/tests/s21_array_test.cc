@@ -94,3 +94,20 @@ TEST(ArrayTest, Size) {
   s21::array<int, 5> arr = {1, 2, 3};
   EXPECT_EQ(arr.size(), 5);
 }
+
+TEST(ArrayTest, Fill) {
+  s21::array<int, 5> arr;
+  arr.fill(10);
+  EXPECT_EQ(arr.at(0), 10);
+  EXPECT_EQ(arr.at(1), 10);
+  EXPECT_EQ(arr.at(2), 10);
+  EXPECT_EQ(arr.at(3), 10);
+  EXPECT_EQ(arr.at(4), 10);
+
+  arr.fill(20);
+  EXPECT_EQ(arr.at(0), 20);
+  EXPECT_EQ(arr.at(1), 20);
+  EXPECT_EQ(arr.at(2), 20);
+  EXPECT_EQ(arr.at(3), 20);
+  EXPECT_EQ(arr.at(4), 20);
+}

@@ -64,20 +64,20 @@ array<T, N>::array(std::initializer_list<value_type> const& items) {
 }
 
 template <typename T, std::size_t N>
-array<T, N>::array(const array& other) {
+inline array<T, N>::array(const array& other) {
   std::copy(other.data_, other.data_ + N, data_);
 }
 
 template <typename T, std::size_t N>
-array<T, N>::array(array&& other) noexcept {
+inline array<T, N>::array(array&& other) noexcept {
   std::move(other.begin(), other.end(), data_);
 }
 
 template <typename T, std::size_t N>
-array<T, N>::~array() {}
+inline array<T, N>::~array() {}
 
 template <typename T, std::size_t N>
-array<T, N>& array<T, N>::operator=(array&& other) noexcept {
+inline array<T, N>& array<T, N>::operator=(array&& other) noexcept {
   if (this != &other) {
     swap(other);
   }
@@ -85,7 +85,7 @@ array<T, N>& array<T, N>::operator=(array&& other) noexcept {
 }
 
 template <typename T, std::size_t N>
-array<T, N>& array<T, N>::operator=(const array& other) {
+inline array<T, N>& array<T, N>::operator=(const array& other) {
   if (this != &other) {
     std::copy(other.data_, other.data_ + N, data_);
   }
@@ -94,7 +94,7 @@ array<T, N>& array<T, N>::operator=(const array& other) {
 
 /*Array Element access*/
 template <typename T, std::size_t N>
-typename array<T, N>::reference array<T, N>::at(size_type pos) {
+inline typename array<T, N>::reference array<T, N>::at(size_type pos) {
   if (pos >= size_) {
     throw std::out_of_range("Index out of range");
   }
@@ -102,33 +102,33 @@ typename array<T, N>::reference array<T, N>::at(size_type pos) {
 }
 
 template <typename T, std::size_t N>
-typename array<T, N>::reference array<T, N>::operator[](size_type pos) {
+inline typename array<T, N>::reference array<T, N>::operator[](size_type pos) {
   return data_[pos];
 }
 
 template <typename T, std::size_t N>
-typename array<T, N>::const_reference array<T, N>::front() const {
+inline typename array<T, N>::const_reference array<T, N>::front() const {
   return data_[0];
 }
 
 template <typename T, std::size_t N>
-typename array<T, N>::const_reference array<T, N>::back() const {
+inline typename array<T, N>::const_reference array<T, N>::back() const {
   return data_[size_ - 1];
 }
 
 template <typename T, std::size_t N>
-typename array<T, N>::iterator array<T, N>::data() noexcept {
+inline typename array<T, N>::iterator array<T, N>::data() noexcept {
   return data_;
 }
 
 /*Array Iterators*/
 template <typename T, std::size_t N>
-typename array<T, N>::iterator array<T, N>::begin() noexcept {
+inline typename array<T, N>::iterator array<T, N>::begin() noexcept {
   return data_;
 }
 
 template <typename T, std::size_t N>
-typename array<T, N>::iterator array<T, N>::end() noexcept {
+inline typename array<T, N>::iterator array<T, N>::end() noexcept {
   return data_ + size_;
 }
 
@@ -148,9 +148,16 @@ inline typename array<T, N>::size_type array<T, N>::max_size() const noexcept {
 }
 /*Array Modifiers*/
 template <typename T, std::size_t N>
-void array<T, N>::swap(array& other) noexcept {
+inline void array<T, N>::swap(array& other) noexcept {
   if constexpr (N > 0) {
     std::swap(data_, other.data_);
+  }
+}
+
+template <typename T, std::size_t N>
+void array<T, N>::fill(const_reference value) {
+  for (size_type i = 0; i < size_; ++i) {
+    data_[i] = value;
   }
 }
 
