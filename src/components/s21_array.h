@@ -87,11 +87,8 @@ array<T>::~array() {
 template <typename T>
 array<T>& array<T>::operator=(array&& other) noexcept {
   if (this != &other) {
-    delete[] data_;
-    data_ = other.data_;
-    size_ = other.size_;
-    other.data_ = nullptr;
-    other.size_ = 0;
+    array<T> temp(std::move(other));
+    swap(temp);
   }
   return *this;
 }
@@ -104,6 +101,14 @@ array<T>& array<T>::operator=(const array& other) {
 }
 
 /*Array Element access*/
+template <typename T>
+typename array<T>::reference array<T>::at(size_type pos) {
+  if (pos >= size_) {
+    throw std::out_of_range("Index out of range");
+  }
+  return data_[pos];
+}
+
 template <typename T>
 typename array<T>::reference array<T>::operator[](size_type pos) {
   return data_[pos];
