@@ -77,3 +77,20 @@ TEST(ArrayTest, End) {
   s21::array<int, 5> arr = {1, 2, 3, 4, 5};
   EXPECT_EQ(*(arr.end() - 1), 5);
 }
+
+TEST(ArrayTest, MaxSize) {
+  s21::array<int, 5> arr;
+  EXPECT_EQ(arr.max_size(), 5);
+}
+
+TEST(ArrayTest, Empty) {
+  s21::array<int, 0> arr;
+  EXPECT_TRUE(arr.empty());
+  s21::array<int, 3> arr_2 = {1, 2, 3};
+  EXPECT_FALSE(arr_2.empty());
+}
+
+TEST(ArrayTest, Size) {
+  s21::array<int, 5> arr = {1, 2, 3};
+  EXPECT_EQ(arr.size(), 5);
+}

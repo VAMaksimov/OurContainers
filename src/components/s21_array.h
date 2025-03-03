@@ -134,14 +134,24 @@ typename array<T, N>::iterator array<T, N>::end() noexcept {
 
 /*Array Capacity*/
 template <typename T, std::size_t N>
+inline bool array<T, N>::empty() const noexcept {
+  return N == 0;
+}
+
+template <typename T, std::size_t N>
 typename array<T, N>::size_type array<T, N>::size() const noexcept {
   return size_;
+}
+template <typename T, std::size_t N>
+inline typename array<T, N>::size_type array<T, N>::max_size() const noexcept {
+  return size();
 }
 /*Array Modifiers*/
 template <typename T, std::size_t N>
 void array<T, N>::swap(array& other) noexcept {
-  std::swap(data_, other.data_);
-  std::swap(size_, other.size_);
+  if constexpr (N > 0) {
+    std::swap(data_, other.data_);
+  }
 }
 
 }  // namespace s21
