@@ -24,7 +24,7 @@ class array : public SequenceContainer<array<T, N>, T> {
   array(std::initializer_list<value_type> const& items);
   array(const array& other);
   array(array&& other) noexcept;
-  ~array();
+  ~array() = default;
 
   // Assignment operators
   array& operator=(array&& other) noexcept;
@@ -43,23 +43,23 @@ class array : public SequenceContainer<array<T, N>, T> {
 
   // Array Capacity
   bool empty() const noexcept;
-  size_type size() const noexcept;
-  size_type max_size() const noexcept;
+  constexpr size_type size() const noexcept;
+  constexpr size_type max_size() const noexcept;
 
   // Array Modifiers
   void swap(array& other) noexcept;
   void fill(const_reference value);
 
  private:
-  size_type size_ = N;
   value_type data_[N];
 };
 
 /*Array Member functions*/
-template <typename T, size_t N>
-inline array<T, N>::array() : size_(N) {}
 template <typename T, std::size_t N>
-array<T, N>::array(std::initializer_list<value_type> const& items) {
+inline array<T, N>::array() {}
+
+template <typename T, std::size_t N>
+inline array<T, N>::array(std::initializer_list<value_type> const& items) {
   std::copy(items.begin(), items.end(), data_);
 }
 
@@ -72,9 +72,6 @@ template <typename T, std::size_t N>
 inline array<T, N>::array(array&& other) noexcept {
   std::move(other.begin(), other.end(), data_);
 }
-
-template <typename T, std::size_t N>
-inline array<T, N>::~array() {}
 
 template <typename T, std::size_t N>
 inline array<T, N>& array<T, N>::operator=(array&& other) noexcept {
@@ -95,7 +92,7 @@ inline array<T, N>& array<T, N>::operator=(const array& other) {
 /*Array Element access*/
 template <typename T, std::size_t N>
 inline typename array<T, N>::reference array<T, N>::at(size_type pos) {
-  if (pos >= size_) {
+  if (pos >= N) {
     throw std::out_of_range("Index out of range");
   }
   return data_[pos];
@@ -113,7 +110,7 @@ inline typename array<T, N>::const_reference array<T, N>::front() const {
 
 template <typename T, std::size_t N>
 inline typename array<T, N>::const_reference array<T, N>::back() const {
-  return data_[size_ - 1];
+  return data_[N - 1];
 }
 
 template <typename T, std::size_t N>
@@ -129,7 +126,7 @@ inline typename array<T, N>::iterator array<T, N>::begin() noexcept {
 
 template <typename T, std::size_t N>
 inline typename array<T, N>::iterator array<T, N>::end() noexcept {
-  return data_ + size_;
+  return data_ + N;
 }
 
 /*Array Capacity*/
@@ -139,11 +136,13 @@ inline bool array<T, N>::empty() const noexcept {
 }
 
 template <typename T, std::size_t N>
-typename array<T, N>::size_type array<T, N>::size() const noexcept {
-  return size_;
+inline constexpr typename array<T, N>::size_type array<T, N>::size()
+    const noexcept {
+  return N;
 }
 template <typename T, std::size_t N>
-inline typename array<T, N>::size_type array<T, N>::max_size() const noexcept {
+inline constexpr typename array<T, N>::size_type array<T, N>::max_size()
+    const noexcept {
   return size();
 }
 /*Array Modifiers*/
@@ -156,7 +155,7 @@ inline void array<T, N>::swap(array& other) noexcept {
 
 template <typename T, std::size_t N>
 void array<T, N>::fill(const_reference value) {
-  for (size_type i = 0; i < size_; ++i) {
+  for (size_type i = 0; i < N; ++i) {
     data_[i] = value;
   }
 }

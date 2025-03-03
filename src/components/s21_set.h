@@ -16,7 +16,7 @@ class set : public BinaryTree<Key, Key> {
   using size_type = size_t;
 
  public:
-  set() : BinaryTree<key_type, value_type>() {};
+  set() : BinaryTree<key_type, value_type>(){};
   set(std::initializer_list<value_type> const &items)
       : BinaryTree<key_type, value_type>() {
     for (auto num : items) {
