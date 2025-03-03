@@ -83,10 +83,45 @@ template <typename T>
 array<T>::~array() {
   delete[] data_;
 }
+
+template <typename T>
+array<T>& array<T>::operator=(array&& other) noexcept {
+  if (this != &other) {
+    delete[] data_;
+    data_ = other.data_;
+    size_ = other.size_;
+    other.data_ = nullptr;
+    other.size_ = 0;
+  }
+  return *this;
+}
+
+template <typename T>
+array<T>& array<T>::operator=(const array& other) {
+  array<T> temp(other);
+  swap(temp);
+  return *this;
+}
+
 /*Array Element access*/
 template <typename T>
 typename array<T>::reference array<T>::operator[](size_type pos) {
   return data_[pos];
+}
+
+template <typename T>
+typename array<T>::const_reference array<T>::front() const {
+  return data_[0];
+}
+
+template <typename T>
+typename array<T>::const_reference array<T>::back() const {
+  return data_[size_ - 1];
+}
+
+template <typename T>
+typename array<T>::iterator array<T>::data() noexcept {
+  return data_;
 }
 
 /*Array Iterators*/
@@ -97,6 +132,11 @@ typename array<T>::size_type array<T>::size() const noexcept {
   return size_;
 }
 /*Array Modifiers*/
+template <typename T>
+void array<T>::swap(array& other) noexcept {
+  std::swap(data_, other.data_);
+  std::swap(size_, other.size_);
+}
 
 }  // namespace s21
 
