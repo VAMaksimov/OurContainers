@@ -6,14 +6,14 @@
 namespace s21 {
 
 template <typename T>
-class list : public SequenceContaner<list<T>, T> {
+class list : public SequenceContainer<list<T>, T> {
  public:
   // List Member type
-  using value_type = typename SequenceContaner<list<T>, T>::value_type;
-  using reference = typename SequenceContaner<list<T>, T>::reference;
+  using value_type = typename SequenceContainer<list<T>, T>::value_type;
+  using reference = typename SequenceContainer<list<T>, T>::reference;
   using const_reference =
-      typename SequenceContaner<list<T>, T>::const_reference;
-  using size_type = typename SequenceContaner<list<T>, T>::size_type;
+      typename SequenceContainer<list<T>, T>::const_reference;
+  using size_type = typename SequenceContainer<list<T>, T>::size_type;
 
  private:
   struct Node_ {

@@ -1,5 +1,3 @@
-#include "components/s21_list.h"
-
 #include <gtest/gtest.h>
 
 #include "s21_containers.h"

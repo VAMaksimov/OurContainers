@@ -7,7 +7,7 @@
 namespace s21 {
 
 template <typename Derived, typename T>
-class SequenceContaner {
+class SequenceContainer {
  public:
   using value_type = T;
   using reference = T&;
