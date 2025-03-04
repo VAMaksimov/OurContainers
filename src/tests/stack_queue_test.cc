@@ -243,4 +243,9 @@ TEST(StackTest, LargeContainer) {
   our_stack_int.insert_many_back(14, 15, 16, 17, 18, 19);
   for (int i = 14; i <= 19; i++) std_stack_int.push(i);
   CompareStacks<int>(our_stack_int, std_stack_int);
+  our_stack_int.pop();
+  our_stack_int.pop();
+  std_stack_int.pop();
+  std_stack_int.pop();
+  CompareStacks<int>(our_stack_int, std_stack_int);
 }
