@@ -233,3 +233,14 @@ TEST(StackTest, InsertMany) {
   std_stack_int.push(4);
   CompareStacks<int>(our_stack_int, std_stack_int);
 }
+
+TEST(StackTest, LargeContainer) {
+  Stack<int> our_stack_int({1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13})
+      std::stack<int>
+          std_stack_int;
+  for (int i = 1; i <= 13; i++) std_stack_int.push(i);
+  CompareStacks<int>(our_stack_int, std_stack_int);
+  our_stack_int.insert_many_back(14, 15, 16, 17, 18, 19);
+  for (int i = 14; i <= 19; i++) std_stack_int.push(i);
+  CompareStacks<int>(our_stack_int, std_stack_int);
+}
