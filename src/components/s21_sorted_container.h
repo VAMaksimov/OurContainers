@@ -165,10 +165,11 @@ class BinaryTree {
     if (pos == nullptr) {
       return;
     }
+    std::cout << "Delete: " << pos->key_ << std::endl;
     Node *parent_erase = pos->parent_;
-    Node *node_erase = nullptr;
     Node *new_root = nullptr;
     if (pos->left_) {
+      std::cout << "Delete: left" << std::endl;
       new_root = pos->left_;
       if (pos->right_) {
         Node *current = pos->left_;
@@ -180,19 +181,19 @@ class BinaryTree {
         parent->right_ = pos->right_;
       }
     } else if (pos->right_) {
+      std::cout << "Delete: right" << std::endl;
       new_root = pos->right_;
     } else if (parent_erase) {
       if (pos->key_ < parent_erase->key_) {
-        node_erase = parent_erase->left_;
         parent_erase->left_ = EraseNode(parent_erase->left_);
       } else {
-        node_erase = parent_erase->right_;
+        std::cout << "Delete: parent" << std::endl;
         parent_erase->right_ = EraseNode(parent_erase->right_);
       }
     } else {
-      node_erase = root_;
       root_ = EraseNode(root_);
     }
+    Node *node_erase = nullptr;
     if (new_root && parent_erase) {
       node_erase = new_root->parent_;
       new_root->parent_ = parent_erase;
@@ -214,6 +215,102 @@ class BinaryTree {
     }
     return nullptr;
   }
+
+  const_iterator FindNode(Node *current, const Key &key) {
+    const_iterator result = const_iterator(root_);
+    if (key < current->key_) {
+      result = FindNode(current->left_, key);
+    } else if (key > current->key_) {
+      result = FindNode(current->right_, key);
+    } else {
+      result = const_iterator(current);
+    }
+    return result;
+  }
+
+  bool Contains(Node *current, const Key &key) {
+    if (current == nullptr) {
+      return false;
+    }
+    bool result = false;
+    if (key < current->key_) {
+      result = Contains(current->left_, key);
+    } else if (key > current->key_) {
+      result = Contains(current->right_, key);
+    } else {
+      result = true;
+    }
+    return result;
+  }
+
+  void Merge(Node *other) {
+    if (other == nullptr) {
+      std::cout << "return" << std::endl;
+      return;
+    }
+    std::cout << "Merge: " << other->key_ << std::endl;
+    auto move_node = AddNode(other->key_, other->value_);
+    if (move_node.second)
+      std::cout << "true" << std::endl;
+    else
+      std::cout << "false" << std::endl;
+    Merge(other->left_);
+    Merge(other->right_);
+    if (move_node.second) {
+      std::cout << "********SET*********" << std::endl;
+      PrintTree();
+      std::cout << "********OTHER*********" << std::endl;
+      Node *temp = other;
+      while (temp->parent_) {
+        temp = temp->parent_;
+      }
+      PrintHelper(temp);
+      Erase(const_iterator(other));
+    }
+  }
+
+  // void Merge(Node *other) {
+  //   if (other == nullptr) {
+  //     std::cout << "return" << std::endl;
+  //     return;
+  //   }
+  //   std::cout << "Merge: " << other->key_ << std::endl;
+  //   bool move_node = MergeHelper(root_, other, nullptr);
+  //   if (move_node)
+  //     std::cout << "true" << std::endl;
+  //   else
+  //     std::cout << "false" << std::endl;
+  //   Merge(other->left_);
+  //   Merge(other->right_);
+  //   if (move_node) {
+  //     Erase(const_iterator(other));
+  //   }
+  // }
+
+  // bool MergeHelper(Node *current, Node *other, Node *parent) {
+  //   if (current == nullptr) {
+  //     Node *new_node = new Node(other->key_, other->value_);
+  //     new_node->parent_ = parent;
+  //     if
+  //       return true;
+  //   }
+  //   bool result = false;
+  //   // std::cout << "P1" << std::endl;
+  //   if (other->key_ < current->key_) {
+  //     std::cout << other->key_ << " < " << current->key_ << std::endl;
+  //     result = MergeHelper(current->left_, other, current);
+  //     if (result) {
+  //       current->left_ = other;
+  //     }
+  //   } else if (other->key_ > current->key_) {
+  //     std::cout << other->key_ << " > " << current->key_ << std::endl;
+  //     result = MergeHelper(current->right_, other, current);
+  //     if (result) {
+  //       current->right_ = other;
+  //     }
+  //   }
+  //   return result;
+  // }
 
   Node *CopyTree(Node *source, Node *parent) {
     if (source == nullptr) {
@@ -249,8 +346,9 @@ class BinaryTree {
 
   void PrintHelper(Node *my_tree) {
     if (my_tree) {
+      PrintStruct(my_tree);
       PrintHelper(my_tree->left_);
-      std::cout << my_tree->value_ << " ";
+      // std::cout << my_tree->value_ << " ";
       PrintHelper(my_tree->right_);
     }
   }

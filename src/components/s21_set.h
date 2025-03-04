@@ -78,6 +78,22 @@ class set : public BinaryTree<Key, Key> {
   }
 
   void erase(const_iterator pos) { this->Erase(pos); }
+  const_iterator find(const key_type &key) {
+    return this->FindNode(this->root_, key);
+  }
+
+  bool contains(const key_type &key) {
+    return this->Contains(this->root_, key);
+  }
+  void swap(set &other) { std::swap(this->root_, other.root_); }
+  void merge(set &other) {
+    this->Merge(other.root_);
+    this->PrintTree();
+    std::cout << "*****************" << std::endl;
+    other.PrintTree();
+  }
+
+  void print() { this->PrintTree(); }
 };
 
 }  // namespace s21
