@@ -30,7 +30,8 @@ OBJS_TEST=$(addprefix $(OBJ_DIR)/, $(notdir $(SRC_TEST:.cc=.o)))
 #os
 UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Linux)
-	GTESTFLAGS=$(shell pkg-config --cflags --libs gtest gtest_main)
+	# GTESTFLAGS=$(shell pkg-config --cflags --libs gtest gtest_main)
+	GTESTFLAGS=-lgtest -lgtest_main -lpthread -lsubunit
 	OPEN=xdg-open 
 else ifeq ($(UNAME_S),Darwin)
 	GTESTFLAGS=-lgtest -lgtest_main -lpthread

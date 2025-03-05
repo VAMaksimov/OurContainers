@@ -35,20 +35,20 @@ void CompareSets(s21::set<T> &ActualSet, std::set<T> &ExpectedSet) {
 // }
 
 TEST(SetTest, Iterators) {
-  s21::set<int> ActualSet = {1, 2, 3, 4};
+  // 10 15 20 25 30 40 50 70 80 90
+  s21::set<int> ActualSet = {50, 25, 10, 30, 60, 80, 15, 40, 70, 90, 20};
 
   EXPECT_EQ(ActualSet.end(), nullptr);
   auto it = ActualSet.begin();
-  EXPECT_EQ(*it, 1);
+  EXPECT_EQ(*it, 10);
   it++;
-  EXPECT_EQ(*it, 2);
+  EXPECT_EQ(*it, 15);
   it++;
   it++;
-  EXPECT_EQ(*it, 4);
+  EXPECT_EQ(*it, 25);
   it--;
-  EXPECT_EQ(*it, 3);
-  it++;
-  it++;
+  EXPECT_EQ(*it, 20);
+  for (int i = 2; i < 10; i++) it++;
   EXPECT_EQ(it, ActualSet.end());
 }
 
@@ -116,7 +116,7 @@ TEST(SetTest, Insert) {
   s21::set<int> ActualSet;
   std::set<int> ExpectedSet;
 
-  auto [it1, success1] = ActualSet.insert(42.1);
+  auto [it1, success1] = ActualSet.insert(42);
   EXPECT_TRUE(success1);
   EXPECT_EQ(*it1, 42);
 
@@ -156,6 +156,20 @@ TEST(SetTest, Erase) {
 
   ExpectedSet.erase(4.00001);
   ExpectedSet.erase(7.76543);
+
+  CompareSets(ActualSet, ExpectedSet);
+}
+
+TEST(SetTest, EraseLargeSet) {
+  s21::set<int> ActualSet = {50, 25, 75, 10, 35, 60, 80, 15, 40, 70, 90, 20};
+  std::set<int> ExpectedSet = {50, 10, 35, 60, 80, 15, 40, 90, 20};
+
+  auto it = ActualSet.find(70);
+  ActualSet.erase(it);
+  it = ActualSet.find(75);
+  ActualSet.erase(it);
+  it = ActualSet.find(25);
+  ActualSet.erase(it);
 
   CompareSets(ActualSet, ExpectedSet);
 }
