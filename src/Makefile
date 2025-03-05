@@ -86,3 +86,12 @@ valgrind:
 
 clean:
 	rm -rf $(BUILD_DIR) $(APP_TEST)
+
+cppcheck:
+	cppcheck --language=c++ --enable=all \
+	--suppress=postfixOperator --suppress=missingIncludeSystem --std=c++17 \
+	 -I$(HDIR) $(TEST_DIR)/*.cc -I.
+
+
+clang_tidy:
+	clang-tidy $(SRC_TEST) -- $(GFLAGS) -I$(HDIR) -I.
