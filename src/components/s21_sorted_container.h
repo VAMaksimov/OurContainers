@@ -1,6 +1,7 @@
 #ifndef SRC_COMPONENTS_S21_SORTED_CONTAINER_H
 #define SRC_COMPONENTS_S21_SORTED_CONTAINER_H
 
+#include <climits>
 #include <iostream>
 #include <utility>
 
@@ -165,11 +166,9 @@ class BinaryTree {
     if (pos == End()) {
       return;
     }
-    std::cout << "Delete: " << pos->key_ << std::endl;
     Node *parent_erase = pos->parent_;
     Node *new_root = nullptr;
     if (pos->left_) {
-      std::cout << "Delete: left" << std::endl;
       new_root = pos->left_;
       if (pos->right_) {
         Node *current = pos->left_;
@@ -181,13 +180,11 @@ class BinaryTree {
         parent->right_ = pos->right_;
       }
     } else if (pos->right_) {
-      std::cout << "Delete: right" << std::endl;
       new_root = pos->right_;
     } else if (parent_erase) {
       if (pos->key_ < parent_erase->key_) {
         parent_erase->left_ = EraseNode(parent_erase->left_);
       } else {
-        std::cout << "Delete: parent" << std::endl;
         parent_erase->right_ = EraseNode(parent_erase->right_);
       }
     } else {
@@ -195,7 +192,6 @@ class BinaryTree {
     }
     Node *node_erase = nullptr;
     if (new_root && parent_erase) {
-      std::cout << "Delete: new_root & parent" << std::endl;
       node_erase = new_root->parent_;
       new_root->parent_ = parent_erase;
       if (new_root->key_ < parent_erase->key_) {
@@ -204,19 +200,11 @@ class BinaryTree {
         parent_erase->right_ = new_root;
       }
     } else if (new_root && !parent_erase) {
-      std::cout << "Delete: new_root" << std::endl;
       node_erase = root;
       root = new_root;
       root->parent_ = nullptr;
     }
     EraseNode(node_erase);
-  }
-
-  Node *EraseNode(Node *current) {
-    if (current) {
-      delete current;
-    }
-    return nullptr;
   }
 
   const_iterator FindNode(Node *current, const Key &key) {
@@ -248,72 +236,20 @@ class BinaryTree {
 
   void Merge(Node *&other) {
     if (other == nullptr) {
-      std::cout << "return" << std::endl;
       return;
     }
-    std::cout << "Merge: " << other->key_ << std::endl;
     auto move_node = AddNode(other->key_, other->value_);
-    if (move_node.second)
-      std::cout << "true" << std::endl;
-    else
-      std::cout << "false" << std::endl;
     Merge(other->left_);
     Merge(other->right_);
     if (move_node.second) {
-      std::cout << "********SET*********" << std::endl;
-      PrintTree();
-      std::cout << "********OTHER*********" << std::endl;
-      Node *temp = other;
-      while (temp->parent_) {
-        temp = temp->parent_;
-      }
-      PrintHelper(temp);
       Erase(const_iterator(other), other);
     }
   }
 
-  // void Merge(Node *other) {
-  //   if (other == nullptr) {
-  //     std::cout << "return" << std::endl;
-  //     return;
-  //   }
-  //   std::cout << "Merge: " << other->key_ << std::endl;
-  //   bool move_node = MergeHelper(root_, other, nullptr);
-  //   if (move_node)
-  //     std::cout << "true" << std::endl;
-  //   else
-  //     std::cout << "false" << std::endl;
-  //   Merge(other->left_);
-  //   Merge(other->right_);
-  //   if (move_node) {
-  //     Erase(const_iterator(other));
-  //   }
-  // }
-
-  // bool MergeHelper(Node *current, Node *other, Node *parent) {
-  //   if (current == nullptr) {
-  //     Node *new_node = new Node(other->key_, other->value_);
-  //     new_node->parent_ = parent;
-  //     if
-  //       return true;
-  //   }
-  //   bool result = false;
-  //   // std::cout << "P1" << std::endl;
-  //   if (other->key_ < current->key_) {
-  //     std::cout << other->key_ << " < " << current->key_ << std::endl;
-  //     result = MergeHelper(current->left_, other, current);
-  //     if (result) {
-  //       current->left_ = other;
-  //     }
-  //   } else if (other->key_ > current->key_) {
-  //     std::cout << other->key_ << " > " << current->key_ << std::endl;
-  //     result = MergeHelper(current->right_, other, current);
-  //     if (result) {
-  //       current->right_ = other;
-  //     }
-  //   }
-  //   return result;
-  // }
+  size_type MaxSize() {
+    size_type size_per_node = 3 * sizeof(void *) + sizeof(Key) + sizeof(T);
+    return SIZE_MAX / size_per_node;
+  }
 
   Node *CopyTree(Node *source, Node *parent) {
     if (source == nullptr) {
@@ -324,6 +260,14 @@ class BinaryTree {
     temp->left_ = CopyTree(source->left_, temp);
     temp->right_ = CopyTree(source->right_, temp);
     return temp;
+  }
+
+ private:
+  Node *EraseNode(Node *current) {
+    if (current) {
+      delete current;
+    }
+    return nullptr;
   }
 
   void PrintStruct(Node *tree) {
@@ -351,7 +295,6 @@ class BinaryTree {
     if (my_tree) {
       PrintStruct(my_tree);
       PrintHelper(my_tree->left_);
-      // std::cout << my_tree->value_ << " ";
       PrintHelper(my_tree->right_);
     }
   }

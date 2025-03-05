@@ -61,7 +61,6 @@ class set : public BinaryTree<Key, Key> {
 
   size_type size() {
     this->counter_ = 0;
-    this->PrintTree();
     this->CountNodes(this->root_);
     return this->counter_;
   }
@@ -86,14 +85,8 @@ class set : public BinaryTree<Key, Key> {
     return this->Contains(this->root_, key);
   }
   void swap(set &other) { std::swap(this->root_, other.root_); }
-  void merge(set &other) {
-    this->Merge(other.root_);
-    this->PrintTree();
-    std::cout << "*****************" << std::endl;
-    other.PrintTree();
-  }
-
-  void print() { this->PrintTree(); }
+  void merge(set &other) { this->Merge(other.root_); }
+  size_type max_size() { return this->MaxSize(); }
 };
 
 }  // namespace s21
