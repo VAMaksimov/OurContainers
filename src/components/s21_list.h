@@ -76,17 +76,20 @@ class list : public SequenceContainer<list<T>, T> {
   using iterator = ListIterator;
   using const_iterator = ListConstIterator;
 
-  iterator begin() const noexcept;  // Iterator to first element
-  iterator end() const noexcept;    // Iterator to end marker (fake node)
+  iterator begin() noexcept;  // Iterator to first element
+  iterator end() noexcept;    // Iterator to end marker (fake node)
+  const_iterator begin() const noexcept;
+
+  const_iterator end() const noexcept;
 
   // List Element access
-  const_reference front() const;  // Access first element
-  const_reference back() const;   // Access last element
+  const_reference front() const override;  // Access first element
+  const_reference back() const override;   // Access last element
 
   // List Capacity
-  bool empty() const;                   // Check if list is empty
-  size_type size() const noexcept;      // Get current number of elements
-  size_type max_size() const noexcept;  // Get maximum possible size
+  bool empty() const noexcept override;      // Check if list is empty
+  size_type size() const noexcept override;  // Get current number of elements
+  size_type max_size() const noexcept override;  // Get maximum possible size
 
   // List Modifiers
   void clear() noexcept;  // Remove all elements
@@ -97,8 +100,9 @@ class list : public SequenceContainer<list<T>, T> {
   void pop_back();                         // Remove from end
   void push_front(const_reference value);  // Add to front
   void pop_front();                        // Remove from front
-  void swap(list& other) noexcept;  // Exchange contents with another list
-  void merge(list& other);          // Merge sorted lists
+  void swap(
+      list& other) noexcept override;  // Exchange contents with another list
+  void merge(list& other);             // Merge sorted lists
   void splice(const_iterator pos,
               list& other);  // Transfer elements from other list
   void reverse() noexcept;   // Reverse element order
@@ -312,13 +316,22 @@ typename list<T>::const_reference list<T>::ListConstIterator::operator*() {
 }
 
 template <typename T>
-typename list<T>::iterator list<T>::begin() const noexcept {
+typename list<T>::iterator list<T>::begin() noexcept {
   return iterator(fake->next);
 }
 
 template <typename T>
-typename list<T>::iterator list<T>::end() const noexcept {
+typename list<T>::iterator list<T>::end() noexcept {
   return iterator(fake);
+}
+
+template <typename T>
+typename list<T>::const_iterator list<T>::begin() const noexcept {
+  return const_iterator(fake->next);
+}
+template <typename T>
+typename list<T>::const_iterator list<T>::end() const noexcept {
+  return const_iterator(fake);
 }
 
 /*List Element access*/
@@ -334,7 +347,7 @@ inline typename list<T>::const_reference list<T>::back() const {
 
 /*List Capacity*/
 template <typename T>
-inline bool list<T>::empty() const {
+inline bool list<T>::empty() const noexcept {
   return size_ == 0;
 }
 

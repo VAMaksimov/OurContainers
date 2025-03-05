@@ -33,8 +33,8 @@ class array : public SequenceContainer<array<T, N>, T> {
   // Array Element access
   reference at(size_type pos);
   reference operator[](size_type pos);
-  const_reference front() const;
-  const_reference back() const;
+  const_reference front() const override;
+  const_reference back() const override;
   iterator data() noexcept;
 
   // Array Iterators
@@ -42,12 +42,12 @@ class array : public SequenceContainer<array<T, N>, T> {
   iterator end() noexcept;
 
   // Array Capacity
-  bool empty() const noexcept;
-  constexpr size_type size() const noexcept;
-  constexpr size_type max_size() const noexcept;
+  bool empty() const noexcept override;
+  constexpr size_type size() const noexcept override;
+  constexpr size_type max_size() const noexcept override;
 
   // Array Modifiers
-  void swap(array& other) noexcept;
+  void swap(array& other) noexcept override;
   void fill(const_reference value);
 
  private:
