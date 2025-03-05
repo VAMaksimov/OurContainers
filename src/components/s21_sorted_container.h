@@ -161,8 +161,8 @@ class BinaryTree {
     return {new_node, true};
   }
 
-  void Erase(const_iterator pos) {
-    if (pos == nullptr) {
+  void Erase(const_iterator pos, Node *&root) {
+    if (pos == End()) {
       return;
     }
     std::cout << "Delete: " << pos->key_ << std::endl;
@@ -191,10 +191,11 @@ class BinaryTree {
         parent_erase->right_ = EraseNode(parent_erase->right_);
       }
     } else {
-      root_ = EraseNode(root_);
+      root = EraseNode(root);
     }
     Node *node_erase = nullptr;
     if (new_root && parent_erase) {
+      std::cout << "Delete: new_root & parent" << std::endl;
       node_erase = new_root->parent_;
       new_root->parent_ = parent_erase;
       if (new_root->key_ < parent_erase->key_) {
@@ -203,8 +204,10 @@ class BinaryTree {
         parent_erase->right_ = new_root;
       }
     } else if (new_root && !parent_erase) {
-      node_erase = root_;
-      root_ = new_root;
+      std::cout << "Delete: new_root" << std::endl;
+      node_erase = root;
+      root = new_root;
+      root->parent_ = nullptr;
     }
     EraseNode(node_erase);
   }
@@ -243,7 +246,7 @@ class BinaryTree {
     return result;
   }
 
-  void Merge(Node *other) {
+  void Merge(Node *&other) {
     if (other == nullptr) {
       std::cout << "return" << std::endl;
       return;
@@ -265,7 +268,7 @@ class BinaryTree {
         temp = temp->parent_;
       }
       PrintHelper(temp);
-      Erase(const_iterator(other));
+      Erase(const_iterator(other), other);
     }
   }
 

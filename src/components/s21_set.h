@@ -77,7 +77,7 @@ class set : public BinaryTree<Key, Key> {
     return this->AddNode(value, value);
   }
 
-  void erase(const_iterator pos) { this->Erase(pos); }
+  void erase(const_iterator pos) { this->Erase(pos, this->root_); }
   const_iterator find(const key_type &key) {
     return this->FindNode(this->root_, key);
   }
