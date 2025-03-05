@@ -1,5 +1,5 @@
-#ifndef SRC_COMPONENTS_S21_SET_H
-#define SRC_COMPONENTS_S21_SET_H
+#ifndef COMPONENTS_S21_SET_H
+#define COMPONENTS_S21_SET_H
 
 #include "s21_sorted_container.h"
 
@@ -85,7 +85,9 @@ class set : public BinaryTree<Key, Key> {
   bool contains(const key_type &key) {
     return this->Contains(this->root_, key);
   }
-  void swap(set &other) { std::swap(this->root_, other.root_); }
+
+  void swap(set &other) { return this->Swap(other.root_); }
+
   void merge(set &other) {
     this->Merge(other.root_);
     this->PrintTree();
@@ -98,4 +100,4 @@ class set : public BinaryTree<Key, Key> {
 
 }  // namespace s21
 
-#endif
+#endif  // COMPONENTS_S21_SET_H
