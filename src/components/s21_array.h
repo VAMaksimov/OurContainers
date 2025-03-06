@@ -110,7 +110,8 @@ inline typename array<T, N>::const_reference array<T, N>::front() const {
 
 template <typename T, std::size_t N>
 inline typename array<T, N>::const_reference array<T, N>::back() const {
-  return data_[N - 1];
+  size_type size_ = N == 0 ? 1 : N;
+  return data_[size_ - 1];
 }
 
 template <typename T, std::size_t N>
