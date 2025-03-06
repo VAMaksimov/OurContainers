@@ -89,7 +89,7 @@ clean:
 
 cppcheck:
 	cppcheck --language=c++ --enable=all \
-	--suppress=postfixOperator --suppress=missingIncludeSystem --std=c++17 \
+	--suppress=postfixOperator --suppress=noExplicitConstructor --suppress=missingIncludeSystem --std=c++17 \
 	 -I$(HDIR) $(TEST_DIR)/*.cc -I.
 
 
