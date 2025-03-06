@@ -47,7 +47,6 @@ class list : public SequenceContainer<list<T>, T> {
   Node_* getTail() const;
 
   // List Iterators
-
   class ListIterator {
    public:
     ListIterator();                      // Default iterator constructor
@@ -65,12 +64,25 @@ class list : public SequenceContainer<list<T>, T> {
     Node_* current;  // Pointer to current node
   };
 
-  class ListConstIterator : public ListIterator {
+  // Separate class for const iterator
+  class ListConstIterator {
    public:
-    ListConstIterator();                           // Default const iterator
-    explicit ListConstIterator(Node_* node);       // Node pointer constructor
-    ListConstIterator(const ListIterator& other);  // Conversion from non-const
-    const_reference operator*();                   // Const dereference operator
+    ListConstIterator();  // Default const iterator
+    explicit ListConstIterator(
+        Node_* node);  // Node pointer constructor
+                       // cppcheck-suppress noExplicitConstructor
+    ListConstIterator(const ListIterator& other);
+    ListConstIterator& operator++();    // Prefix increment
+    ListConstIterator operator++(int);  // Postfix increment
+    ListConstIterator& operator--();    // Prefix decrement
+    ListConstIterator operator--(int);  // Postfix decrement
+    const_reference operator*();        // Const dereference operator
+    bool operator==(const ListConstIterator& other) const;  // Equality check
+    bool operator!=(const ListConstIterator& other) const;  // Inequality check
+    Node_* getNode() const;  // Get underlying node pointer
+
+   protected:
+    Node_* current;  // Pointer to current node
   };
 
   using iterator = ListIterator;
@@ -300,21 +312,66 @@ typename list<T>::Node_* list<T>::ListIterator::getNode() const {
 /*ListConstIterator*/
 
 template <typename T>
-list<T>::ListConstIterator::ListConstIterator() : ListIterator(nullptr) {}
+list<T>::ListConstIterator::ListConstIterator() : current(nullptr) {}
 
 template <typename T>
-list<T>::ListConstIterator::ListConstIterator(Node_* node)
-    : ListIterator(node) {}
-
+list<T>::ListConstIterator::ListConstIterator(Node_* node) : current(node) {}
+// cppcheck-suppress noExplicitConstructor
 template <typename T>
 list<T>::ListConstIterator::ListConstIterator(const ListIterator& other)
-    : ListIterator(other) {}
+    : current(other.getNode()) {}
+
+template <typename T>
+typename list<T>::ListConstIterator& list<T>::ListConstIterator::operator++() {
+  current = current->next;
+  return *this;
+}
+
+template <typename T>
+typename list<T>::ListConstIterator list<T>::ListConstIterator::operator++(
+    int) {
+  ListConstIterator temp = *this;
+  ++(*this);
+  return temp;
+}
+
+template <typename T>
+typename list<T>::ListConstIterator& list<T>::ListConstIterator::operator--() {
+  current = current->prev;
+  return *this;
+}
+
+template <typename T>
+typename list<T>::ListConstIterator list<T>::ListConstIterator::operator--(
+    int) {
+  ListConstIterator temp = *this;
+  --(*this);
+  return temp;
+}
 
 template <typename T>
 typename list<T>::const_reference list<T>::ListConstIterator::operator*() {
-  return this->current->value;
+  return current->value;
 }
 
+template <typename T>
+bool list<T>::ListConstIterator::operator==(
+    const ListConstIterator& other) const {
+  return current == other.current;
+}
+
+template <typename T>
+bool list<T>::ListConstIterator::operator!=(
+    const ListConstIterator& other) const {
+  return current != other.current;
+}
+
+template <typename T>
+typename list<T>::Node_* list<T>::ListConstIterator::getNode() const {
+  return current;
+}
+
+///////////
 template <typename T>
 typename list<T>::iterator list<T>::begin() noexcept {
   return iterator(fake->next);
@@ -535,7 +592,7 @@ typename list<T>::iterator list<T>::insert_many(const_iterator pos,
   list<T> temp;
   (temp.emplaceBack(std::forward<Args>(args)), ...);
 
-  if (temp.empty()) return pos;
+  if (temp.empty()) return iterator(pos.getNode());
 
   iterator first = temp.begin();
   splice(pos, temp);
