@@ -35,7 +35,7 @@ void CompareSets(s21::set<T> &ActualSet, std::set<T> &ExpectedSet) {
 // }
 
 TEST(SetTest, Iterators) {
-  // 10 15 20 25 30 40 50 70 80 90
+  // 10 15 20 25 30 40 50 60 70 80 90
   s21::set<int> ActualSet = {50, 25, 10, 30, 60, 80, 15, 40, 70, 90, 20};
 
   EXPECT_EQ(ActualSet.end(), nullptr);
@@ -48,7 +48,7 @@ TEST(SetTest, Iterators) {
   EXPECT_EQ(*it, 25);
   it--;
   EXPECT_EQ(*it, 20);
-  for (int i = 2; i < 10; i++) it++;
+  for (int i = 2; i < 11; i++) it++;
   EXPECT_EQ(it, ActualSet.end());
 }
 

@@ -1,5 +1,5 @@
-#ifndef SRC_COMPONENTS_S21_SET_H
-#define SRC_COMPONENTS_S21_SET_H
+#ifndef COMPONENTS_S21_SET_H
+#define COMPONENTS_S21_SET_H
 
 #include "s21_sorted_container.h"
 
@@ -61,7 +61,6 @@ class set : public BinaryTree<Key, Key> {
 
   size_type size() {
     this->counter_ = 0;
-    this->PrintTree();
     this->CountNodes(this->root_);
     return this->counter_;
   }
@@ -100,4 +99,4 @@ class set : public BinaryTree<Key, Key> {
 
 }  // namespace s21
 
-#endif
+#endif  // COMPONENTS_S21_SET_H
