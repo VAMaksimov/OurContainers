@@ -53,7 +53,7 @@ $(OBJ_DIR)/%.o: $(TEST_DIR)/%.cc
 	@mkdir -p $(OBJ_DIR)
 	$(GCC) $(GFLAGS) $(GOVFLAGS) $(GTESTFLAGS) -I$(HDIR) -I. -c $< -o $@
 
-gcov_report: clean test
+gcov_report: #clean test
 	@mkdir -p $(COVERAGE_DIR)
 	./$(BIN_DIR)/$(APP_TEST)
 	lcov --capture --directory $(OBJ_DIR) --output-file $(COVERAGE_DIR)/coverage.info \
@@ -95,3 +95,15 @@ cppcheck:
 
 clang_tidy:
 	clang-tidy $(SRC_TEST) -- $(GFLAGS) -I$(HDIR) -I.
+
+
+
+## Separate test
+
+test_array test_list test_map test_multiset test_queue test_set test_stack test_vector: test_%: clean
+	@mkdir -p $(OBJ_DIR)
+	@mkdir -p $(BIN_DIR)
+	$(GCC) $(GFLAGS) $(GOVFLAGS) $(GTESTFLAGS) -I$(HDIR) -I. -c $(TEST_DIR)/s21_$*_test.cc -o $(OBJ_DIR)/s21_$*_test.o
+	$(GCC) $(GFLAGS) $(GOVFLAGS) $(GTESTFLAGS) -I$(HDIR) -I. $(OBJ_DIR)/s21_$*_test.o -o $(BIN_DIR)/$(APP_TEST)
+	cp $(BIN_DIR)/$(APP_TEST) .
+	./$(APP_TEST)
