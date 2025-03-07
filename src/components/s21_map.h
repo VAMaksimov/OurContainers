@@ -17,7 +17,7 @@ class map : public BinaryTree<Key, Value> {
   using size_type = size_t;
 
  public:
-  map() : BinaryTree<key_type, mapped_type>() {};
+  map() : BinaryTree<key_type, mapped_type>(){};
   map(std::initializer_list<value_type> const &key_value_pairs) {
     for (const auto &kvp : key_value_pairs) this->insert(kvp);
   }
