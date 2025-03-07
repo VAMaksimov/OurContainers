@@ -20,10 +20,8 @@ class set : public BinaryTree<Key, Key> {
   set(std::initializer_list<value_type> const &items)
       : BinaryTree<key_type, value_type>() {
     for (auto num : items) {
-      std::cout << num << " ";
       this->AddNode(num, num);
     }
-    std::cout << std::endl;
   }
   set(const set &s) : BinaryTree<key_type, value_type>() {
     this->DestroyTree(this->root_);
