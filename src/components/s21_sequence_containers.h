@@ -13,7 +13,6 @@ class SequenceContainer {
   using reference = T&;
   using const_reference = const T&;
   using size_type = size_t;
-  virtual ~SequenceContainer() = default;
 
   // Access to elements
   virtual const_reference front() const = 0;

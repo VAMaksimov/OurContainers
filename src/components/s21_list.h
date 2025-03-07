@@ -627,6 +627,13 @@ typename list<T>::Node_* list<T>::createNode(const_reference value, Node_* next,
                                              Node_* prev) {
   return new Node_(value, next, prev);
 }
+
+/*
+transferNode() - transfers a single node from another list to this list at the
+specified position. It removes the node from the source list, updates the source
+list's size, and inserts the node at the position in the current list, updating
+its size as well.
+*/
 template <typename T>
 void list<T>::transferNode(iterator pos, list& other, iterator src) {
   Node_* srcNode = src.getNode();
@@ -643,6 +650,11 @@ void list<T>::transferNode(iterator pos, list& other, iterator src) {
   ++size_;
 }
 
+/*
+appendRemaining() - appends all nodes from the source list to the end of the
+current list. It extracts all nodes from the source list and links them to the
+end of the current list. The source list becomes empty after this operation.
+*/
 template <typename T>
 void list<T>::appendRemaining(list& other) {
   if (other.empty()) return;
@@ -654,6 +666,12 @@ void list<T>::appendRemaining(list& other) {
   linkNodes(fake->prev, fake, first, last, movedSize);
 }
 
+/*
+extractNodes() - extracts all nodes from the source list, returning the first
+and last nodes along with the number of nodes extracted. The source list is
+reset to an empty state. This is used for efficient transfer of nodes between
+lists.
+*/
 template <typename T>
 void list<T>::extractNodes(list& other, Node_*& first, Node_*& last,
                            size_type& movedSize) {
@@ -667,6 +685,12 @@ void list<T>::extractNodes(list& other, Node_*& first, Node_*& last,
   other.size_ = 0;
 }
 
+/*
+linkNodes() - connects a sequence of nodes between two existing nodes in the
+list. It takes the nodes before and after the insertion point, the first and
+last nodes of the sequence to insert, and the number of nodes being inserted.
+This is used for efficient node transfer operations.
+*/
 template <typename T>
 void list<T>::linkNodes(Node_* posPrev, Node_* posNext, Node_* first,
                         Node_* last, size_type movedSize) {
