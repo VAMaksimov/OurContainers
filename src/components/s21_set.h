@@ -1,5 +1,5 @@
-#ifndef SRC_COMPONENTS_S21_SET_H
-#define SRC_COMPONENTS_S21_SET_H
+#ifndef COMPONENTS_S21_SET_H
+#define COMPONENTS_S21_SET_H
 
 #include "s21_sorted_container.h"
 
@@ -16,7 +16,7 @@ class set : public BinaryTree<Key, Key> {
   using size_type = size_t;
 
  public:
-  set() : BinaryTree<key_type, value_type>(){};
+  set() : BinaryTree<key_type, value_type>() {};
   set(std::initializer_list<value_type> const &items)
       : BinaryTree<key_type, value_type>() {
     for (auto num : items) {
@@ -78,8 +78,26 @@ class set : public BinaryTree<Key, Key> {
   }
 
   void erase(const_iterator pos) { this->Erase(pos); }
+  const_iterator find(const key_type &key) {
+    return this->FindNode(this->root_, key);
+  }
+
+  bool contains(const key_type &key) {
+    return this->Contains(this->root_, key);
+  }
+
+  void swap(set &other) { return this->Swap(other.root_); }
+
+  void merge(set &other) {
+    this->Merge(other.root_);
+    this->PrintTree();
+    std::cout << "*****************" << std::endl;
+    other.PrintTree();
+  }
+
+  void print() { this->PrintTree(); }
 };
 
 }  // namespace s21
 
-#endif
+#endif  // COMPONENTS_S21_SET_H

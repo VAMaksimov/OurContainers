@@ -1,5 +1,5 @@
-#ifndef SRC_COMPONENTS_S21_SORTED_CONTAINER_H
-#define SRC_COMPONENTS_S21_SORTED_CONTAINER_H
+#ifndef COMPONENTS_S21_SORTED_CONTAINER_H
+#define COMPONENTS_S21_SORTED_CONTAINER_H
 
 #include <iostream>
 #include <utility>
@@ -38,10 +38,10 @@ class BinaryTree {
  public:
   class const_iterator {
    private:
-    Node *current_;
+    Node *current_ = nullptr;
 
    public:
-    const_iterator(Node *cur_node = nullptr) : current_(cur_node) {}
+    const_iterator(Node *cur_node) : current_(cur_node) {}
     const Key &operator*() const { return current_->key_; }
     const Node *operator->() const { return current_; }
 
@@ -161,51 +161,123 @@ class BinaryTree {
     return {new_node, true};
   }
 
-  void Erase(const_iterator pos) {
-    if (pos == nullptr) {
+  // void Erase(const_iterator pos) {
+  //   if (pos == nullptr) {
+  //     return;
+  //   }
+  //   std::cout << "Delete: " << pos->key_ << std::endl;
+  //   Node *parent_erase = pos->parent_;
+  //   Node *new_root = nullptr;
+  //   if (pos->left_) {
+  //     std::cout << "Delete: left" << std::endl;
+  //     new_root = pos->left_;
+  //     if (pos->right_) {
+  //       Node *current = pos->left_;
+  //       Node *parent = nullptr;
+  //       while (current) {
+  //         parent = current;
+  //         current = current->right_;
+  //       }
+  //       parent->right_ = pos->right_;
+  //     }
+  //   } else if (pos->right_) {
+  //     std::cout << "Delete: right" << std::endl;
+  //     new_root = pos->right_;
+  //   } else if (parent_erase) {
+  //     if (pos->key_ < parent_erase->key_) {
+  //       parent_erase->left_ = EraseNode(parent_erase->left_);
+  //     } else {
+  //       std::cout << "Delete: parent" << std::endl;
+  //       parent_erase->right_ = EraseNode(parent_erase->right_);
+  //     }
+  //   } else {
+  //     root_ = EraseNode(root_);
+  //   }
+  //   Node *node_erase = nullptr;
+  //   if (new_root && parent_erase) {
+  //     node_erase = new_root->parent_;
+  //     new_root->parent_ = parent_erase;
+  //     if (new_root->key_ < parent_erase->key_) {
+  //       parent_erase->left_ = new_root;
+  //     } else {
+  //       parent_erase->right_ = new_root;
+  //     }
+  //   } else if (new_root && !parent_erase) {
+  //     node_erase = root_;
+  //     root_ = new_root;
+  //   }
+  //   EraseNode(node_erase);
+  // }
+
+  void AddSubtree(Node *subroot) {
+    if (!subroot) {
       return;
     }
-    Node *parent_erase = pos->parent_;
-    Node *node_erase = nullptr;
-    Node *new_root = nullptr;
-    if (pos->left_) {
-      new_root = pos->left_;
-      if (pos->right_) {
-        Node *current = pos->left_;
-        Node *parent = nullptr;
-        while (current) {
-          parent = current;
-          current = current->right_;
+    AddNode(subroot->key_, subroot->value_);
+    AddSubtree(subroot->left_);
+    AddSubtree(subroot->right_);
+  }
+
+  /**
+   * 1) Determine which child (may be nullptr) becomes the "main" child
+   *
+   * 2) If the node had two children, the "other" child is whichever is
+   * not'main_child'
+   *
+   * 3) If current node is on the left side of its parent, each
+   * of his children will also go to the left and vice versa
+   *
+   * 4) If we are erasing the root, make main_child the new root
+   *
+   * 5) If there is another child, traverse its descendants and add each one
+   *
+   * 6) If no children exist and this node is not root, simply remove it from
+   * parent
+   *
+   * 7) If erasing a leaf that is root, tree becomes empty
+   *
+   * 8) Finally, erase the current node from memory
+   */
+  void Erase(const_iterator pos) {
+    if (pos == nullptr) return;
+
+    Node *parent_of_erased = pos->parent_;
+    Node *left_child = pos->left_;
+    Node *right_child = pos->right_;
+
+    Node *main_child = (left_child ? left_child : right_child);
+    Node *other_child =
+        (left_child && right_child)
+            ? (main_child == left_child ? right_child : left_child)
+            : nullptr;
+
+    if (main_child) {
+      main_child->parent_ = EraseNode(main_child->parent_);
+      if (parent_of_erased) {
+        if (pos->key_ < parent_of_erased->key_) {
+          parent_of_erased->left_ = main_child;
+        } else {
+          parent_of_erased->right_ = main_child;
         }
-        parent->right_ = pos->right_;
-      }
-    } else if (pos->right_) {
-      new_root = pos->right_;
-    } else if (parent_erase) {
-      if (pos->key_ < parent_erase->key_) {
-        node_erase = parent_erase->left_;
-        parent_erase->left_ = EraseNode(parent_erase->left_);
+        main_child->parent_ = parent_of_erased;
       } else {
-        node_erase = parent_erase->right_;
-        parent_erase->right_ = EraseNode(parent_erase->right_);
+        root_ = main_child;
+      }
+
+      if (other_child) {
+        AddSubtree(other_child);
       }
     } else {
-      node_erase = root_;
-      root_ = EraseNode(root_);
-    }
-    if (new_root && parent_erase) {
-      node_erase = new_root->parent_;
-      new_root->parent_ = parent_erase;
-      if (new_root->key_ < parent_erase->key_) {
-        parent_erase->left_ = new_root;
+      if (parent_of_erased) {
+        if (pos->key_ < parent_of_erased->key_) {
+          parent_of_erased->left_ = EraseNode(parent_of_erased->left_);
+        } else {
+          parent_of_erased->right_ = EraseNode(parent_of_erased->right_);
+        }
       } else {
-        parent_erase->right_ = new_root;
+        root_ = EraseNode(root_);
       }
-    } else if (new_root && !parent_erase) {
-      node_erase = root_;
-      root_ = new_root;
     }
-    EraseNode(node_erase);
   }
 
   Node *EraseNode(Node *current) {
@@ -214,6 +286,110 @@ class BinaryTree {
     }
     return nullptr;
   }
+
+  const_iterator FindNode(Node *current, const Key &key) {
+    const_iterator result = const_iterator(root_);
+    if (key < current->key_) {
+      result = FindNode(current->left_, key);
+    } else if (key > current->key_) {
+      result = FindNode(current->right_, key);
+    } else {
+      result = const_iterator(current);
+    }
+    return result;
+  }
+
+  bool Contains(Node *current, const Key &key) {
+    if (current == nullptr) {
+      return false;
+    }
+    bool result = false;
+    if (key < current->key_) {
+      result = Contains(current->left_, key);
+    } else if (key > current->key_) {
+      result = Contains(current->right_, key);
+    } else {
+      result = true;
+    }
+    return result;
+  }
+
+  void Swap(Node *other_root) {
+    Node *left_child = this->root_->left_;
+    if (left_child) left_child->parent_ = other_root->right_;
+    Node *right_child = this->root_->right_;
+    if (right_child) right_child->parent_ = other_root->left_;
+    std::swap(this->root_, other_root);
+  }
+
+  void Merge(Node *other) {
+    if (other == nullptr) {
+      std::cout << "return" << std::endl;
+      return;
+    }
+    std::cout << "Merge: " << other->key_ << std::endl;
+    auto move_node = AddNode(other->key_, other->value_);
+    if (move_node.second)
+      std::cout << "true" << std::endl;
+    else
+      std::cout << "false" << std::endl;
+    Merge(other->left_);
+    Merge(other->right_);
+    if (move_node.second) {
+      std::cout << "********SET*********" << std::endl;
+      PrintTree();
+      std::cout << "********OTHER*********" << std::endl;
+      Node *temp = other;
+      while (temp->parent_) {
+        temp = temp->parent_;
+      }
+      PrintHelper(temp);
+      Erase(const_iterator(other));
+    }
+  }
+
+  // void Merge(Node *other) {
+  //   if (other == nullptr) {
+  //     std::cout << "return" << std::endl;
+  //     return;
+  //   }
+  //   std::cout << "Merge: " << other->key_ << std::endl;
+  //   bool move_node = MergeHelper(root_, other, nullptr);
+  //   if (move_node)
+  //     std::cout << "true" << std::endl;
+  //   else
+  //     std::cout << "false" << std::endl;
+  //   Merge(other->left_);
+  //   Merge(other->right_);
+  //   if (move_node) {
+  //     Erase(const_iterator(other));
+  //   }
+  // }
+
+  // bool MergeHelper(Node *current, Node *other, Node *parent) {
+  //   if (current == nullptr) {
+  //     Node *new_node = new Node(other->key_, other->value_);
+  //     new_node->parent_ = parent;
+  //     if
+  //       return true;
+  //   }
+  //   bool result = false;
+  //   // std::cout << "P1" << std::endl;
+  //   if (other->key_ < current->key_) {
+  //     std::cout << other->key_ << " < " << current->key_ << std::endl;
+  //     result = MergeHelper(current->left_, other, current);
+  //     if (result) {
+  //       current->left_ = other;
+  //     }
+  //   } else if (other->key_ > current->key_) {
+  //     std::cout << other->key_ << " > " << current->key_ << std::endl;
+  //     result = MergeHelper(current->right_, other, current);
+  //     if (result) {
+  //       current->right_ = other;
+  //     }
+  //   }
+  //   return result;
+  // }
 
   Node *CopyTree(Node *source, Node *parent) {
     if (source == nullptr) {
@@ -249,11 +425,12 @@ class BinaryTree {
 
   void PrintHelper(Node *my_tree) {
     if (my_tree) {
+      PrintStruct(my_tree);
       PrintHelper(my_tree->left_);
-      std::cout << my_tree->value_ << " ";
+      // std::cout << my_tree->value_ << " ";
       PrintHelper(my_tree->right_);
     }
   }
-};  // end class
+};  // class BinaryTree
 
-#endif
+#endif  // COMPONENTS_S21_SORTED_CONTAINER_H

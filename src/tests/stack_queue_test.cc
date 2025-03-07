@@ -8,10 +8,8 @@
 #include <gtest/gtest.h>
 // 5) project's headers.
 
-using namespace s21;
-
 template <typename T>
-void CompareStacks(Stack<T> &actual, std::stack<T> &expected) {
+void CompareStacks(s21::Stack<T> &actual, std::stack<T> &expected) {
   EXPECT_EQ(actual.size(), expected.size());
 
   while (!actual.empty() && !expected.empty()) {
@@ -24,7 +22,7 @@ void CompareStacks(Stack<T> &actual, std::stack<T> &expected) {
 }
 
 template <typename T>
-void CompareQueues(Queue<T> &actual, std::queue<T> &expected) {
+void CompareQueues(s21::Queue<T> &actual, std::queue<T> &expected) {
   EXPECT_EQ(actual.size(), expected.size());
 
   while (!actual.empty() && !expected.empty()) {
@@ -37,7 +35,7 @@ void CompareQueues(Queue<T> &actual, std::queue<T> &expected) {
 }
 
 TEST(StackTest, InitializationAndBasicProperties) {
-  Stack<int> my_stack({1, 2, 3});
+  s21::Stack<int> my_stack({1, 2, 3});
 
   // Note: std::stack does not support initializer_list directly,
   // so we push the elements in the same order.
@@ -50,7 +48,7 @@ TEST(StackTest, InitializationAndBasicProperties) {
 }
 
 TEST(QueueTest, InitializationAndBasicProperties) {
-  Queue<int> my_queue({1, 2, 3});
+  s21::Queue<int> my_queue({1, 2, 3});
 
   std::queue<int> q;
   q.push(1);
@@ -62,8 +60,8 @@ TEST(QueueTest, InitializationAndBasicProperties) {
 }
 
 TEST(StackTest, Swap) {
-  Stack<int> stack1({1, 2, 3, 4, 5});
-  Stack<int> stack2({6, 7, 8});
+  s21::Stack<int> stack1({1, 2, 3, 4, 5});
+  s21::Stack<int> stack2({6, 7, 8});
   stack1.swap(stack2);
   EXPECT_EQ(stack2.size(), 5);
   EXPECT_EQ(stack1.size(), 3);
@@ -72,7 +70,7 @@ TEST(StackTest, Swap) {
 }
 
 TEST(StackTest, EmptyContainer) {
-  Stack<int> my_stack;
+  s21::Stack<int> my_stack;
   std::stack<int> st;
 
   EXPECT_EQ(my_stack.size(), st.size());
@@ -84,7 +82,7 @@ TEST(StackTest, EmptyContainer) {
 }
 
 TEST(QueueTest, EmptyContainer) {
-  Queue<int> my_queue;
+  s21::Queue<int> my_queue;
   std::queue<int> q;
 
   EXPECT_EQ(my_queue.size(), q.size());
@@ -99,11 +97,11 @@ TEST(QueueTest, EmptyContainer) {
 
 // Capture and test the output of PrintContainer().
 TEST(StackTest, PrintContainer) {
-  Stack<int> stack1({10, 20, 30});
-  Stack<double> stack2(
+  s21::Stack<int> stack1({10, 20, 30});
+  s21::Stack<double> stack2(
       {1.1, 2, 3, 8.9, 4.005, 5.666, 6, -5, 7.000001, 8, 9, 999});
-  Stack<char> stack3({'a', 'b', 'c'});
-  Stack<std::string> stack4({"one", "two", "three"});
+  s21::Stack<char> stack3({'a', 'b', 'c'});
+  s21::Stack<std::string> stack4({"one", "two", "three"});
 
   std::ostringstream oss;
   // First, the code saves the original buffer of std::cout so it can be
@@ -133,8 +131,8 @@ TEST(StackTest, PrintContainer) {
 }
 
 TEST(StackTest, ConstructorCopy) {
-  Stack<int> our_stack = {1, 2, 3};
-  Stack<int> our_copy(our_stack);
+  s21::Stack<int> our_stack = {1, 2, 3};
+  s21::Stack<int> our_copy(our_stack);
   std::stack<int> std_stack;
   std_stack.push(1);
   std_stack.push(2);
@@ -144,8 +142,8 @@ TEST(StackTest, ConstructorCopy) {
 }
 
 TEST(StackTest, ConstructorMove) {
-  Stack<int> our_stack = {1, 2, 3};
-  Stack<int> our_move(std::move(our_stack));
+  s21::Stack<int> our_stack = {1, 2, 3};
+  s21::Stack<int> our_move(std::move(our_stack));
   std::stack<int> std_stack;
   std_stack.push(1);
   std_stack.push(2);
@@ -156,12 +154,12 @@ TEST(StackTest, ConstructorMove) {
 }
 
 TEST(StackTest, OperatorMove) {
-  Stack<int> our_stack_int = {1, 2, 3};
+  s21::Stack<int> our_stack_int = {1, 2, 3};
   std::stack<int> std_stack_int;
   std_stack_int.push(1);
   std_stack_int.push(2);
   std_stack_int.push(3);
-  Stack<int> our_stack_empty;
+  s21::Stack<int> our_stack_empty;
   std::stack<int> std_stack_empty;
   our_stack_empty = std::move(our_stack_int);
   std_stack_empty = std::move(std_stack_int);
@@ -178,7 +176,7 @@ TEST(StackTest, OperatorMove) {
 // }
 
 TEST(StackTest, Push) {
-  Stack<int> our_stack_int;
+  s21::Stack<int> our_stack_int;
   our_stack_int.push(1);
   our_stack_int.push(2);
   our_stack_int.push(3);
@@ -190,7 +188,7 @@ TEST(StackTest, Push) {
 }
 
 TEST(StackTest, Pop) {
-  Stack<int> our_stack_int;
+  s21::Stack<int> our_stack_int;
   our_stack_int.push(1);
   our_stack_int.push(2);
   our_stack_int.pop();
@@ -206,7 +204,7 @@ TEST(StackTest, Pop) {
 }
 
 TEST(QueueTest, Pop) {
-  Queue<int> our_queue_int;
+  s21::Queue<int> our_queue_int;
   our_queue_int.push(1);
   our_queue_int.push(2);
   our_queue_int.pop();
@@ -222,7 +220,7 @@ TEST(QueueTest, Pop) {
 }
 
 TEST(StackTest, InsertMany) {
-  Stack<int> our_stack_int;
+  s21::Stack<int> our_stack_int;
   our_stack_int.insert_many_back(1, 2, 3);
   std::stack<int> std_stack_int;
   std_stack_int.push(1);
@@ -231,5 +229,20 @@ TEST(StackTest, InsertMany) {
   CompareStacks<int>(our_stack_int, std_stack_int);
   our_stack_int.insert_many_back(4);
   std_stack_int.push(4);
+  CompareStacks<int>(our_stack_int, std_stack_int);
+}
+
+TEST(StackTest, LargeContainer) {
+  s21::Stack<int> our_stack_int({1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13});
+  std::stack<int> std_stack_int;
+  for (int i = 1; i <= 13; i++) std_stack_int.push(i);
+  CompareStacks<int>(our_stack_int, std_stack_int);
+  our_stack_int.insert_many_back(14, 15, 16, 17, 18, 19);
+  for (int i = 14; i <= 19; i++) std_stack_int.push(i);
+  CompareStacks<int>(our_stack_int, std_stack_int);
+  our_stack_int.pop();
+  our_stack_int.pop();
+  std_stack_int.pop();
+  std_stack_int.pop();
   CompareStacks<int>(our_stack_int, std_stack_int);
 }

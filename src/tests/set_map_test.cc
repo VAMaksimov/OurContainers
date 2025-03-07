@@ -35,20 +35,20 @@ void CompareSets(s21::set<T> &ActualSet, std::set<T> &ExpectedSet) {
 // }
 
 TEST(SetTest, Iterators) {
-  s21::set<int> ActualSet = {1, 2, 3, 4};
+  // 10 15 20 25 30 40 50 70 80 90
+  s21::set<int> ActualSet = {50, 25, 10, 30, 60, 80, 15, 40, 70, 90, 20};
 
   EXPECT_EQ(ActualSet.end(), nullptr);
   auto it = ActualSet.begin();
-  EXPECT_EQ(*it, 1);
+  EXPECT_EQ(*it, 10);
   it++;
-  EXPECT_EQ(*it, 2);
+  EXPECT_EQ(*it, 15);
   it++;
   it++;
-  EXPECT_EQ(*it, 4);
+  EXPECT_EQ(*it, 25);
   it--;
-  EXPECT_EQ(*it, 3);
-  it++;
-  it++;
+  EXPECT_EQ(*it, 20);
+  for (int i = 2; i < 11; i++) it++;
   EXPECT_EQ(it, ActualSet.end());
 }
 
@@ -68,18 +68,18 @@ TEST(SetTest, InitListConstructor) {
 }
 
 TEST(SetTest, CopyConstructor) {
-  s21::set<int> ActualSet = {1, 2, 3, 4, 5};
+  s21::set<int> ActualSet = {5, 4, 3, 2, 1};
   s21::set<int> CopySet(ActualSet);
-  std::set<int> ExpectedSet = {1, 2, 3, 4, 5};
+  std::set<int> ExpectedSet = {5, 4, 3, 2, 1};
 
   CompareSets(CopySet, ExpectedSet);
   CompareSets(ActualSet, ExpectedSet);
 }
 
 TEST(SetTest, MoveConstructor) {
-  s21::set<int> ActualSet = {1, 2, 3, 4, 5};
+  s21::set<int> ActualSet = {3, 4, 5, 1, 2};
   s21::set<int> MoveSet(std::move(ActualSet));
-  std::set<int> ExpectedSet = {1, 2, 3, 4, 5};
+  std::set<int> ExpectedSet = {3, 4, 5, 1, 2};
 
   CompareSets(MoveSet, ExpectedSet);
 
@@ -87,10 +87,12 @@ TEST(SetTest, MoveConstructor) {
 }
 
 TEST(SetTest, MoveOperator) {
-  s21::set<int> ActualSet = {1, 2, 3, 4, 5};
+  s21::set<int> ActualSet = {2, 3, 5,   4,  1,  1,   4,  6,
+                             3, 7, 132, 13, 23, 543, 23, 52};
   s21::set<int> MoveSet;
   MoveSet = std::move(ActualSet);
-  std::set<int> ExpectedSet = {1, 2, 3, 4, 5};
+  std::set<int> ExpectedSet = {2, 3, 5,   4,  1,  1,   4,  6,
+                               3, 7, 132, 13, 23, 543, 23, 52};
 
   CompareSets(MoveSet, ExpectedSet);
 
@@ -100,8 +102,8 @@ TEST(SetTest, MoveOperator) {
 // Destructor test is not needed because destructor is called automatically
 
 TEST(SetTest, Clear) {
-  s21::set<int> ActualSet = {1, 2, 3, 4, 5};
-  std::set<int> ExpectedSet = {1, 2, 3, 4, 5};
+  s21::set<char> ActualSet = {'k', 'g', 'f', 'd', 'c', 'b', 'a'};
+  std::set<char> ExpectedSet = {'k', 'g', 'f', 'd', 'c', 'b', 'a'};
 
   ActualSet.clear();
   ExpectedSet.clear();
@@ -133,79 +135,104 @@ TEST(SetTest, Insert) {
   CompareSets(ActualSet, ExpectedSet);
 }
 
-// TEST(SetTest, Erase) {
-//   s21::set<int> ActualSet = {1, 2, 3, 4, 5};
-//   std::set<int> ExpectedSet = {1, 2, 3, 4, 5};
+TEST(SetTest, Erase) {
+  s21::set<float> ActualSet = {4.00001, 34.1, 543.1, 7.76543};
+  std::set<float> ExpectedSet = {4.00001, 34.1, 543.1, 7.76543};
 
-//   // Find and erase element 3
-//   auto it = ActualSet.find(3);
-//   ActualSet.erase(it);
+  // Find and erase element 3
+  auto it = ActualSet.find(34.1);
+  ActualSet.erase(it);
 
-//   ExpectedSet.erase(3);
+  ExpectedSet.erase(34.1);
 
-//   CompareSets(ActualSet, ExpectedSet);
+  CompareSets(ActualSet, ExpectedSet);
 
-//   EXPECT_FALSE(ActualSet.contains(3));
+  EXPECT_FALSE(ActualSet.contains(34.1));
 
-//   it = ActualSet.find(1);
-//   ActualSet.erase(it);
-//   it = ActualSet.find(5);
-//   ActualSet.erase(it);
+  it = ActualSet.find(4.00001);
+  ActualSet.erase(it);
+  it = ActualSet.find(7.76543);
+  ActualSet.erase(it);
 
-//   ExpectedSet.erase(1);
-//   ExpectedSet.erase(5);
+  ExpectedSet.erase(4.00001);
+  ExpectedSet.erase(7.76543);
 
-//   CompareSets(ActualSet, ExpectedSet);
-// }
+  CompareSets(ActualSet, ExpectedSet);
+}
 
-// TEST(SetTest, Swap) {
-//   s21::set<int> ActualSet1 = {1, 2, 3};
-//   s21::set<int> ActualSet2 = {4, 5, 6, 7};
+TEST(SetTest, EraseLargeSet) {
+  s21::set<int> ActualSet = {50, 25, 75, 10, 35, 60, 80, 15, 40, 70, 90, 20};
+  std::set<int> ExpectedSet = {50, 10, 35, 60, 80, 15, 40, 90, 20};
 
-//   std::set<int> ExpectedSet1 = {1, 2, 3};
-//   std::set<int> ExpectedSet2 = {4, 5, 6, 7};
+  auto it = ActualSet.find(70);
+  ActualSet.erase(it);
+  it = ActualSet.find(75);
+  ActualSet.erase(it);
+  it = ActualSet.find(25);
+  ActualSet.erase(it);
 
-//   ActualSet1.swap(ActualSet2);
+  CompareSets(ActualSet, ExpectedSet);
+}
 
-//   CompareSets(ActualSet1, ExpectedSet2);
-//   CompareSets(ActualSet2, ExpectedSet1);
-// }
+TEST(SetTest, Swap) {
+  s21::set<int> ActualSet1 = {1, 2, 3};
+  s21::set<int> ActualSet2 = {4, 5, 6, 7};
 
-// TEST(SetTest, Merge) {
-//   s21::set<int> ActualSet1 = {1, 3, 5};
-//   s21::set<int> ActualSet2 = {2, 3, 4, 6};
+  std::set<int> ExpectedSet1 = {1, 2, 3};
+  std::set<int> ExpectedSet2 = {4, 5, 6, 7};
 
-//   std::set<int> ExpectedSet1 = {1, 2, 3, 4, 5, 6};
-//   std::set<int> ExpectedSet2 = {3};  // Only duplicate remains
+  ActualSet1.swap(ActualSet2);
 
-//   ActualSet1.merge(ActualSet2);
+  CompareSets(ActualSet1, ExpectedSet2);
+  CompareSets(ActualSet2, ExpectedSet1);
+}
 
-//   CompareSets(ActualSet1, ExpectedSet1);
-//   CompareSets(ActualSet2, ExpectedSet2);
-// }
+TEST(SetTest, Merge) {
+  s21::set<int> ActualSet1 = {1, 3, 5};
+  s21::set<int> ActualSet2 = {2, 3, 4, 6};
 
-// TEST(SetTest, Find) {
-//   s21::set<int> ActualSet = {1, 2, 3, 4, 5};
+  std::set<int> ExpectedSet1 = {1, 2, 3, 4, 5, 6};
+  std::set<int> ExpectedSet2 = {3};  // Only duplicate remains
 
-//   auto it1 = ActualSet.find(3);
-//   EXPECT_NE(it1, ActualSet.end());
-//   EXPECT_EQ(*it1, 3);
+  ActualSet1.merge(ActualSet2);
 
-//   auto it2 = ActualSet.find(10);
-//   EXPECT_EQ(it2, ActualSet.end());
-// }
+  CompareSets(ActualSet1, ExpectedSet1);
+  CompareSets(ActualSet2, ExpectedSet2);
+}
 
-// TEST(SetTest, Contains) {
-//   s21::set<int> ActualSet = {1, 2, 3, 4, 5};
+TEST(SetTest, Find) {
+  s21::set<int> ActualSet = {4, 4, 1, 6, 3, 9};
 
-//   EXPECT_TRUE(ActualSet.contains(1));
-//   EXPECT_TRUE(ActualSet.contains(3));
-//   EXPECT_TRUE(ActualSet.contains(5));
+  auto it1 = ActualSet.find(3);
+  EXPECT_NE(it1, ActualSet.end());
+  EXPECT_EQ(*it1, 3);
 
-//   EXPECT_FALSE(ActualSet.contains(0));
-//   EXPECT_FALSE(ActualSet.contains(6));
-//   EXPECT_FALSE(ActualSet.contains(-1));
-// }
+  auto it2 = ActualSet.find(10);
+  EXPECT_EQ(it2, ActualSet.end());
+}
+
+TEST(SetTest, FindString) {
+  s21::set<std::string> ActualSet = {"Hello", "World"};
+
+  auto it1 = ActualSet.find("World");
+  EXPECT_NE(it1, ActualSet.end());
+  EXPECT_EQ(*it1, "World");
+
+  auto it2 = ActualSet.find("Goodbye");
+  EXPECT_EQ(it2, ActualSet.end());
+}
+
+TEST(SetTest, Contains) {
+  s21::set<int> ActualSet = {1, 2, 3, 4, 5};
+
+  EXPECT_TRUE(ActualSet.contains(1));
+  EXPECT_TRUE(ActualSet.contains(3));
+  EXPECT_TRUE(ActualSet.contains(5));
+
+  EXPECT_FALSE(ActualSet.contains(0));
+  EXPECT_FALSE(ActualSet.contains(6));
+  EXPECT_FALSE(ActualSet.contains(-1));
+}
 
 // TEST(MapTest, At) {
 //   s21::map<int, std::string> ActualMap = {{1, "one"}, {2, "two"}};
