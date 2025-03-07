@@ -178,6 +178,8 @@ class BinaryTree {
           current = current->right_;
         }
         parent->right_ = pos->right_;
+        Node *right_branch = pos->right_;
+        right_branch->parent_ = parent;
       }
     } else if (pos->right_) {
       new_root = pos->right_;
