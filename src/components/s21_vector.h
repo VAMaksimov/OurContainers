@@ -11,12 +11,16 @@ namespace s21 {
 template <typename T>
 class vector {
  private:
+  // Vector Member type
   using value_type = T;
   using reference = value_type&;
   using const_reference = const value_type&;
+  using iterator = T*;
+  using const_iterator = const T*;
   using size_type = std::size_t;
-  using pointer = value_type*;
+
   using const_pointer = const value_type*;
+  using pointer = value_type*;
 
   pointer data_ptr;
   size_type Size;
@@ -25,132 +29,66 @@ class vector {
   void reallocate(size_type new_capacity);
 
  public:
-  class VectorIterator;
-  class VectorConstIterator;
+  // Vector Member functions
+  // Vector Member functions
+  vector();  // default constructor, creates empty vector
+  explicit vector(
+      size_type n);  // parameterized constructor, creates the vector of size n
+  vector(std::initializer_list<value_type> const&
+             items);        // initializer list constructor, creates vector
+                            // initizialized using std::initializer_list
+  vector(const vector& v);  // copy constructor
+  vector(vector&& v);       // move constructor
+  vector& operator=(
+      vector&& v);  // assignment operator overload for moving object
 
-  using iterator = VectorIterator;
-  using const_iterator = VectorConstIterator;
+  // Destructor
+  ~vector();  // destructor
 
-  // Конструкторы
-  vector();
-  explicit vector(size_type n);
-  vector(std::initializer_list<value_type> const& items);
-  vector(const vector& v);
-  vector(vector&& v);
-  vector& operator=(vector&& v);
+  // Vector Element access
+  reference at(size_type pos);  // access specified element with bounds checking
+  reference operator[](size_type pos);  // access specified element
+  const_reference front() const;        // access the first element
+  const_reference back() const;         // access the last element
+  pointer data();                       // direct access to the underlying array
 
-  // Деструктор
-  ~vector();
-
-  // Методы
-  reference at(size_type pos);
-  reference operator[](size_type pos);
+  // TODO: not specified in the spec
   reference front();
-  const_reference front() const;
   reference back();
-  const_reference back() const;
-  pointer data();
   const_pointer data() const;
-  bool empty() const;
-  size_type size() const;
-  size_type max_size();
-  size_type capacity() const;
-  void reserve(size_type size);
-  void shrink_to_fit();
-  void clear();
-  void push_back(const_reference value);
-  void pop_back();
-  void swap(vector& other);
-  void erase(iterator pos);
 
-  iterator begin();
-  iterator end();
+  // Vector Iterators
+  iterator begin();  // returns an iterator to the beginning
+  iterator end();    // returns an iterator to the end
+
+  // TODO: not specified in the spec
   const_iterator cbegin() const;
   const_iterator cend() const;
-  iterator insert(iterator pos, const_reference value);
 
-  class VectorIterator {
-   private:
-    pointer current;
+  // Vector Capacity
+  bool empty() const;      // checks whether the container is empty
+  size_type size() const;  // returns the number of elements
+  size_type max_size();    // returns the maximum possible number of elements
+  void reserve(
+      size_type size);  // allocate storage of size elements and copies current
+                        // array elements to a newely allocated array
+  size_type capacity() const;  // returns the number of elements that can be
+                               // held in currently allocated storage
+  void shrink_to_fit();        // reduces memory usage by freeing unused memory
 
-   public:
-    VectorIterator(pointer ptr) : current(ptr) {}
-
-    reference operator*() { return *current; }
-
-    VectorIterator& operator++() {
-      ++current;
-      return *this;
-    }
-
-    VectorIterator operator++(int) {
-      VectorIterator temp = *this;
-      ++(*this);
-      return temp;
-    }
-
-    VectorIterator& operator--() {
-      --current;
-      return *this;
-    }
-
-    VectorIterator operator--(int) {
-      VectorIterator temp = *this;
-      --(*this);
-      return temp;
-    }
-
-    bool operator==(const VectorIterator& other) const {
-      return current == other.current;
-    }
-
-    bool operator!=(const VectorIterator& other) const {
-      return current != other.current;
-    }
-  };
-
-  class VectorConstIterator {
-   private:
-    const_pointer current;
-
-   public:
-    VectorConstIterator(const_pointer ptr) : current(ptr) {}
-
-    const_reference operator*() const { return *current; }
-
-    VectorConstIterator& operator++() {
-      ++current;
-      return *this;
-    }
-
-    VectorConstIterator operator++(int) {
-      VectorConstIterator temp = *this;
-      ++(*this);
-      return temp;
-    }
-
-    VectorConstIterator& operator--() {
-      --current;
-      return *this;
-    }
-
-    VectorConstIterator operator--(int) {
-      VectorConstIterator temp = *this;
-      --(*this);
-      return temp;
-    }
-
-    bool operator==(const VectorConstIterator& other) const {
-      return current == other.current;
-    }
-
-    bool operator!=(const VectorConstIterator& other) const {
-      return current != other.current;
-    }
-  };
+  // Vector Modifiers
+  void clear();  // clears the contents
+  iterator insert(
+      iterator pos,
+      const_reference value);  // inserts elements into concrete pos and returns
+                               // the iterator that points to the new element
+  void erase(iterator pos);    // erases element at pos
+  void push_back(const_reference value);  // adds an element to the end
+  void pop_back();                        // removes the last element
+  void swap(vector& other);               // swaps the contents
 };
 
-// Реализация методов
+// Vector Member functions implementation
 
 template <typename value_type>
 void vector<value_type>::reallocate(size_type new_capacity) {

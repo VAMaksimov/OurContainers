@@ -196,7 +196,7 @@ TEST(VectorTest, AtOutOfRange) {
   EXPECT_THROW(s21_vec_string.at(5), std::out_of_range);
 }
 
-TEST(vector_at, case3) {
+TEST(VectorTest, AtEmptyVector) {
   s21::vector<int> s21_vec_int;
   s21::vector<double> s21_vec_double;
   s21::vector<std::string> s21_vec_string;
@@ -206,7 +206,7 @@ TEST(vector_at, case3) {
   EXPECT_THROW(s21_vec_string.at(5), std::out_of_range);
 }
 
-TEST(vector_square_braces, case1) {
+TEST(VectorTest, OperatorBrackets) {
   s21::vector<int> s21_vec_int{1, 4, 8, 9};
   s21::vector<double> s21_vec_double{1.4, 4.8, 8.9, 9.1};
   s21::vector<std::string> s21_vec_string{"Hello", ",", "world", "!"};
@@ -216,7 +216,7 @@ TEST(vector_square_braces, case1) {
   EXPECT_EQ(s21_vec_string[0], "Hello");
 }
 
-TEST(vector_front, case1) {
+TEST(VectorTest, Front) {
   s21::vector<int> s21_vec_int{1, 4, 8, 9};
   s21::vector<double> s21_vec_double{1.4, 4.8, 8.9, 9.1};
   s21::vector<std::string> s21_vec_string{"Hello", ",", "world", "!"};
@@ -226,7 +226,7 @@ TEST(vector_front, case1) {
   EXPECT_EQ(s21_vec_string.front(), "Hello");
 }
 
-TEST(vector_back, case1) {
+TEST(VectorTest, Back) {
   s21::vector<int> s21_vec_int{1, 4, 8, 9};
   s21::vector<double> s21_vec_double{1.4, 4.8, 8.9, 9.1};
   s21::vector<std::string> s21_vec_string{"Hello", ",", "world", "!"};
@@ -236,7 +236,7 @@ TEST(vector_back, case1) {
   EXPECT_EQ(s21_vec_string.back(), "!");
 }
 
-TEST(vector_data, case1) {
+TEST(VectorTest, Data) {
   s21::vector<int> s21_vec_int{1, 4, 8, 9};
   s21::vector<double> s21_vec_double{1.4, 4.8, 8.9, 9.1};
   s21::vector<std::string> s21_vec_string{"Hello", ",", "world", "!"};
@@ -246,7 +246,7 @@ TEST(vector_data, case1) {
   EXPECT_EQ(s21_vec_string.data(), &s21_vec_string[0]);
 }
 
-TEST(vector_begin, case1) {
+TEST(VectorTest, Begin) {
   s21::vector<int> s21_vec_int{1, 4, 8, 9};
   s21::vector<double> s21_vec_double{1.4, 4.8, 8.9, 9.1};
   s21::vector<std::string> s21_vec_string{"Hello", ",", "world", "!"};
@@ -256,7 +256,7 @@ TEST(vector_begin, case1) {
   EXPECT_EQ(s21_vec_string.begin(), &s21_vec_string[0]);
 }
 
-TEST(vector_end, case1) {
+TEST(VectorTest, End) {
   s21::vector<int> s21_vec_int{1, 4, 8, 9};
   s21::vector<double> s21_vec_double{1.4, 4.8, 8.9, 9.1};
   s21::vector<std::string> s21_vec_string{"Hello", ",", "world", "!"};
@@ -266,7 +266,7 @@ TEST(vector_end, case1) {
   EXPECT_EQ(s21_vec_string.end(), &s21_vec_string[0] + 4);
 }
 
-TEST(vector_empty, case1) {
+TEST(VectorTest, Empty) {
   s21::vector<int> s21_vec_int{1, 4, 8, 9};
   s21::vector<double> s21_vec_double{1.4, 4.8, 8.9, 9.1};
   s21::vector<std::string> s21_vec_string{"Hello", ",", "world", "!"};
@@ -276,7 +276,7 @@ TEST(vector_empty, case1) {
   EXPECT_EQ(s21_vec_string.empty(), 0);
 }
 
-TEST(vector_empty, case2) {
+TEST(VectorTest, EmptyTrue) {
   s21::vector<int> s21_vec_int{};
   s21::vector<double> s21_vec_double{};
   s21::vector<std::string> s21_vec_string{};
@@ -286,7 +286,7 @@ TEST(vector_empty, case2) {
   EXPECT_EQ(s21_vec_string.empty(), 1);
 }
 
-TEST(vector_size, case1) {
+TEST(VectorTest, Size) {
   s21::vector<int> s21_vec_int{1, 4, 8, 9};
   s21::vector<double> s21_vec_double{1.4, 4.8, 8.9, 9.1};
   s21::vector<std::string> s21_vec_string{"Hello", ",", "world", "!"};
@@ -296,7 +296,7 @@ TEST(vector_size, case1) {
   EXPECT_EQ(s21_vec_string.size(), 4U);
 }
 
-TEST(vector_size, case2) {
+TEST(VectorTest, SizeEmpty) {
   s21::vector<int> s21_vec_int{};
   s21::vector<double> s21_vec_double{};
   s21::vector<std::string> s21_vec_string{};
@@ -306,7 +306,7 @@ TEST(vector_size, case2) {
   EXPECT_EQ(s21_vec_string.size(), 0U);
 }
 
-TEST(vector_max_size, case1) {
+TEST(VectorTest, MaxSize) {
   s21::vector<int> s21_vec_int{1, 4, 8, 9};
   std::vector<int> std_vec_int{1, 4, 8, 9};
 
@@ -321,7 +321,7 @@ TEST(vector_max_size, case1) {
   EXPECT_EQ(s21_vec_string.max_size(), std_vec_string.max_size());
 }
 
-TEST(vector_reserve, case1) {
+TEST(VectorTest, Reserve) {
   s21::vector<int> s21_vec_int{1, 4, 8, 9};
   s21::vector<double> s21_vec_double{1.4, 4.8, 8.9, 9.1};
   s21::vector<std::string> s21_vec_string{"Hello", ",", "world", "!"};
@@ -335,7 +335,7 @@ TEST(vector_reserve, case1) {
   EXPECT_EQ(s21_vec_string.capacity(), 20U);
 }
 
-TEST(vector_reserve, case2) {
+TEST(VectorTest, ReserveSmaller) {
   s21::vector<int> s21_vec_int{1, 4, 8, 9};
   s21::vector<double> s21_vec_double{1.4, 4.8, 8.9, 9.1};
   s21::vector<std::string> s21_vec_string{"Hello", ",", "world", "!"};
@@ -349,7 +349,7 @@ TEST(vector_reserve, case2) {
   EXPECT_EQ(s21_vec_string.capacity(), 4U);
 }
 
-TEST(vector_capacity, case1) {
+TEST(VectorTest, Capacity) {
   s21::vector<int> s21_vec_int{1, 4, 8, 9};
   s21::vector<double> s21_vec_double{1.4, 4.8, 8.9, 9.1};
   s21::vector<std::string> s21_vec_string{"Hello", ",", "world", "!"};
@@ -359,7 +359,7 @@ TEST(vector_capacity, case1) {
   EXPECT_EQ(s21_vec_string.capacity(), 4U);
 }
 
-TEST(vector_capacity, case2) {
+TEST(VectorTest, CapacityEmpty) {
   s21::vector<int> s21_vec_int{};
   s21::vector<double> s21_vec_double{};
   s21::vector<std::string> s21_vec_string{};
@@ -369,7 +369,7 @@ TEST(vector_capacity, case2) {
   EXPECT_EQ(s21_vec_string.capacity(), 0U);
 }
 
-TEST(vector_shrink_to_fit, case1) {
+TEST(VectorTest, ShrinkToFit) {
   s21::vector<int> s21_vec_int{1, 4, 8, 9};
   s21::vector<double> s21_vec_double{1.4, 4.8, 8.9, 9.1};
   s21::vector<std::string> s21_vec_string{"Hello", ",", "world", "!"};
@@ -387,7 +387,7 @@ TEST(vector_shrink_to_fit, case1) {
   EXPECT_EQ(s21_vec_string.capacity(), 4U);
 }
 
-TEST(vector_shrink_to_fit, case2) {
+TEST(VectorTest, ShrinkToFitNoEffect) {
   s21::vector<int> s21_vec_int{1, 4, 8, 9};
   s21::vector<double> s21_vec_double{1.4, 4.8, 8.9, 9.1};
   s21::vector<std::string> s21_vec_string{"Hello", ",", "world", "!"};
@@ -401,7 +401,7 @@ TEST(vector_shrink_to_fit, case2) {
   EXPECT_EQ(s21_vec_string.capacity(), 4U);
 }
 
-TEST(vector_clear, case1) {
+TEST(VectorTest, Clear) {
   s21::vector<int> s21_vec_int{1, 4, 8, 9};
   s21::vector<double> s21_vec_double{1.4, 4.8, 8.9, 9.1};
   s21::vector<std::string> s21_vec_string{"Hello", ",", "world", "!"};
@@ -415,7 +415,7 @@ TEST(vector_clear, case1) {
   EXPECT_EQ(&s21_vec_string[0], nullptr);
 }
 
-TEST(vector_clear, case2) {
+TEST(VectorTest, ClearTwice) {
   s21::vector<int> s21_vec_int{1, 4, 8, 9};
   s21::vector<double> s21_vec_double{1.4, 4.8, 8.9, 9.1};
   s21::vector<std::string> s21_vec_string{"Hello", ",", "world", "!"};
@@ -429,256 +429,190 @@ TEST(vector_clear, case2) {
   EXPECT_EQ(&s21_vec_string[0], nullptr);
 }
 
-// TEST(vector_insert, case1) {
-//   s21::vector<int> s21_vec_int{1, 4, 8, 9};
-//   s21::vector<double> s21_vec_double{1.4, 4.8, 8.9, 9.1};
-//   s21::vector<std::string> s21_vec_string{"Hello", ",", "", "!"};
+TEST(VectorTest, Insert) {
+  s21::vector<int> s21_vec_int{1, 4, 8, 9};
+  s21::vector<double> s21_vec_double{1.4, 4.8, 8.9, 9.1};
+  s21::vector<std::string> s21_vec_string{"Hello", ",", "", "!"};
 
-//   auto pos_int = s21_vec_int.begin() + 2;
-//   auto pos_double = s21_vec_double.begin() + 2;
-//   auto pos_string = s21_vec_string.begin() + 2;
+  auto pos_int = s21_vec_int.begin() + 2;
+  auto pos_double = s21_vec_double.begin() + 2;
+  auto pos_string = s21_vec_string.begin() + 2;
 
-//   s21_vec_int.insert(pos_int, 2);
-//   s21_vec_double.insert(pos_double, 2.0);
-//   s21_vec_string.insert(pos_string, "world");
+  s21_vec_int.insert(pos_int, 2);
+  s21_vec_double.insert(pos_double, 2.0);
+  s21_vec_string.insert(pos_string, "world");
 
-//   EXPECT_EQ(s21_vec_int[2], 2);
-//   EXPECT_EQ(s21_vec_double[2], 2.0);
-//   EXPECT_EQ(s21_vec_string[2], "world");
-// }
+  EXPECT_EQ(s21_vec_int[2], 2);
+  EXPECT_EQ(s21_vec_double[2], 2.0);
+  EXPECT_EQ(s21_vec_string[2], "world");
+}
 
-// TEST(vector_insert, case2) {
-//   s21::vector<int> s21_vec_int{1, 4, 8, 9};
-//   s21::vector<double> s21_vec_double{1.4, 4.8, 8.9, 9.1};
-//   s21::vector<std::string> s21_vec_string{"Hello", ",", "", "!"};
+TEST(VectorTest, InsertBegin) {
+  s21::vector<int> s21_vec_int{1, 4, 8, 9};
+  s21::vector<double> s21_vec_double{1.4, 4.8, 8.9, 9.1};
+  s21::vector<std::string> s21_vec_string{"Hello", ",", "", "!"};
 
-//   auto pos_int = s21_vec_int.begin();
-//   auto pos_double = s21_vec_double.begin();
-//   auto pos_string = s21_vec_string.begin();
+  auto pos_int = s21_vec_int.begin();
+  auto pos_double = s21_vec_double.begin();
+  auto pos_string = s21_vec_string.begin();
 
-//   s21_vec_int.insert(pos_int, 2);
-//   s21_vec_double.insert(pos_double, 2.0);
-//   s21_vec_string.insert(pos_string, "world");
+  s21_vec_int.insert(pos_int, 2);
+  s21_vec_double.insert(pos_double, 2.0);
+  s21_vec_string.insert(pos_string, "world");
 
-//   EXPECT_EQ(s21_vec_int[0], 2);
-//   EXPECT_EQ(s21_vec_double[0], 2.0);
-//   EXPECT_EQ(s21_vec_string[0], "world");
-// }
+  EXPECT_EQ(s21_vec_int[0], 2);
+  EXPECT_EQ(s21_vec_double[0], 2.0);
+  EXPECT_EQ(s21_vec_string[0], "world");
+}
 
-// TEST(vector_insert, case3) {
-//   s21::vector<int> s21_vec_int{1, 4, 8, 9};
-//   s21::vector<double> s21_vec_double{1.4, 4.8, 8.9, 9.1};
-//   s21::vector<std::string> s21_vec_string{"Hello", ",", "", "!"};
+TEST(VectorTest, InsertEnd) {
+  s21::vector<int> s21_vec_int{1, 4, 8, 9};
+  s21::vector<double> s21_vec_double{1.4, 4.8, 8.9, 9.1};
+  s21::vector<std::string> s21_vec_string{"Hello", ",", "", "!"};
 
-//   auto pos_int = s21_vec_int.end();
-//   auto pos_double = s21_vec_double.end();
-//   auto pos_string = s21_vec_string.end();
+  auto pos_int = s21_vec_int.end();
+  auto pos_double = s21_vec_double.end();
+  auto pos_string = s21_vec_string.end();
 
-//   s21_vec_int.insert(pos_int, 2);
-//   s21_vec_double.insert(pos_double, 2.0);
-//   s21_vec_string.insert(pos_string, "world");
+  s21_vec_int.insert(pos_int, 2);
+  s21_vec_double.insert(pos_double, 2.0);
+  s21_vec_string.insert(pos_string, "world");
 
-//   EXPECT_EQ(s21_vec_int[4], 2);
-//   EXPECT_EQ(s21_vec_double[4], 2.0);
-//   EXPECT_EQ(s21_vec_string[4], "world");
-// }
+  EXPECT_EQ(s21_vec_int[4], 2);
+  EXPECT_EQ(s21_vec_double[4], 2.0);
+  EXPECT_EQ(s21_vec_string[4], "world");
+}
 
-// TEST(vector_erase, case1) {
-//   s21::vector<int> s21_vec_int{1, 4, 1, 8, 9};
-//   s21::vector<double> s21_vec_double{1.4, 4.8, 1.0, 8.9, 9.1};
-//   s21::vector<std::string> s21_vec_string{"Hello", ",", "", "world", "!"};
+TEST(VectorTest, Erase) {
+  s21::vector<int> s21_vec_int{1, 4, 1, 8, 9};
+  s21::vector<double> s21_vec_double{1.4, 4.8, 1.0, 8.9, 9.1};
+  s21::vector<std::string> s21_vec_string{"Hello", ",", "", "world", "!"};
 
-//   auto pos_int = s21_vec_int.begin() + 2;
-//   auto pos_double = s21_vec_double.begin() + 2;
-//   auto pos_string = s21_vec_string.begin() + 2;
+  auto pos_int = s21_vec_int.begin() + 2;
+  auto pos_double = s21_vec_double.begin() + 2;
+  auto pos_string = s21_vec_string.begin() + 2;
 
-//   s21_vec_int.erase(pos_int);
-//   s21_vec_double.erase(pos_double);
-//   s21_vec_string.erase(pos_string);
+  s21_vec_int.erase(pos_int);
+  s21_vec_double.erase(pos_double);
+  s21_vec_string.erase(pos_string);
 
-//   EXPECT_EQ(s21_vec_int[2], 8);
-//   EXPECT_EQ(s21_vec_double[2], 8.9);
-//   EXPECT_EQ(s21_vec_string[2], "world");
-// }
+  EXPECT_EQ(s21_vec_int[2], 8);
+  EXPECT_EQ(s21_vec_double[2], 8.9);
+  EXPECT_EQ(s21_vec_string[2], "world");
+}
 
-// TEST(vector_erase, case2) {
-//   s21::vector<int> s21_vec_int{1, 1, 4, 8, 9};
-//   s21::vector<double> s21_vec_double{1.0, 1.4, 4.8, 8.9, 9.1};
-//   s21::vector<std::string> s21_vec_string{"", "Hello", ",", "world", "!"};
+TEST(VectorTest, EraseBegin) {
+  s21::vector<int> s21_vec_int{1, 1, 4, 8, 9};
+  s21::vector<double> s21_vec_double{1.0, 1.4, 4.8, 8.9, 9.1};
+  s21::vector<std::string> s21_vec_string{"", "Hello", ",", "world", "!"};
 
-//   auto pos_int = s21_vec_int.begin();
-//   auto pos_double = s21_vec_double.begin();
-//   auto pos_string = s21_vec_string.begin();
+  auto pos_int = s21_vec_int.begin();
+  auto pos_double = s21_vec_double.begin();
+  auto pos_string = s21_vec_string.begin();
 
-//   s21_vec_int.erase(pos_int);
-//   s21_vec_double.erase(pos_double);
-//   s21_vec_string.erase(pos_string);
+  s21_vec_int.erase(pos_int);
+  s21_vec_double.erase(pos_double);
+  s21_vec_string.erase(pos_string);
 
-//   EXPECT_EQ(s21_vec_int[0], 1);
-//   EXPECT_EQ(s21_vec_double[0], 1.4);
-//   EXPECT_EQ(s21_vec_string[0], "Hello");
-// }
+  EXPECT_EQ(s21_vec_int[0], 1);
+  EXPECT_EQ(s21_vec_double[0], 1.4);
+  EXPECT_EQ(s21_vec_string[0], "Hello");
+}
 
-// TEST(vector_push_back, case1) {
-//   s21::vector<int> s21_vec_int{1, 4, 8, 9};
-//   s21::vector<double> s21_vec_double{1.4, 4.8, 8.9, 9.1};
-//   s21::vector<std::string> s21_vec_string{"Hello", ",", "world", "!"};
+TEST(VectorTest, PushBack) {
+  s21::vector<double> s21_vec_double{1.4, 4.8, 8.9, 9.1};
+  s21::vector<std::string> s21_vec_string{"Hello", ",", "world", "!"};
 
-//   s21_vec_int.push_back(10);
-//   s21_vec_double.push_back(10.0);
-//   s21_vec_string.push_back("!!");
+  s21_vec_double.push_back(10.0);
+  s21_vec_string.push_back("!!");
 
-//   EXPECT_EQ(*(s21_vec_int.end() - 1), 10);
-//   EXPECT_EQ(*(s21_vec_double.end() - 1), 10.0);
-//   EXPECT_EQ(*(s21_vec_string.end() - 1), "!!");
-// }
+  EXPECT_EQ(*(s21_vec_double.end() - 1), 10.0);
+  EXPECT_EQ(*(s21_vec_string.end() - 1), "!!");
+}
 
-// TEST(vector_push_back, case2) {
-//   s21::vector<int> s21_vec_int{1, 4, 8, 9};
-//   s21::vector<double> s21_vec_double{1.4, 4.8, 8.9, 9.1};
-//   s21::vector<std::string> s21_vec_string{"Hello", ",", "world", "!"};
+TEST(VectorTest, PushBackReserved) {
+  s21::vector<int> s21_vec_int{1, 4, 8, 9};
+  s21::vector<double> s21_vec_double{1.4, 4.8, 8.9, 9.1};
+  s21::vector<std::string> s21_vec_string{"Hello", ",", "world", "!"};
 
-//   s21_vec_int.reserve(20);
-//   s21_vec_double.reserve(20);
-//   s21_vec_string.reserve(20);
+  s21_vec_int.reserve(20);
+  s21_vec_double.reserve(20);
+  s21_vec_string.reserve(20);
 
-//   s21_vec_int.push_back(10);
-//   s21_vec_double.push_back(10.0);
-//   s21_vec_string.push_back("!!");
+  s21_vec_int.push_back(10);
+  s21_vec_double.push_back(10.0);
+  s21_vec_string.push_back("!!");
 
-//   EXPECT_EQ(*(s21_vec_int.end() - 1), 10);
-//   EXPECT_EQ(*(s21_vec_double.end() - 1), 10.0);
-//   EXPECT_EQ(*(s21_vec_string.end() - 1), "!!");
-// }
+  EXPECT_EQ(*(s21_vec_int.end() - 1), 10);
+  EXPECT_EQ(*(s21_vec_double.end() - 1), 10.0);
+  EXPECT_EQ(*(s21_vec_string.end() - 1), "!!");
+}
 
-// TEST(vector_pop_back, case1) {
-//   s21::vector<int> s21_vec_int{1, 4, 8, 9};
-//   s21::vector<double> s21_vec_double{1.4, 4.8, 8.9, 9.1};
-//   s21::vector<std::string> s21_vec_string{"Hello", ",", "world", "!"};
+TEST(VectorTest, PopBack) {
+  s21::vector<int> s21_vec_int{1, 4, 8, 9};
+  s21::vector<double> s21_vec_double{1.4, 4.8, 8.9, 9.1};
+  s21::vector<std::string> s21_vec_string{"Hello", ",", "world", "!"};
 
-//   s21_vec_int.pop_back();
-//   s21_vec_double.pop_back();
-//   s21_vec_string.pop_back();
+  s21_vec_int.pop_back();
+  s21_vec_double.pop_back();
+  s21_vec_string.pop_back();
 
-//   EXPECT_EQ(s21_vec_int.size(), 3U);
-//   EXPECT_EQ(s21_vec_int.capacity(), 4U);
-//   EXPECT_EQ(s21_vec_double.size(), 3U);
-//   EXPECT_EQ(s21_vec_double.capacity(), 4U);
-//   EXPECT_EQ(s21_vec_string.size(), 3U);
-//   EXPECT_EQ(s21_vec_string.capacity(), 4U);
-// }
+  EXPECT_EQ(s21_vec_int.size(), 3U);
+  EXPECT_EQ(s21_vec_int.capacity(), 4U);
+  EXPECT_EQ(s21_vec_double.size(), 3U);
+  EXPECT_EQ(s21_vec_double.capacity(), 4U);
+  EXPECT_EQ(s21_vec_string.size(), 3U);
+  EXPECT_EQ(s21_vec_string.capacity(), 4U);
+}
 
-// TEST(vector_swap, case1) {
-//   s21::vector<int> s21_vec_ref_int{1, 4, 8, 9};
-//   s21::vector<int> s21_vec_res_int{0, 0, 0};
+TEST(VectorTest, Swap) {
+  s21::vector<int> s21_vec_ref_int{1, 4, 8, 9};
+  s21::vector<int> s21_vec_res_int{0, 0, 0};
 
-//   s21::vector<double> s21_vec_ref_double{1.4, 4.8, 8.9, 9.1};
-//   s21::vector<double> s21_vec_res_double{0.0, 0.0, 0.0};
+  s21::vector<double> s21_vec_ref_double{1.4, 4.8, 8.9, 9.1};
+  s21::vector<double> s21_vec_res_double{0.0, 0.0, 0.0};
 
-//   s21::vector<std::string> s21_vec_ref_string{"Hello", ",", "world", "!"};
-//   s21::vector<std::string> s21_vec_res_string{"", "", ""};
+  s21::vector<std::string> s21_vec_ref_string{"Hello", ",", "world", "!"};
+  s21::vector<std::string> s21_vec_res_string{"", "", ""};
 
-//   s21_vec_ref_int.swap(s21_vec_res_int);
-//   s21_vec_ref_double.swap(s21_vec_res_double);
-//   s21_vec_ref_string.swap(s21_vec_res_string);
+  s21_vec_ref_int.swap(s21_vec_res_int);
+  s21_vec_ref_double.swap(s21_vec_res_double);
+  s21_vec_ref_string.swap(s21_vec_res_string);
 
-//   EXPECT_EQ(s21_vec_res_int.size(), 4U);
-//   EXPECT_EQ(s21_vec_res_int.capacity(), 4U);
-//   EXPECT_EQ(s21_vec_res_int[2], 8);
+  EXPECT_EQ(s21_vec_res_int.size(), 4U);
+  EXPECT_EQ(s21_vec_res_int.capacity(), 4U);
+  EXPECT_EQ(s21_vec_res_int[2], 8);
 
-//   EXPECT_EQ(s21_vec_res_double.size(), 4U);
-//   EXPECT_EQ(s21_vec_res_double.capacity(), 4U);
-//   EXPECT_EQ(s21_vec_res_double[2], 8.9);
+  EXPECT_EQ(s21_vec_res_double.size(), 4U);
+  EXPECT_EQ(s21_vec_res_double.capacity(), 4U);
+  EXPECT_EQ(s21_vec_res_double[2], 8.9);
 
-//   EXPECT_EQ(s21_vec_res_string.size(), 4U);
-//   EXPECT_EQ(s21_vec_res_string.capacity(), 4U);
-//   EXPECT_EQ(s21_vec_res_string[2], "world");
-// }
+  EXPECT_EQ(s21_vec_res_string.size(), 4U);
+  EXPECT_EQ(s21_vec_res_string.capacity(), 4U);
+  EXPECT_EQ(s21_vec_res_string[2], "world");
+}
 
-// TEST(vector_emplace, case1) {
-//   s21::vector<int> s21_vec_int{1, 4};
-//   s21::vector<double> s21_vec_double{1.4, 4.8};
-//   s21::vector<std::string> s21_vec_string{"Hello", ","};
+TEST(VectorTest, ConstIteratorAccess) {
+  s21::vector<int> original{10, 20, 30};
+  const auto& vec = original;
 
-//   auto pos_int = s21_vec_int.begin() + 1;
-//   auto pos_double = s21_vec_double.begin() + 1;
-//   auto pos_string = s21_vec_string.begin() + 1;
+  ASSERT_EQ(*vec.cbegin(), 10);
+  ASSERT_EQ(*(vec.cend() - 1), 30);
 
-//   s21_vec_int.emplace(pos_int, 2, 3);
-//   s21_vec_double.emplace(pos_double, 2.0, 3.56);
-//   s21_vec_string.emplace(pos_string, "world", "!");
+  original.push_back(40);
+  ASSERT_EQ(*(vec.cend() - 1), 40);
+  ASSERT_EQ(vec.cend() - vec.cbegin(), 4);
+}
+TEST(VectorTest, ConstFrontBack) {
+  const s21::vector<int> s21_vec_int{1, 4, 8, 9};
+  const s21::vector<double> s21_vec_double{1.4, 4.8, 8.9, 9.1};
+  const s21::vector<std::string> s21_vec_string{"Hello", ",", "world", "!"};
 
-//   EXPECT_EQ(s21_vec_int[1], 2);
-//   EXPECT_EQ(s21_vec_int[2], 3);
+  EXPECT_EQ(s21_vec_int.front(), 1);
+  EXPECT_EQ(s21_vec_double.front(), 1.4);
+  EXPECT_EQ(s21_vec_string.front(), "Hello");
 
-//   EXPECT_EQ(s21_vec_double[1], 2.0);
-//   EXPECT_EQ(s21_vec_double[2], 3.56);
-
-//   EXPECT_EQ(s21_vec_string[1], "world");
-//   EXPECT_EQ(s21_vec_string[2], "!");
-// }
-
-// TEST(vector_emplace, case2) {
-//   s21::vector<int> s21_vec_int{1, 4};
-//   s21::vector<double> s21_vec_double{1.4, 4.8};
-//   s21::vector<std::string> s21_vec_string{"Hello", ","};
-
-//   auto pos_int = s21_vec_int.begin();
-//   auto pos_double = s21_vec_double.begin();
-//   auto pos_string = s21_vec_string.begin();
-
-//   s21_vec_int.emplace(pos_int, 2, 3);
-//   s21_vec_double.emplace(pos_double, 2.0, 3.56);
-//   s21_vec_string.emplace(pos_string, "world", "!");
-
-//   EXPECT_EQ(s21_vec_int[0], 2);
-//   EXPECT_EQ(s21_vec_int[1], 3);
-
-//   EXPECT_EQ(s21_vec_double[0], 2.0);
-//   EXPECT_EQ(s21_vec_double[1], 3.56);
-
-//   EXPECT_EQ(s21_vec_string[0], "world");
-//   EXPECT_EQ(s21_vec_string[1], "!");
-// }
-
-// TEST(vector_emplace, case3) {
-//   s21::vector<int> s21_vec_int;
-//   s21::vector<double> s21_vec_double;
-//   s21::vector<std::string> s21_vec_string;
-
-//   auto pos_int = s21_vec_int.begin();
-//   auto pos_double = s21_vec_double.begin();
-//   auto pos_string = s21_vec_string.begin();
-
-//   s21_vec_int.emplace(pos_int, 2, 3);
-//   s21_vec_double.emplace(pos_double, 2.0, 3.56);
-//   s21_vec_string.emplace(pos_string, "world", "!");
-
-//   EXPECT_EQ(s21_vec_int[0], 2);
-//   EXPECT_EQ(s21_vec_int[1], 3);
-
-//   EXPECT_EQ(s21_vec_double[0], 2.0);
-//   EXPECT_EQ(s21_vec_double[1], 3.56);
-
-//   EXPECT_EQ(s21_vec_string[0], "world");
-//   EXPECT_EQ(s21_vec_string[1], "!");
-// }
-
-// TEST(vector_emplace_back, case1) {
-//   s21::vector<int> s21_vec_int{1, 4};
-//   s21::vector<double> s21_vec_double{1.4, 4.8};
-//   s21::vector<std::string> s21_vec_string{"Hello", ","};
-
-//   s21_vec_int.emplace_back(2, 3);
-//   s21_vec_double.emplace_back(2.0, 3.56);
-//   s21_vec_string.emplace_back("world", "!");
-
-//   EXPECT_EQ(s21_vec_int[2], 2);
-//   EXPECT_EQ(s21_vec_int[3], 3);
-
-//   EXPECT_EQ(s21_vec_double[2], 2.0);
-//   EXPECT_EQ(s21_vec_double[3], 3.56);
-
-//   EXPECT_EQ(s21_vec_string[2], "world");
-//   EXPECT_EQ(s21_vec_string[3], "!");
-// }
+  EXPECT_EQ(s21_vec_int.back(), 9);
+  EXPECT_EQ(s21_vec_double.back(), 9.1);
+  EXPECT_EQ(s21_vec_string.back(), "!");
+}
