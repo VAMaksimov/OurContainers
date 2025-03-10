@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <initializer_list>
 #include <iostream>
+#include <limits>
 #include <stdexcept>
 
 namespace s21 {
@@ -16,7 +17,7 @@ class vector {
   using size_type = std::size_t;
   using pointer = value_type*;
   using const_pointer = const value_type*;
-  using difference_type = std::ptrdiff_t;
+
   pointer data_ptr;
   size_type Size;
   size_type Capacity;
