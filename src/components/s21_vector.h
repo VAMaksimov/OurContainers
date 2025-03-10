@@ -5,7 +5,7 @@
 #include <initializer_list>
 #include <iostream>
 #include <limits>
-#include <stdexcept>
+// #include <stdexcept>
 
 namespace s21 {
 template <typename T>
@@ -30,7 +30,6 @@ class vector {
 
  public:
   // Vector Member functions
-  // Vector Member functions
   vector();  // default constructor, creates empty vector
   explicit vector(
       size_type n);  // parameterized constructor, creates the vector of size n
@@ -52,16 +51,11 @@ class vector {
   const_reference back() const;         // access the last element
   pointer data();                       // direct access to the underlying array
 
-  // TODO: not specified in the spec
-  reference front();
-  reference back();
-  const_pointer data() const;
-
   // Vector Iterators
   iterator begin();  // returns an iterator to the beginning
   iterator end();    // returns an iterator to the end
 
-  // TODO: not specified in the spec
+  // not specified in the spec
   const_iterator cbegin() const;
   const_iterator cend() const;
 
@@ -137,8 +131,8 @@ vector<value_type>::~vector() {
 
 template <typename value_type>
 typename vector<value_type>::reference vector<value_type>::at(size_type pos) {
-  if (pos >= Size) {
-    throw std::out_of_range("Index out of range");
+  if (pos >= Size || Size == 0) {
+    throw std::out_of_range("Index out range");
   }
   return data_ptr[pos];
 }
@@ -150,18 +144,8 @@ typename vector<value_type>::reference vector<value_type>::operator[](
 }
 
 template <typename value_type>
-typename vector<value_type>::reference vector<value_type>::front() {
-  return data_ptr[0];
-}
-
-template <typename value_type>
 typename vector<value_type>::const_reference vector<value_type>::front() const {
   return data_ptr[0];
-}
-
-template <typename value_type>
-typename vector<value_type>::reference vector<value_type>::back() {
-  return data_ptr[Size - 1];
 }
 
 template <typename value_type>
@@ -171,11 +155,6 @@ typename vector<value_type>::const_reference vector<value_type>::back() const {
 
 template <typename value_type>
 typename vector<value_type>::pointer vector<value_type>::data() {
-  return data_ptr;
-}
-
-template <typename value_type>
-typename vector<value_type>::const_pointer vector<value_type>::data() const {
   return data_ptr;
 }
 

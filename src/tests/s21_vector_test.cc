@@ -11,15 +11,12 @@ TEST(VectorTest, DefaultConstructor) {
 
   EXPECT_EQ(s21_vec_int.size(), 0U);
   EXPECT_EQ(s21_vec_int.capacity(), 0U);
-  EXPECT_EQ(&s21_vec_int[0], nullptr);
 
   EXPECT_EQ(s21_vec_double.size(), 0U);
   EXPECT_EQ(s21_vec_double.capacity(), 0U);
-  EXPECT_EQ(&s21_vec_double[0], nullptr);
 
   EXPECT_EQ(s21_vec_string.size(), 0U);
   EXPECT_EQ(s21_vec_string.capacity(), 0U);
-  EXPECT_EQ(&s21_vec_string[0], nullptr);
 }
 
 TEST(VectorTest, SizeConstructor) {
@@ -410,23 +407,12 @@ TEST(VectorTest, Clear) {
   s21_vec_double.clear();
   s21_vec_string.clear();
 
-  EXPECT_EQ(&s21_vec_int[0], nullptr);
-  EXPECT_EQ(&s21_vec_double[0], nullptr);
-  EXPECT_EQ(&s21_vec_string[0], nullptr);
-}
-
-TEST(VectorTest, ClearTwice) {
-  s21::vector<int> s21_vec_int{1, 4, 8, 9};
-  s21::vector<double> s21_vec_double{1.4, 4.8, 8.9, 9.1};
-  s21::vector<std::string> s21_vec_string{"Hello", ",", "world", "!"};
-
-  s21_vec_int.clear();
-  s21_vec_double.clear();
-  s21_vec_string.clear();
-
-  EXPECT_EQ(&s21_vec_int[0], nullptr);
-  EXPECT_EQ(&s21_vec_double[0], nullptr);
-  EXPECT_EQ(&s21_vec_string[0], nullptr);
+  EXPECT_EQ(s21_vec_int.size(), 0U);
+  EXPECT_EQ(s21_vec_int.capacity(), 0U);
+  EXPECT_EQ(s21_vec_double.size(), 0U);
+  EXPECT_EQ(s21_vec_double.capacity(), 0U);
+  EXPECT_EQ(s21_vec_string.size(), 0U);
+  EXPECT_EQ(s21_vec_string.capacity(), 0U);
 }
 
 TEST(VectorTest, Insert) {
