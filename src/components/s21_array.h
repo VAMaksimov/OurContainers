@@ -1,5 +1,5 @@
-#ifndef S21_CONTAINERS_H_S21_array_H
-#define S21_CONTAINERS_H_S21_array_H
+#ifndef S21_CONTAINERS_H_S21_ARRAY_H
+#define S21_CONTAINERS_H_S21_ARRAY_H
 
 #include <initializer_list>
 

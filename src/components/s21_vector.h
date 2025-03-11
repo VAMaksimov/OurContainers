@@ -1,12 +1,7 @@
-#ifndef VECTOR
-#define VECTOR
+#ifndef S21_CONTAINERS_H_S21_VECTOR_H
+#define S21_CONTAINERS_H_S21_VECTOR_H
 
-#include <algorithm>
-#include <initializer_list>
-#include <iostream>
-#include <limits>
-
-// #include <stdexcept>
+#include "components/s21_sequence_containers.h"
 
 /*This project was initially started by peer barleysp, who later left the
  project. Peer countesz was responsible for debugging and adding tests.
@@ -14,15 +9,17 @@
 
 namespace s21 {
 template <typename T>
-class vector {
+class vector : public SequenceContainer<vector<T>, T> {
  private:
   // Vector Member type
-  using value_type = T;
-  using reference = value_type&;
-  using const_reference = const value_type&;
+  using value_type = typename SequenceContainer<list<T>, T>::value_type;
+  using reference = typename SequenceContainer<list<T>, T>::reference;
+  using const_reference =
+      typename SequenceContainer<list<T>, T>::const_reference;
+  using size_type = typename SequenceContainer<list<T>, T>::size_type;
+
   using iterator = T*;
   using const_iterator = const T*;
-  using size_type = std::size_t;
 
   using const_pointer = const value_type*;
   using pointer = value_type*;
@@ -51,10 +48,10 @@ class vector {
 
   // Vector Element access
   reference at(size_type pos);  // access specified element with bounds checking
-  reference operator[](size_type pos);  // access specified element
-  const_reference front() const;        // access the first element
-  const_reference back() const;         // access the last element
-  pointer data();                       // direct access to the underlying array
+  reference operator[](size_type pos);     // access specified element
+  const_reference front() const override;  // access the first element
+  const_reference back() const override;   // access the last element
+  pointer data();  // direct access to the underlying array
 
   // Vector Iterators
   iterator begin();  // returns an iterator to the beginning
@@ -65,9 +62,11 @@ class vector {
   const_iterator cend() const;
 
   // Vector Capacity
-  bool empty() const noexcept;  // checks whether the container is empty
-  size_type size() const;       // returns the number of elements
-  size_type max_size();  // returns the maximum possible number of elements
+  bool empty()
+      const noexcept override;  // checks whether the container is empty
+  size_type size() const noexcept override;  // returns the number of elements
+  size_type max_size() const noexcept
+      override;  // returns the maximum possible number of elements
   void reserve(
       size_type size);  // allocate storage of size elements and copies current
                         // array elements to a newely allocated array
@@ -82,9 +81,9 @@ class vector {
       const_reference value);  // inserts elements into concrete pos and returns
                                // the iterator that points to the new element
   void erase(iterator pos);    // erases element at pos
-  void push_back(const_reference value);  // adds an element to the end
-  void pop_back();                        // removes the last element
-  void swap(vector& other);               // swaps the contents
+  void push_back(const_reference value);       // adds an element to the end
+  void pop_back();                             // removes the last element
+  void swap(vector& other) noexcept override;  // swaps the contents
 
   // Methods insert_many
   template <typename... Args>
@@ -175,7 +174,8 @@ bool vector<value_type>::empty() const noexcept {
 }
 
 template <typename value_type>
-typename vector<value_type>::size_type vector<value_type>::size() const {
+typename vector<value_type>::size_type vector<value_type>::size()
+    const noexcept {
   return Size;
 }
 
@@ -222,7 +222,7 @@ void vector<value_type>::pop_back() {
 }
 
 template <typename value_type>
-void vector<value_type>::swap(vector& other) {
+void vector<value_type>::swap(vector& other) noexcept {
   std::swap(data_ptr, other.data_ptr);
   std::swap(Size, other.Size);
   std::swap(Capacity, other.Capacity);
@@ -265,7 +265,8 @@ vector<value_type>& vector<value_type>::operator=(vector&& v) {
 }
 
 template <typename value_type>
-typename vector<value_type>::size_type vector<value_type>::max_size() {
+typename vector<value_type>::size_type vector<value_type>::max_size()
+    const noexcept {
   return std::numeric_limits<std::size_t>::max() / sizeof(value_type) / 2;
 }
 
