@@ -415,7 +415,7 @@ inline typename list<T>::size_type list<T>::size() const noexcept {
 
 template <typename T>
 inline typename list<T>::size_type list<T>::max_size() const noexcept {
-  return std::numeric_limits<size_type>::max();
+  return std::numeric_limits<size_type>::max() / sizeof(Node_) / 2;
 }
 
 /*List Modifiers*/
