@@ -65,9 +65,9 @@ class vector {
   const_iterator cend() const;
 
   // Vector Capacity
-  bool empty() const;      // checks whether the container is empty
-  size_type size() const;  // returns the number of elements
-  size_type max_size();    // returns the maximum possible number of elements
+  bool empty() const noexcept;  // checks whether the container is empty
+  size_type size() const;       // returns the number of elements
+  size_type max_size();  // returns the maximum possible number of elements
   void reserve(
       size_type size);  // allocate storage of size elements and copies current
                         // array elements to a newely allocated array
@@ -170,8 +170,8 @@ typename vector<value_type>::pointer vector<value_type>::data() {
 }
 
 template <typename value_type>
-bool vector<value_type>::empty() const {
-  return Size == 0;
+bool vector<value_type>::empty() const noexcept {
+  return data_ptr == nullptr;
 }
 
 template <typename value_type>
