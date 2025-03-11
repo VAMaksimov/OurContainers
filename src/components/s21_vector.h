@@ -5,7 +5,12 @@
 #include <initializer_list>
 #include <iostream>
 #include <limits>
+
 // #include <stdexcept>
+
+/*This project was initially started by peer barleysp, who later left the
+ project. Peer countesz was responsible for debugging and adding tests.
+*/
 
 namespace s21 {
 template <typename T>
@@ -80,6 +85,12 @@ class vector {
   void push_back(const_reference value);  // adds an element to the end
   void pop_back();                        // removes the last element
   void swap(vector& other);               // swaps the contents
+
+  // Methods insert_many
+  template <typename... Args>
+  iterator insert_many(const_iterator pos, Args&&... args);
+  template <typename... Args>
+  void insert_many_back(Args&&... args);
 };
 
 // Vector Member functions implementation
@@ -287,5 +298,29 @@ void vector<value_type>::erase(iterator pos) {
 
   --Size;
 }
+
+/*Insert_many methods*/
+
+template <typename value_type>
+template <typename... Args>
+typename vector<value_type>::iterator vector<value_type>::insert_many(
+    const_iterator pos, Args&&... args) {
+  s21::vector<value_type> tmp{args...};
+  iterator position = const_cast<iterator>(pos);
+  size_type index = position - begin();
+
+  for (size_type i = 0; i < tmp.size(); ++i) {
+    position = insert(position, tmp[i]) + 1;
+  }
+
+  return begin() + index;
+}
+
+template <typename value_type>
+template <typename... Args>
+void vector<value_type>::insert_many_back(Args&&... args) {
+  (push_back(std::forward<Args>(args)), ...);
+}
+
 }  // namespace s21
 #endif  // VECTOR

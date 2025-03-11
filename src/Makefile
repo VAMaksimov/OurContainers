@@ -85,7 +85,7 @@ valgrind:
 	valgrind --leak-check=full --track-origins=yes --show-leak-kinds=all -s ./$(BIN_DIR)/$(APP_TEST)
 
 clean:
-	rm -rf $(BUILD_DIR) $(APP_TEST)
+	rm -rf $(BUILD_DIR) $(APP_TEST) *_report.txt
 
 cppcheck:
 	cppcheck --language=c++ --enable=all \
@@ -94,8 +94,7 @@ cppcheck:
 
 
 clang_tidy:
-	clang-tidy $(SRC_TEST) -- $(GFLAGS) -I$(HDIR) -I.
-
+	clang-tidy $(SRC_TEST) -checks=* --warnings-as-errors=* -- $(GFLAGS) -I$(HDIR) -I. > clang_tidy_report.txt
 
 
 ## Separate test
