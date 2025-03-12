@@ -1,5 +1,7 @@
 #include <gtest/gtest.h>
 
+#include <list>
+
 #include "s21_containers.h"
 
 TEST(Test_List, Default_Constructor) {
@@ -127,18 +129,6 @@ TEST(Test_List, AssignEmptyList) {
   }
 }
 
-// TEST(Test_List, SelfAssignment) {
-//   s21::list<int> list1 = {1, 2, 3};
-//   list1 = list1;
-
-//   EXPECT_EQ(list1.size(), 3);
-//   auto it = list1.begin();
-//   EXPECT_EQ(*it, 1);
-//   ++it;
-//   EXPECT_EQ(*it, 2);
-//   ++it;
-//   EXPECT_EQ(*it, 3);
-// }
 TEST(Test_List, MoveAssignmentOperator) {
   s21::list<int> list1 = {1, 2, 3};
   s21::list<int> list2;
@@ -215,7 +205,8 @@ TEST(Test_List, Size_Method) {
 
 TEST(Test_List, Max_Size_Method) {
   s21::list<int> myList;
-  EXPECT_GT(myList.max_size(), 0);
+  std::list<int> stdList;
+  EXPECT_EQ(myList.max_size(), stdList.max_size());
 }
 
 TEST(Test_List, Insert_Method_Before_First_Element) {
@@ -275,8 +266,7 @@ TEST(Test_List, Erase_Method) {
   it = myList.end();
   --it;
   ++it;
-  // cppcheck-suppress postfixOperator
-  it--;  // cppcheck-suppress postfixOperator
+  it--;
   myList.erase(it);
   EXPECT_EQ(myList.back(), 4);
   EXPECT_EQ(myList.size(), 2);
@@ -555,4 +545,46 @@ TEST(Test_List, Insert_Many_Back) {
   EXPECT_EQ(*it++, 5);
   EXPECT_EQ(*it++, 6);
   EXPECT_EQ(it, myList.end());
+}
+
+TEST(Test_List, DifferentDataTypes) {
+  s21::list<int> int_list = {1, 2, 3, 4, 5};
+  EXPECT_EQ(int_list.size(), 5);
+  auto int_it = int_list.begin();
+  EXPECT_EQ(*int_it++, 1);
+  EXPECT_EQ(*int_it++, 2);
+  EXPECT_EQ(*int_it++, 3);
+  EXPECT_EQ(*int_it++, 4);
+  EXPECT_EQ(*int_it++, 5);
+  EXPECT_EQ(int_it, int_list.end());
+
+  s21::list<double> double_list = {1.1, 2.2, 3.3, 4.4, 5.5};
+  EXPECT_EQ(double_list.size(), 5);
+  auto double_it = double_list.begin();
+  EXPECT_DOUBLE_EQ(*double_it++, 1.1);
+  EXPECT_DOUBLE_EQ(*double_it++, 2.2);
+  EXPECT_DOUBLE_EQ(*double_it++, 3.3);
+  EXPECT_DOUBLE_EQ(*double_it++, 4.4);
+  EXPECT_DOUBLE_EQ(*double_it++, 5.5);
+  EXPECT_EQ(double_it, double_list.end());
+
+  s21::list<std::string> string_list = {"one", "two", "three", "four", "five"};
+  EXPECT_EQ(string_list.size(), 5);
+  auto string_it = string_list.begin();
+  EXPECT_EQ(*string_it++, "one");
+  EXPECT_EQ(*string_it++, "two");
+  EXPECT_EQ(*string_it++, "three");
+  EXPECT_EQ(*string_it++, "four");
+  EXPECT_EQ(*string_it++, "five");
+  EXPECT_EQ(string_it, string_list.end());
+
+  s21::list<char> char_list = {'a', 'b', 'c', 'd', 'e'};
+  EXPECT_EQ(char_list.size(), 5);
+  auto char_it = char_list.begin();
+  EXPECT_EQ(*char_it++, 'a');
+  EXPECT_EQ(*char_it++, 'b');
+  EXPECT_EQ(*char_it++, 'c');
+  EXPECT_EQ(*char_it++, 'd');
+  EXPECT_EQ(*char_it++, 'e');
+  EXPECT_EQ(char_it, char_list.end());
 }

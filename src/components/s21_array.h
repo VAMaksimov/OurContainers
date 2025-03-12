@@ -1,15 +1,29 @@
-#ifndef S21_CONTAINERS_H_S21_array_H
-#define S21_CONTAINERS_H_S21_array_H
+#ifndef S21_CONTAINERS_H_S21_ARRAY_H
+#define S21_CONTAINERS_H_S21_ARRAY_H
 
 #include <initializer_list>
 
 #include "components/s21_sequence_containers.h"
 
+/**
+ * @file s21_array.h
+ * @brief Implementation of array container for s21_containers library
+ *
+ * @details This file defines the array container class template, which is a
+ * fixed-size sequence container that encapsulates a statically allocated array.
+ * The array container offers constant time access to individual elements and
+ * does not handle its own storage allocation/deallocation as the size is fixed
+ * at compile time.
+ *
+ * @author countesz
+ * @date 2025
+ */
+
 namespace s21 {
 
 template <typename T, std::size_t N>
 class array : public SequenceContainer<array<T, N>, T> {
- public:
+ private:
   // Array Member type
   using value_type = typename SequenceContainer<array<T, N>, T>::value_type;
   using reference = typename SequenceContainer<array<T, N>, T>::reference;
@@ -19,6 +33,9 @@ class array : public SequenceContainer<array<T, N>, T> {
   using const_iterator = const T*;
   using size_type = typename SequenceContainer<array<T, N>, T>::size_type;
 
+  value_type data_[N];
+
+ public:
   // Array Member functions
   array();
   array(std::initializer_list<value_type> const& items);
@@ -49,9 +66,6 @@ class array : public SequenceContainer<array<T, N>, T> {
   // Array Modifiers
   void swap(array& other) noexcept override;
   void fill(const_reference value);
-
- private:
-  value_type data_[N];
 };
 
 /*Array Member functions*/

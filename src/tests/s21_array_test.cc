@@ -1,5 +1,7 @@
 #include <gtest/gtest.h>
 
+#include <array>
+
 #include "s21_containersplus.h"
 
 TEST(ArrayTest, DefaultConstructor) {
@@ -80,7 +82,8 @@ TEST(ArrayTest, End) {
 
 TEST(ArrayTest, MaxSize) {
   s21::array<int, 5> arr;
-  EXPECT_EQ(arr.max_size(), 5);
+  std::array<int, 5> std_arr;
+  EXPECT_EQ(arr.max_size(), std_arr.max_size());
 }
 
 TEST(ArrayTest, Empty) {
@@ -110,4 +113,49 @@ TEST(ArrayTest, Fill) {
   EXPECT_EQ(arr.at(2), 20);
   EXPECT_EQ(arr.at(3), 20);
   EXPECT_EQ(arr.at(4), 20);
+}
+
+TEST(ArrayTest, DifferentTypes) {
+  s21::array<int, 3> arr_int = {1, 2, 3};
+  EXPECT_EQ(arr_int.size(), 3);
+  EXPECT_EQ(arr_int[0], 1);
+  EXPECT_EQ(arr_int[2], 3);
+
+  s21::array<double, 3> arr_double = {1.1, 2.2, 3.3};
+  EXPECT_DOUBLE_EQ(arr_double[0], 1.1);
+  EXPECT_DOUBLE_EQ(arr_double[1], 2.2);
+  EXPECT_DOUBLE_EQ(arr_double[2], 3.3);
+
+  s21::array<char, 4> arr_char = {'a', 'b', 'c', 'd'};
+  EXPECT_EQ(arr_char[0], 'a');
+  EXPECT_EQ(arr_char[3], 'd');
+
+  s21::array<std::string, 3> arr_string = {"Hello", "world", "!"};
+  EXPECT_EQ(arr_string[0], "Hello");
+  EXPECT_EQ(arr_string[1], "world");
+  EXPECT_EQ(arr_string[2], "!");
+
+  s21::array<bool, 2> arr_bool = {true, false};
+  EXPECT_TRUE(arr_bool[0]);
+  EXPECT_FALSE(arr_bool[1]);
+}
+
+TEST(ArrayTest, SwapDifferentTypes) {
+  s21::array<int, 3> arr_int1 = {1, 2, 3};
+  s21::array<int, 3> arr_int2 = {4, 5, 6};
+  arr_int1.swap(arr_int2);
+  EXPECT_EQ(arr_int1[0], 4);
+  EXPECT_EQ(arr_int2[0], 1);
+
+  s21::array<double, 2> arr_double1 = {1.1, 2.2};
+  s21::array<double, 2> arr_double2 = {3.3, 4.4};
+  arr_double1.swap(arr_double2);
+  EXPECT_DOUBLE_EQ(arr_double1[0], 3.3);
+  EXPECT_DOUBLE_EQ(arr_double2[0], 1.1);
+
+  s21::array<std::string, 2> arr_string1 = {"Hello", "world"};
+  s21::array<std::string, 2> arr_string2 = {"Goodbye", "planet"};
+  arr_string1.swap(arr_string2);
+  EXPECT_EQ(arr_string1[0], "Goodbye");
+  EXPECT_EQ(arr_string2[0], "Hello");
 }

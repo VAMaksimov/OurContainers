@@ -85,7 +85,7 @@ valgrind:
 	valgrind --leak-check=full --track-origins=yes --show-leak-kinds=all -s ./$(BIN_DIR)/$(APP_TEST)
 
 clean:
-	rm -rf $(BUILD_DIR) $(APP_TEST)
+	rm -rf $(BUILD_DIR) $(APP_TEST) *_report.txt
 
 cppcheck:
 	cppcheck --language=c++ --enable=all \
@@ -94,8 +94,7 @@ cppcheck:
 
 
 clang_tidy:
-	clang-tidy $(SRC_TEST) -- $(GFLAGS) -I$(HDIR) -I.
-
+	clang-tidy $(SRC_TEST) -checks=* --warnings-as-errors=* -- $(GFLAGS) -I$(HDIR) -I. > clang_tidy_report.txt
 
 
 ## Separate test
@@ -105,5 +104,13 @@ test_array test_list test_map test_multiset test_queue test_set test_stack test_
 	@mkdir -p $(BIN_DIR)
 	$(GCC) $(GFLAGS) $(GOVFLAGS) $(GTESTFLAGS) -I$(HDIR) -I. -c $(TEST_DIR)/s21_$*_test.cc -o $(OBJ_DIR)/s21_$*_test.o
 	$(GCC) $(GFLAGS) $(GOVFLAGS) $(GTESTFLAGS) -I$(HDIR) -I. $(OBJ_DIR)/s21_$*_test.o -o $(BIN_DIR)/$(APP_TEST)
+	cp $(BIN_DIR)/$(APP_TEST) .
+	./$(APP_TEST)
+
+test_array_sanitize test_list_sanitize test_map_sanitize test_multiset_sanitize test_queue_sanitize test_set_sanitize test_stack_sanitize test_vector_sanitize: test_%_sanitize: 
+	@mkdir -p $(OBJ_DIR)
+	@mkdir -p $(BIN_DIR)
+	$(GCC) $(GFLAGS) $(SANITIZE_FLAGS) $(GOVFLAGS) $(GTESTFLAGS) -I$(HDIR) -I. -c $(TEST_DIR)/s21_$*_test.cc -o $(OBJ_DIR)/s21_$*_test.o
+	$(GCC) $(GFLAGS) $(SANITIZE_FLAGS) $(GOVFLAGS) $(GTESTFLAGS) -I$(HDIR) -I. $(OBJ_DIR)/s21_$*_test.o -o $(BIN_DIR)/$(APP_TEST)
 	cp $(BIN_DIR)/$(APP_TEST) .
 	./$(APP_TEST)
