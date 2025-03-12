@@ -5,6 +5,20 @@
 
 #include "components/s21_sequence_containers.h"
 
+/**
+ * @file s21_array.h
+ * @brief Implementation of array container for s21_containers library
+ *
+ * @details This file defines the array container class template, which is a
+ * fixed-size sequence container that encapsulates a statically allocated array.
+ * The array container offers constant time access to individual elements and
+ * does not handle its own storage allocation/deallocation as the size is fixed
+ * at compile time.
+ *
+ * @author countesz
+ * @date 2025
+ */
+
 namespace s21 {
 
 template <typename T, std::size_t N>

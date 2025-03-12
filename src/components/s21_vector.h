@@ -8,7 +8,9 @@
  * @brief Implementation of vector container for s21_containers library
  * @details This project was initially started by peer barleysp, who later left
  * the project. Peer countesz was responsible for debugging, adding tests, and
- * implementing the insert_many and insert_many_back functions.
+ * implementing the insert_many and insert_many_back functions. Duplicate
+ * functions and iterator implementation through a class were removed from the
+ * original implementation as they were deemed unnecessary.
  * @author barleysp, countesz
  * @date 2025
  */

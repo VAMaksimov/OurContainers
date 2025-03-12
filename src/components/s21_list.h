@@ -2,6 +2,16 @@
 #define S21_CONTAINERS_H_S21_LIST_H
 
 #include "components/s21_sequence_containers.h"
+/**
+ * @file s21_list.h
+ * @brief Implementation of list container for s21_containers library
+ * @details This container provides a doubly-linked list implementation with
+ * constant time insertion and removal operations anywhere within the sequence.
+ * Unlike vectors, lists do not support random access to elements but allow for
+ * efficient insertion and deletion at any position.
+ * @author countesz
+ * @date 2025
+ */
 
 namespace s21 {
 

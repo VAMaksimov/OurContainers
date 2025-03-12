@@ -4,6 +4,25 @@
 #include <initializer_list>
 #include <iostream>
 #include <limits>
+
+/**
+ * @file s21_sequence_containers.h
+ * @brief Base class for sequence containers in the s21 containers library
+ *
+ * @details This file defines a base class template for sequence containers.
+ * It attempts to establish a common interface for various sequence containers
+ * like vector, list, and array. The class defines common type aliases and
+ * declares pure virtual methods that derived classes must implement.
+ *
+ * In practice, this approach has limitations as different container types
+ * have unique interfaces and behaviors that don't always fit into a common
+ * base class. While this design provides some uniformity, many
+ * container-specific operations still need to be implemented separately in each
+ * derived class.
+ * @author countesz
+ * @date 2025
+ */
+
 namespace s21 {
 
 template <typename Derived, typename T>
