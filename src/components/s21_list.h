@@ -7,7 +7,7 @@ namespace s21 {
 
 template <typename T>
 class list : public SequenceContainer<list<T>, T> {
- public:
+ private:
   // List Member type
   using value_type = typename SequenceContainer<list<T>, T>::value_type;
   using reference = typename SequenceContainer<list<T>, T>::reference;
@@ -15,7 +15,6 @@ class list : public SequenceContainer<list<T>, T> {
       typename SequenceContainer<list<T>, T>::const_reference;
   using size_type = typename SequenceContainer<list<T>, T>::size_type;
 
- private:
   struct Node_ {
     value_type value;
     Node_* next;
@@ -27,6 +26,10 @@ class list : public SequenceContainer<list<T>, T> {
     explicit Node_(value_type val, Node_* nextNode = nullptr,
                    Node_* prevNode = nullptr);
   };
+
+  Node_* fake;
+  size_type size_;
+  void initFakeNode();  // Initialize dummy node structure
 
  public:
   // List Functions
@@ -134,11 +137,6 @@ class list : public SequenceContainer<list<T>, T> {
   void insert_many_front(Args&&... args);  // Prepend multiple elements
 
  private:
-  Node_* fake;
-  size_type size_;
-
-  void initFakeNode();  // Initialize dummy node structure
-
   // Utils
   Node_* createNode(const_reference value, Node_* next,
                     Node_* prev);    // Node allocation
