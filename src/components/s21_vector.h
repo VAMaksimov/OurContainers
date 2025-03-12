@@ -46,8 +46,8 @@ class vector : public SequenceContainer<vector<T>, T> {
                             // initizialized using std::initializer_list
   vector(const vector& v);  // copy constructor
   vector(vector&& v);       // move constructor
-  vector& operator=(
-      vector&& v);  // assignment operator overload for moving object
+  vector& operator=(vector&& v);  // assignment operator overload for moving
+                                  // object, by countesz
 
   // Destructor
   ~vector();  // destructor
@@ -93,9 +93,12 @@ class vector : public SequenceContainer<vector<T>, T> {
 
   // Methods insert_many
   template <typename... Args>
-  iterator insert_many(const_iterator pos, Args&&... args);
+  iterator insert_many(
+      const_iterator pos,
+      Args&&... args);  // inserts multiple elements at position , by countesz
   template <typename... Args>
-  void insert_many_back(Args&&... args);
+  void insert_many_back(
+      Args&&... args);  // adds multiple elements to the end, by countesz
 };
 
 // Vector Member functions implementation
@@ -257,15 +260,8 @@ typename vector<value_type>::const_iterator vector<value_type>::cend() const {
 template <typename value_type>
 vector<value_type>& vector<value_type>::operator=(vector&& v) {
   if (this != &v) {
-    delete[] data_ptr;
-
-    data_ptr = v.data_ptr;
-    Size = v.Size;
-    Capacity = v.Capacity;
-
-    v.data_ptr = nullptr;
-    v.Size = 0;
-    v.Capacity = 0;
+    vector temp(std::move(v));
+    swap(temp);
   }
   return *this;
 }
@@ -330,4 +326,4 @@ void vector<value_type>::insert_many_back(Args&&... args) {
 }
 
 }  // namespace s21
-#endif  // VECTOR
+#endif  // S21_CONTAINERS_H_S21_VECTOR_H
