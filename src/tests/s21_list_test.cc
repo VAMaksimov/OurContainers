@@ -266,8 +266,7 @@ TEST(Test_List, Erase_Method) {
   it = myList.end();
   --it;
   ++it;
-  // cppcheck-suppress postfixOperator
-  it--;  // cppcheck-suppress postfixOperator
+  it--;
   myList.erase(it);
   EXPECT_EQ(myList.back(), 4);
   EXPECT_EQ(myList.size(), 2);
