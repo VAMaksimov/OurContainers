@@ -181,7 +181,7 @@ typename vector<value_type>::pointer vector<value_type>::data() {
 
 template <typename value_type>
 bool vector<value_type>::empty() const noexcept {
-  return data_ptr == nullptr;
+  return Size == 0;
 }
 
 template <typename value_type>
